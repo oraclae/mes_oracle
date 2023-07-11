@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.question.mapper.WtglCjlsMapper">
+
+    <resultMap type="WtglCjls" id="WtglCjlsResult">
+        <result property="LSID" column="LSID"/>
+        <result property="ZS" column="ZS"/>
+        <result property="CJWTID" column="CJWTID"/>
+        <result property="WTJS" column="WTJS"/>
+        <result property="SBXH" column="SBXH"/>
+        <result property="JH" column="JH"/>
+        <result property="CPXH" column="CPXH"/>
+        <result property="GXH" column="GXH"/>
+        <result property="GXMC" column="GXMC"/>
+        <result property="BCRQ" column="BCRQ"/>
+        <result property="TBR" column="TBR"/>
+        <result property="BJZRKS" column="BJZRKS"/>
+        <result property="BJZRR" column="BJZRR"/>
+        <result property="WTMS" column="WTMS"/>
+        <result property="TBJSSJ" column="TBJSSJ"/>
+        <result property="TBDQST" column="TBDQST"/>
+        <result property="JSR" column="JSR"/>
+        <result property="JJFA" column="JJFA"/>
+        <result property="WTZT" column="WTZT"/>
+        <result property="SCDDH" column="SCDDH"/>
+        <result property="PC" column="PC"/>
+        <result property="SFMY" column="SFMY"/>
+        <result property="CJSJ" column="CJSJ"/>
+        <result property="TBRID" column="TBRID"/>
+        <result property="BJRID" column="BJRID"/>
+        <result property="JSRID" column="JSRID"/>
+        <result property="CJBMKS" column="CJBMKS"/>
+        <result property="WTMC" column="WTMC"/>
+        <result property="WTLB" column="WTLB"/>
+        <result property="WTXL" column="WTXL"/>
+    </resultMap>
+
+    <sql id="selectWtglCjlsVo">
+        select LSID,
+               ZS,
+               CJWTID,
+               WTJS,
+               SBXH,
+               JH,
+               CPXH,
+               GXH,
+               GXMC,
+               BCRQ,
+               TBR,
+               BJZRKS,
+               BJZRR,
+               WTMS,
+               TBJSSJ,
+               TBDQST,
+               JSR,
+               JJFA,
+               WTZT,
+               SCDDH,
+               PC,
+               SFMY,
+               CJSJ,
+               TBRID,
+               BJRID,
+               JSRID,
+               CJBMKS,
+               WTMC,
+               WTLB,
+               WTXL
+        from WTGL_CJLS
+    </sql>
+
+    <select id="selectWtglCjlsList" parameterType="WtglCjlsDTO" resultMap="WtglCjlsResult">
+        <include refid="selectWtglCjlsVo"/>
+        <where>
+            <if test="selectType != null  and selectType != '' and selectData != null and selectData != ''">and
+                ${selectType} like '%' || #{selectData} || '%'
+            </if>
+        </where>
+        order by CJSJ desc
+    </select>
+
+    <select id="selectWtglDownCjlsList" parameterType="WtglCjls" resultMap="WtglCjlsResult">
+        <include refid="selectWtglCjlsVo"/>
+        where WTZT &lt;&gt; '取消' order by CJSJ desc
+    </select>
+
+    <select id="selectWtglCjlsByLSID" parameterType="String" resultMap="WtglCjlsResult">
+        <include refid="selectWtglCjlsVo"/>
+        where LSID = #{LSID}
+    </select>
+    <select id="selectywcjList" resultType="com.ruoyi.project.question.domain.vo.WtxxVo">
+        select *
+        from wtgl_ywcj
+        order by CJSJ desc
+    </select>
+    <select id="selectWtglCjlsSpeechList" resultMap="WtglCjlsResult">
+        select LSID,
+               ZS,
+               CJWTID,
+               WTJS,
+               SBXH,
+               JH,
+               CPXH,
+               GXH,
+               GXMC,
+               BCRQ,
+               TBR,
+               BJZRKS,
+               BJZRR,
+               WTMS,
+               TBJSSJ,
+               TBDQST,
+               JSR,
+               JJFA,
+               WTZT,
+               SCDDH,
+               PC,
+               SFMY,
+               CJSJ,
+               TBRID,
+               BJRID,
+               JSRID,
+               CJBMKS,
+               WTMC,
+               WTLB,
+               WTXL
+        from WTGL_CJLS
+        where WTZT = '提交'
+        order by CJSJ desc
+    </select>
+    <select id="getwtztNumber" resultType="com.ruoyi.project.question.domain.vo.NumberVO">
+        select COUNT(*) as num, WTZT as str
+        from WTGL_CJLS
+        where WTZT &lt;&gt; '取消'
+        group by WTZT
+    </select>
+    <select id="getcjksbmNumber" resultType="com.ruoyi.project.question.domain.vo.NumberVO">
+        select COUNT(*) num, WTLB as str
+        from WTGL_CJLS
+        where WTZT &lt;&gt; '取消'
+        group by WTLB
+    </select>
+    <select id="getsfgzIdsByIds" resultType="java.lang.String">
+        select WTID from wtgl_wtgz
+        <foreach open="where WTID in(" close=")" collection="list" separator="," item="id">
+            #{id}
+        </foreach>
+    </select>
+    <select id="listYwzd" resultType="com.ruoyi.project.question.domain.Ywzd">
+        select * from WTGL_YWZD
+        <where>
+            <if test="selectData != null  and selectData != ''">
+                ZJD like '%' || #{selectData} || '%' or CJD like '%' || #{selectData} || '%'
+            </if>
+        </where>
+    </select>
+    <select id="listDacc" resultType="com.ruoyi.project.question.domain.WtglDacc">
+        select *
+        from WTGL_DACC
+        <where>
+            <if test="wtglDacc.selectData != null and wtglDacc.selectData != ''">
+                WTMC like '%' || #{wtglDacc.selectData} || '%'
+            </if>
+        </where>
+    </select>
+    <select id="getYwzdByXH" resultType="com.ruoyi.project.question.domain.Ywzd">
+        select *
+        from WTGL_YWZD
+        where XH = #{xh}
+    </select>
+    <select id="getDacc" resultType="com.ruoyi.project.question.domain.WtglDacc">
+        select *
+        from WTGL_DACC
+        where DAXXID = #{daxxID}
+    </select>
+    <insert id="insertWtglCjls" parameterType="WtglCjls">
+        insert into WTGL_CJLS
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="LSID != null">LSID,</if>
+            <if test="ZS != null">ZS,</if>
+            <if test="CJWTID != null">CJWTID,</if>
+            <if test="WTJS != null">WTJS,</if>
+            <if test="SBXH != null">SBXH,</if>
+            <if test="JH != null">JH,</if>
+            <if test="CPXH != null">CPXH,</if>
+            <if test="GXH != null">GXH,</if>
+            <if test="GXMC != null">GXMC,</if>
+            <if test="BCRQ != null">BCRQ,</if>
+            <if test="TBR != null">TBR,</if>
+            <if test="BJZRKS != null">BJZRKS,</if>
+            <if test="BJZRR != null">BJZRR,</if>
+            <if test="WTMS != null">WTMS,</if>
+            <if test="TBJSSJ != null">TBJSSJ,</if>
+            <if test="TBDQST != null">TBDQST,</if>
+            <if test="JSR != null">JSR,</if>
+            <if test="JJFA != null">JJFA,</if>
+            <if test="WTZT != null">WTZT,</if>
+            <if test="SCDDH != null">SCDDH,</if>
+            <if test="PC != null">PC,</if>
+            <if test="SFMY != null">SFMY,</if>
+            <if test="CJSJ != null">CJSJ,</if>
+            <if test="TBRID != null">TBRID,</if>
+            <if test="BJRID != null">BJRID,</if>
+            <if test="JSRID != null">JSRID,</if>
+            <if test="CJBMKS != null">CJBMKS,</if>
+            <if test="WTMC != null">WTMC,</if>
+            <if test="WTLB != null">WTLB,</if>
+            <if test="WTXL != null">WTXL,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="LSID != null">#{LSID},</if>
+            <if test="ZS != null">#{ZS},</if>
+            <if test="CJWTID != null">#{CJWTID},</if>
+            <if test="WTJS != null">#{WTJS},</if>
+            <if test="SBXH != null">#{SBXH},</if>
+            <if test="JH != null">#{JH},</if>
+            <if test="CPXH != null">#{CPXH},</if>
+            <if test="GXH != null">#{GXH},</if>
+            <if test="GXMC != null">#{GXMC},</if>
+            <if test="BCRQ != null">#{BCRQ},</if>
+            <if test="TBR != null">#{TBR},</if>
+            <if test="BJZRKS != null">#{BJZRKS},</if>
+            <if test="BJZRR != null">#{BJZRR},</if>
+            <if test="WTMS != null">#{WTMS},</if>
+            <if test="TBJSSJ != null">#{TBJSSJ},</if>
+            <if test="TBDQST != null">#{TBDQST},</if>
+            <if test="JSR != null">#{JSR},</if>
+            <if test="JJFA != null">#{JJFA},</if>
+            <if test="WTZT != null">#{WTZT},</if>
+            <if test="SCDDH != null">#{SCDDH},</if>
+            <if test="PC != null">#{PC},</if>
+            <if test="SFMY != null">#{SFMY},</if>
+            <if test="CJSJ != null">#{CJSJ},</if>
+            <if test="TBRID != null">#{TBRID},</if>
+            <if test="BJRID != null">#{BJRID},</if>
+            <if test="JSRID != null">#{JSRID},</if>
+            <if test="CJBMKS != null">#{CJBMKS},</if>
+            <if test="WTMC != null">#{WTMC},</if>
+            <if test="WTLB != null">#{WTLB},</if>
+            <if test="WTXL != null">#{WTXL},</if>
+        </trim>
+    </insert>
+    <insert id="addYwzd">
+        insert into WTGL_YWZD
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="ZJD != null">ZJD,</if>
+            <if test="CJD != null">CJD,</if>
+            <if test="BZ != null">BZ,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="ZJD != null">#{ZJD},</if>
+            <if test="CJD != null">#{CJD},</if>
+            <if test="BZ != null">#{BZ},</if>
+        </trim>
+    </insert>
+
+    <update id="updateWtglCjls" parameterType="WtglCjls">
+        update WTGL_CJLS
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="ZS != null">ZS = #{ZS},</if>
+            <if test="CJWTID != null">CJWTID = #{CJWTID},</if>
+            <if test="WTJS != null">WTJS = #{WTJS},</if>
+            <if test="SBXH != null">SBXH = #{SBXH},</if>
+            <if test="JH != null">JH = #{JH},</if>
+            <if test="CPXH != null">CPXH = #{CPXH},</if>
+            <if test="GXH != null">GXH = #{GXH},</if>
+            <if test="GXMC != null">GXMC = #{GXMC},</if>
+            <if test="BCRQ != null">BCRQ = #{BCRQ},</if>
+            <if test="TBR != null">TBR = #{TBR},</if>
+            <if test="BJZRKS != null">BJZRKS = #{BJZRKS},</if>
+            <if test="BJZRR != null">BJZRR = #{BJZRR},</if>
+            <if test="WTMS != null">WTMS = #{WTMS},</if>
+            <if test="TBJSSJ != null">TBJSSJ = #{TBJSSJ},</if>
+            <if test="TBDQST != null">TBDQST = #{TBDQST},</if>
+            <if test="JSR != null">JSR = #{JSR},</if>
+            <if test="JJFA != null">JJFA = #{JJFA},</if>
+            <if test="WTZT != null">WTZT = #{WTZT},</if>
+            <if test="SCDDH != null">SCDDH = #{SCDDH},</if>
+            <if test="PC != null">PC = #{PC},</if>
+            <if test="SFMY != null">SFMY = #{SFMY},</if>
+            <if test="CJSJ != null">CJSJ = #{CJSJ},</if>
+            <if test="TBRID != null">TBRID = #{TBRID},</if>
+            <if test="BJRID != null">BJRID = #{BJRID},</if>
+            <if test="JSRID != null">JSRID = #{JSRID},</if>
+            <if test="CJBMKS != null">CJBMKS = #{CJBMKS},</if>
+            <if test="WTMC != null">WTMC = #{WTMC},</if>
+            <if test="WTLB != null">WTLB = #{WTLB},</if>
+            <if test="WTXL != null">WTXL = #{WTXL},</if>
+        </trim>
+        where LSID = #{LSID}
+    </update>
+    <update id="changewtzt">
+        update WTGL_CJLS set WTZT = #{wtzt} where LSID in (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
+    <update id="updatejjfa">
+        update WTGL_CJLS
+        set JJFA = #{str},
+            WTZT = '申请已完成'
+        where LSID = #{id}
+    </update>
+    <update id="wtjsYesIt">
+        <foreach collection="list" separator=";" item="item">
+            update WTGL_CJLS set WTZT = '接收', JSR = #{item.BJZRR}, TBJSSJ = #{item.TBJSSJ} where LSID = #{item.LSID}
+        </foreach>
+    </update>
+    <update id="wtjsNoIt">
+        <foreach collection="list" item="item" open="BEGIN" separator=";" close="END">
+            update WTGL_CJLS set WTZT = '接收', JSR = #{item.JSR}, TBJSSJ = #{item.TBJSSJ} where LSID = #{item.LSID}
+        </foreach>
+    </update>
+    <update id="updateDacc">
+        update WTGL_DACC
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="WTMC != null">WTMC = #{WTMC},</if>
+            <if test="ZRR != null">ZRR = #{ZRR},</if>
+            <if test="GBSJ != null">GBSJ = #{GBSJ},</if>
+            <if test="DAXX != null">DAXX = #{DAXX},</if>
+            <if test="CJR != null">CJR = #{CJR},</if>
+            <if test="WTLB != null">WTLB = #{WTLB},</if>
+            <if test="WTXL != null">WTXL = #{WTXL},</if>
+            <if test="RD != null">RD = #{RD},</if>
+            <if test="WTMS != null">WTMS = #{WTMS},</if>
+        </trim>
+        where DAXXID = #{DAXXID}
+    </update>
+    <update id="updateYwzd">
+        update WTGL_YWZD
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="ZJD != null">ZJD = #{ZJD},</if>
+            <if test="CJD != null">CJD = #{CJD},</if>
+            <if test="BZ != null">BZ = #{BZ},</if>
+        </trim>
+        where XH = #{XH}
+    </update>
+
+    <delete id="deleteWtglCjlsByLSID" parameterType="String">
+        delete
+        from WTGL_CJLS
+        where LSID = #{LSID}
+    </delete>
+
+    <delete id="deleteWtglCjlsByLSIDs" parameterType="String">
+        delete from WTGL_CJLS where LSID in
+        <foreach item="LSID" collection="array" open="(" separator="," close=")">
+            #{LSID}
+        </foreach>
+    </delete>
+    <delete id="delDacc">
+        delete from WTGL_DACC where DAXXID in
+        <foreach collection="daccIDs" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="delYwzd">
+        delete from WTGL_YWZD where XH in
+        <foreach item="XH" collection="array" open="(" separator="," close=")">
+            #{XH}
+        </foreach>
+    </delete>
+</mapper>

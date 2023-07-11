@@ -1,0 +1,757 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.question.mapper.QuestionMapper">
+    <insert id="createQuestion" parameterType="com.ruoyi.project.question.domain.WtxxDTO">
+        insert into WTGL_YWCJ
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="wtxxDTO.WTMC != null">WTMC,</if>
+            <if test="wtxxDTO.SCDDH != null">SCDDH,</if>
+            <if test="wtxxDTO.CPXH != null">CPXH,</if>
+            <if test="wtxxDTO.WTLY != null">WTLY,</if>
+            <if test="wtxxDTO.XWJJSJ != null">XWJJSJ,</if>
+            <if test="wtxxDTO.WTXL != null">WTXL,</if>
+            <if test="wtxxDTO.ZYCD != null">ZYCD,</if>
+            <if test="wtxxDTO.YZRBM != null">YZRBM,</if>
+            <if test="wtxxDTO.WTLB != null">WTLB,</if>
+            <if test="wtxxDTO.WTMS != null">WTMS,</if>
+            <if test="wtxxDTO.WTZT != null">WTZT,</if>
+            <if test="wtxxDTO.ID != null">ID,</if>
+            <if test="wtxxDTO.GBSJ != null">GBSJ,</if>
+            <if test="wtxxDTO.WCTS != null">WCTS,</if>
+            <if test="wtxxDTO.TJSJ != null">TJSJ,</if>
+            <if test="wtxxDTO.JSSJ != null">JSSJ,</if>
+            <if test="wtxxDTO.GZXT != null">GZXT,</if>
+            <if test="wtxxDTO.JJSJ != null">JJSJ,</if>
+            <if test="wtxxDTO.WTDB != null">WTDB,</if>
+            <if test="wtxxDTO.WDWT != null">WDWT,</if>
+            <if test="wtxxDTO.CJBMID != null">CJBMID,</if>
+            <if test="wtxxDTO.CJKSID != null">CJKSID,</if>
+            <if test="wtxxDTO.CJRID != null">CJRID,</if>
+            <if test="wtxxDTO.GXH != null">GXH,</if>
+            <if test="wtxxDTO.WTSJ != null">WTSJ,</if>
+            <if test="wtxxDTO.XCPHWT != null">XCPHWT,</if>
+            <if test="wtxxDTO.LDPS != null">LDPS,</if>
+            <if test="wtxxDTO.SCFJ != null">SCFJ,</if>
+            <if test="wtxxDTO.CQTS != null">CQTS,</if>
+            <if test="wtxxDTO.WTBH != null">WTBH,</if>
+            <if test="wtxxDTO.CJR != null">CJR,</if>
+            <if test="wtxxDTO.CJKS != null">CJKS,</if>
+            <if test="wtxxDTO.CJBM != null">CJBM,</if>
+            <if test="wtxxDTO.YXCD != null">YXCD,</if>
+            <if test="wtxxDTO.YJSJ != null">YJSJ,</if>
+            <if test="wtxxDTO.DQZRR != null">DQZRR,</if>
+            <if test="wtxxDTO.LXFK != null">LXFK,</if>
+            <if test="wtxxDTO.PC != null">PC,</if>
+            <if test="wtxxDTO.SB != null">SB,</if>
+            <if test="wtxxDTO.YZR != null">YZR,</if>
+            <if test="wtxxDTO.YZRID != null">YZRID,</if>
+            <if test="wtxxDTO.YZRBMID != null">YZRBMID,</if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="wtxxDTO.WTMC != null">#{wtxxDTO.WTMC},</if>
+            <if test="wtxxDTO.SCDDH != null">#{wtxxDTO.SCDDH},</if>
+            <if test="wtxxDTO.CPXH != null">#{wtxxDTO.CPXH},</if>
+            <if test="wtxxDTO.WTLY != null">#{wtxxDTO.WTLY},</if>
+            <if test="wtxxDTO.XWJJSJ != null">to_date(#{wtxxDTO.XWJJSJ},'yyyy-MM-DD HH24:MI:SS'),</if>
+            <if test="wtxxDTO.WTXL != null">#{wtxxDTO.WTXL},</if>
+            <if test="wtxxDTO.ZYCD != null">#{wtxxDTO.ZYCD},</if>
+            <if test="wtxxDTO.YZRBM != null">#{wtxxDTO.YZRBM},</if>
+            <if test="wtxxDTO.WTLB != null">#{wtxxDTO.WTLB},</if>
+            <if test="wtxxDTO.WTMS != null">#{wtxxDTO.WTMS},</if>
+            <if test="wtxxDTO.WTZT != null">#{wtxxDTO.WTZT},</if>
+            <if test="wtxxDTO.ID != null">#{wtxxDTO.ID},</if>
+            <if test="wtxxDTO.GBSJ != null">to_date(#{wtxxDTO.GBSJ},'yyyy-MM-DD HH24:MI:SS'),</if>
+            <if test="wtxxDTO.WCTS != null">#{wtxxDTO.WCTS},</if>
+            <if test="wtxxDTO.TJSJ != null">to_date(#{wtxxDTO.TJSJ},'yyyy-MM-DD HH24:MI:SS'),</if>
+            <if test="wtxxDTO.JSSJ != null">to_date(#{wtxxDTO.JSSJ},'yyyy-MM-DD HH24:MI:SS'),</if>
+            <if test="wtxxDTO.GZXT != null">#{wtxxDTO.GZXT},</if>
+            <if test="wtxxDTO.JJSJ != null">to_date(#{wtxxDTO.JJSJ},'yyyy-MM-DD HH24:MI:SS'),</if>
+            <if test="wtxxDTO.WTDB != null">#{wtxxDTO.WTDB},</if>
+            <if test="wtxxDTO.WDWT != null">#{wtxxDTO.WDWT},</if>
+            <if test="wtxxDTO.CJBMID != null">#{wtxxDTO.CJBMID},</if>
+            <if test="wtxxDTO.CJKSID != null">#{wtxxDTO.CJKSID},</if>
+            <if test="wtxxDTO.CJRID != null">#{wtxxDTO.CJRID},</if>
+            <if test="wtxxDTO.GXH != null">#{wtxxDTO.GXH},</if>
+            <if test="wtxxDTO.WTSJ != null">#{wtxxDTO.WTSJ},</if>
+            <if test="wtxxDTO.XCPHWT != null">#{wtxxDTO.XCPHWT},</if>
+            <if test="wtxxDTO.LDPS != null">#{wtxxDTO.LDPS},</if>
+            <if test="wtxxDTO.SCFJ != null">#{wtxxDTO.SCFJ},</if>
+            <if test="wtxxDTO.CQTS != null">#{wtxxDTO.CQTS},</if>
+            <if test="wtxxDTO.WTBH != null">#{wtxxDTO.WTBH},</if>
+            <if test="wtxxDTO.CJR != null">#{wtxxDTO.CJR},</if>
+            <if test="wtxxDTO.CJKS != null">#{wtxxDTO.CJKS},</if>
+            <if test="wtxxDTO.CJBM != null">#{wtxxDTO.CJBM},</if>
+            <if test="wtxxDTO.YXCD != null">#{wtxxDTO.YXCD},</if>
+            <if test="wtxxDTO.YJSJ != null">#{wtxxDTO.YJSJ},</if>
+            <if test="wtxxDTO.DQZRR != null">#{wtxxDTO.DQZRR},</if>
+            <if test="wtxxDTO.LXFK != null">#{wtxxDTO.LXFK},</if>
+            <if test="wtxxDTO.PC != null">#{wtxxDTO.PC},</if>
+            <if test="wtxxDTO.SB != null">#{wtxxDTO.SB},</if>
+            <if test="wtxxDTO.YZR != null">#{wtxxDTO.YZR},</if>
+            <if test="wtxxDTO.YZRID != null">#{wtxxDTO.YZRID},</if>
+            <if test="wtxxDTO.YZRBMID != null">#{wtxxDTO.YZRBMID},</if>
+        </trim>
+    </insert>
+    <insert id="saveJhjlList" parameterType="com.ruoyi.project.question.domain.vo.Sjjh">
+        insert into WTGL_JHJL
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sjjh.XH != null">XH,</if>
+            <if test="sjjh.HFXX != null">HFXX,</if>
+            <if test="sjjh.WTBT != null">WTBT,</if>
+            <if test="sjjh.HFR != null">HFR,</if>
+            <if test="sjjh.WTCJID != null">WTCJID,</if>
+            <if test="sjjh.WTCJR != null">WTCJR,</if>
+            <if test="sjjh.WTCJBM != null">WTCJBM,</if>
+            <if test="sjjh.WTCJKS != null">WTCJKS,</if>
+            <if test="sjjh.WTZRRID != null">WTZRRID,</if>
+            <if test="sjjh.JHZT != null">JHZT,</if>
+            <if test="sjjh.WTZRRBM != null">WTZRRBM,</if>
+            <if test="sjjh.WTZRR != null">WTZRR,</if>
+            <if test="sjjh.EJHFPPYJ != null">EJHFPPYJ,</if>
+            <if test="sjjh.WTID != null">WTID,</if>
+            <if test="sjjh.JS != null">JS,</if>
+            <if test="sjjh.YYD != null">YYD,</if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="sjjh.XH != null">#{sjjh.XH},</if>
+            <if test="sjjh.HFXX != null">#{sjjh.HFXX},</if>
+            <if test="sjjh.WTBT != null">#{sjjh.WTBT},</if>
+            <if test="sjjh.HFR != null">#{sjjh.HFR},</if>
+            <if test="sjjh.WTCJID != null">#{sjjh.WTCJID},</if>
+            <if test="sjjh.WTCJR != null">#{sjjh.WTCJR},</if>
+            <if test="sjjh.WTCJBM != null">#{sjjh.WTCJBM},</if>
+            <if test="sjjh.WTCJKS != null">#{sjjh.WTCJKS},</if>
+            <if test="sjjh.WTZRRID != null">#{sjjh.WTZRRID},</if>
+            <if test="sjjh.JHZT != null">#{sjjh.JHZT},</if>
+            <if test="sjjh.WTZRRBM != null">#{sjjh.WTZRRBM},</if>
+            <if test="sjjh.WTZRR != null">#{sjjh.WTZRR},</if>
+            <if test="sjjh.EJHFPPYJ != null">#{sjjh.EJHFPPYJ},</if>
+            <if test="sjjh.WTID != null">#{sjjh.WTID},</if>
+            <if test="sjjh.JS != null">#{sjjh.JS},</if>
+            <if test="sjjh.YYD != null">#{sjjh.YYD},</if>
+        </trim>
+    </insert>
+    <insert id="savegzwtList" parameterType="com.ruoyi.project.question.domain.vo.WtgzVo">
+        insert into WTGL_WTGZ(wtid, cjrid)
+        VALUES
+        <foreach collection="wtgzVo" separator="," item="wt">
+            (#{wt.WTID},#{wt.CJRID})
+        </foreach>
+    </insert>
+    <insert id="saveDaccList">
+        insert into
+        WTGL_DACC
+        (
+        WTID,
+        WTMC,
+        ZRRID,
+        ZRR,
+        GBSJ,
+        DAXX,
+        CJR,
+        WTMS,
+        GXH,
+        GXMC,
+        CJRID,
+        GJC,
+        WTLB,
+        WTXL,
+        DAXXID,
+        RD)
+        VALUES
+        <foreach collection="daccVOS" item="dacc" separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="dacc.WTID != null">#{dacc.WTID},</if>
+                <if test="dacc.WTID == null">null,</if>
+                <if test="dacc.WTMC != null">#{dacc.WTMC},</if>
+                <if test="dacc.WTMC == null">null,</if>
+                <if test="dacc.ZRRID != null">#{dacc.ZRRID},</if>
+                <if test="dacc.ZRRID == null">null,</if>
+                <if test="dacc.ZRR != null">#{dacc.ZRR},</if>
+                <if test="dacc.ZRR == null">null,</if>
+                <if test="dacc.GBSJ != null">#{dacc.GBSJ},</if>
+                <if test="dacc.GBSJ == null">null,</if>
+                <if test="dacc.DAXX != null">#{dacc.DAXX},</if>
+                <if test="dacc.DAXX == null">null,</if>
+                <if test="dacc.CJR != null">#{dacc.CJR},</if>
+                <if test="dacc.CJR == null">null,</if>
+                <if test="dacc.WTMS != null">#{dacc.WTMS},</if>
+                <if test="dacc.WTMS == null">null,</if>
+                <if test="dacc.GXH != null">#{dacc.GXH},</if>
+                <if test="dacc.GXH == null">null,</if>
+                <if test="dacc.GXMC != null">#{dacc.GXMC},</if>
+                <if test="dacc.GXMC == null">null,</if>
+                <if test="dacc.CJRID != null">#{dacc.CJRID},</if>
+                <if test="dacc.CJRID == null">null,</if>
+                <if test="dacc.GJC != null">#{dacc.GJC},</if>
+                <if test="dacc.GJC == null">null,</if>
+                <if test="dacc.WTLB != null">#{dacc.WTLB},</if>
+                <if test="dacc.WTLB == null">null,</if>
+                <if test="dacc.WTXL != null">#{dacc.WTXL},</if>
+                <if test="dacc.WTXL == null">null,</if>
+                <if test="dacc.DAXXID != null">#{dacc.DAXXID},</if>
+                <if test="dacc.DAXXID == null">null,</if>
+                <if test="dacc.RD != null">#{dacc.RD},</if>
+                <if test="dacc.RD == null">null,</if>
+            </trim>
+        </foreach>
+    </insert>
+    <update id="updateQuestionsStatus">
+        <foreach collection="wtxxDTO" item="item" separator=";">
+            update WTGL_YWCJ
+            <set>
+                WTZT=#{item.value},
+                <if test="item.WTDB !=null">
+                    WTDB=WTDB+#{item.WTDB},
+                </if>
+                <if test="item.WDWT !=null">
+                    WDWT=WDWT+#{item.WDWT},
+                </if>
+                <if test="item.JSSJ !=null">
+                    JSSJ=#{item.JSSJ},
+                </if>
+            </set>
+            where ID=#{item.ID}
+        </foreach>
+    </update>
+    <update id="updateQuestions">
+        <foreach collection="wtxxVos" item="item" separator=";">
+            update WTGL_YWCJ
+            <set>
+                <if test="item.CJSJ  != null">CJSJ= #{item.CJSJ},</if>
+                <if test="item.WTMC  != null">WTMC= #{item.WTMC},</if>
+                <if test="item.SCDDH  != null">SCDDH= #{item.SCDDH},</if>
+                <if test="item.CPXH  != null">CPXH= #{item.CPXH},</if>
+                <if test="item.WTLY  != null">WTLY= #{item.WTLY},</if>
+                <if test="item.XWJJSJ  != null">XWJJSJ= #{item.XWJJSJ},</if>
+                <if test="item.WTXL != null">WTXL=#{item.WTXL},</if>
+                <if test="item.ZYCD != null">ZYCD=#{item.ZYCD},</if>
+                <if test="item.YRZBM != null">YRZBM=#{item.YRZBM},</if>
+                <if test="item.WTLB != null">WTLB=#{item.WTLB},</if>
+                <if test="item.WTMS != null">WTMS=#{item.WTMS},</if>
+                <if test="item.WTZT != null">WTZT=#{item.WTZT},</if>
+                <if test="item.GBSJ != null">GBSJ=#{item.GBSJ},</if>
+                <if test="item.WCTS != null">WCTS=#{item.WCTS},</if>
+                <if test="item.TJSJ != null">TJSJ=#{item.TJSJ},</if>
+                <if test="item.JSSJ != null">JSSJ=#{item.JSSJ},</if>
+                <if test="item.GZXT != null">GZXT=#{item.GZXT},</if>
+                <if test="item.JJSJ != null">JJSJ=#{item.JJSJ},</if>
+                <if test="item.WTDB != null">WTDB=#{item.WTDB},</if>
+                <if test="item.WDWT != null">WDWT=#{item.WDWT},</if>
+                <if test="item.CJBM != null">CJBMID=#{item.CJBM},</if>
+                <if test="item.CJKS != null">CJKSID=#{item.CJKS},</if>
+                <if test="item.CJR != null">CJR=#{item.CJR},</if>
+                <if test="item.CJBMID != null">CJBMID=#{item.CJBMID},</if>
+                <if test="item.CJKSID != null">CJKSID=#{item.CJKSID},</if>
+                <if test="item.CJRID != null">CJRID=#{item.CJRID},</if>
+                <if test="item.GXH != null">GXH=#{item.GXH},</if>
+                <if test="item.YZR != null">YZR=#{item.YZR},</if>
+                <if test="item.XCPHWT != null">XCPHWT=#{item.XCPHWT},</if>
+                <if test="item.LDPS != null">LDPS=#{item.LDPS},</if>
+                <if test="item.SCFJ != null">SCFJ=#{item.SCFJ},</if>
+                <if test="item.YJSJ != null">YJSJ=#{item.YJSJ},</if>
+                <if test="item.WTBH != null">WTBH=#{item.WTBH},</if>
+                <if test="item.CQTS != null">CQTS=#{item.CQTS},</if>
+                <if test="item.WWCTS != null">WWCTS=#{item.WWCTS},</if>
+                <if test="item.LXFK != null">LXFK=#{item.LXFK},</if>
+                <if test="item.PC != null">PC=#{item.PC},</if>
+                <if test="item.SB != null">SB=#{item.SB},</if>
+                <if test="item.QWFKSJ != null">QWFKSJ=#{item.QWFKSJ},</if>
+                <if test="item.JHSJ != null">JHSJ=#{item.JHSJ},</if>
+                <if test="item.BHSJ != null">BHSJ=#{item.BHSJ},</if>
+            </set>
+            where ID=#{item.ID}
+        </foreach>
+    </update>
+    <update id="updateMyDoListStatus">
+        <foreach collection="wtxxDTO" item="item" separator=";">
+            update wtgl_zrdb
+            set ZRRZT=#{item.value}
+            where WTID=#{item.ID} and ZRRID=#{item.ZRRID}
+        </foreach>
+    </update>
+    <update id="updateProblemInteraction">
+        <foreach collection="sjjhs" item="item" separator=";">
+            update WTGL_JHJL
+            <set>
+                <if test="item.HFXX  != null">HFXX= #{item.HFXX},</if>
+                <if test="item.WTBT  != null">WTBT= #{item.WTBT},</if>
+                <if test="item.WTID  != null">WTID= #{item.WTID},</if>
+                <if test="item.HFR  != null">HFR= #{item.HFR},</if>
+                <if test="item.WTCJID  != null">WTCJID= #{item.WTCJID},</if>
+                <if test="item.WTCJR  != null">WTCJR= #{item.WTCJR},</if>
+                <if test="item.WTCJBM  != null">WTCJBM= #{item.WTCJBM},</if>
+                <if test="item.WTCJKS  != null">WTCJKS= #{item.WTCJKS},</if>
+                <if test="item.WTCJSJ  != null">WTCJSJ= #{item.WTCJSJ},</if>
+                <if test="item.WTZRRID  != null">WTZRRID= #{item.WTZRRID},</if>
+                <if test="item.WTZRRBM != null">WTZRRBM=#{item.WTZRRBM},</if>
+                <if test="item.WTZRR != null">WTZRR=#{item.WTZRR},</if>
+                <if test="item.EJHFPPYJ != null">EJHFPPYJ=#{item.EJHFPPYJ},</if>
+                <if test="item.JHZT != null">JHZT=#{item.JHZT},</if>
+            </set>
+            where XH=#{item.XH}
+        </foreach>
+    </update>
+    <update id="updatejhjl">
+        update WTGL_JHJL
+        set EJHFPPYJ=#{ejhfppyj}
+        where xh = #{xh}
+    </update>
+    <update id="closedLoop">
+        update wtgl_zrdb
+        set ZRRZT='确认已完成'
+        where XH = #{xh}
+    </update>
+    <update id="activate">
+        update wtgl_zrdb
+        set ZRRZT='未处理'
+        where XH = #{xh}
+    </update>
+    <update id="updatezrr">
+        update wtgl_zrdb
+        set SFZZRR = 'false'
+        where XH = #{xh}
+          and WTID = #{wtid}
+    </update>
+    <update id="updateQuestionSJRJS">
+        update WTGL_YWCJ
+        set SJRJS=#{i}
+        where id = #{id}
+    </update>
+    <update id="updatejhjlToAll">
+        update WTGL_JHJL
+        set EJHFPPYJ=#{replaceAll}
+        where xh = #{xh}
+    </update>
+    <update id="updateQuestionWddb" parameterType="com.ruoyi.project.question.domain.WtxxDTO">
+        update WTGL_YWCJ
+        set WTDB=WTDB + #{wtxxDTO.WTDB}
+        where ID = #{wtxxDTO.ID}
+    </update>
+    <update id="updateQuestionWdwt" parameterType="com.ruoyi.project.question.domain.WtxxDTO">
+        update WTGL_YWCJ
+        set WDWT=WDWT + #{wtxxDTO.WDWT}
+        where ID = #{wtxxDTO.ID}
+    </update>
+    <update id="updateQuestionWTDBToZero">
+        update WTGL_YWCJ
+        set WTDB=0
+        where id = #{id}
+    </update>
+    <update id="updateQuestionWDWTToZero">
+        update WTGL_YWCJ
+        set WDWT=0
+        where id = #{id}
+    </update>
+    <update id="updateQuestionStatus">
+        update WTGL_YWCJ
+        set WTZT = #{status}
+        where ID = #{wtid}
+    </update>
+    <update id="updateQuestionSFDZFK">
+        update WTGL_YWCJ
+        set SFDZFK=0
+        where SFDZFK = 1
+    </update>
+    <update id="updateQuestion" parameterType="com.ruoyi.project.question.domain.WtxxDTO">
+        update WTGL_YWCJ
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="WTMC != null">WTMC = #{WTMC},</if>
+            <if test="XWJJSJ != null">XWJJSJ = #{XWJJSJ},</if>
+            <if test="ZYCD != null">ZYCD = #{ZYCD},</if>
+            <if test="WTMS != null">WTMS = #{WTMS},</if>
+            <if test="LDPS != null">LDPS = #{LDPS},</if>
+            <if test="YXCD != null">YXCD = #{YXCD},</if>
+        </trim>
+        where ID = #{ID}
+    </update>
+    <update id="updateJHJL" parameterType="com.ruoyi.project.question.domain.SjjhDTO">
+        update WTGL_JHJL
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="HFXX != null">HFXX = #{HFXX},</if>
+            <if test="WTBT != null">WTBT = #{WTBT},</if>
+            <if test="EJHFPPYJ != null">EJHFPPYJ = #{EJHFPPYJ},</if>
+        </trim>
+        where XH = #{XH}
+    </update>
+    <delete id="deleteQuestions">
+        delete from WTGL_YWCJ where ID in (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </delete>
+    <delete id="deleteProblemInteraction">
+        delete from WTGL_JHJL where XH in (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </delete>
+    <delete id="deletegzwtList">
+        delete
+        from WTGL_WTGZ
+        where (WTID,CJRID) in
+        (
+        <foreach collection="wtgzVos" item="wt" separator=",">
+            (#{wt.WTID},#{wt.CJRID})
+        </foreach>
+        )
+    </delete>
+    <delete id="deleteJhjlByXh">
+        delete
+        from WTGL_JHJL
+        where XH = #{id}
+    </delete>
+    <select id="selectWtxxData1" parameterType="com.ruoyi.project.question.domain.WtxxDTO"
+            resultType="com.ruoyi.project.question.domain.vo.WtxxVo">
+        select *
+        from WTGL_YWCJ
+        where (WTZT = #{wtxxDTO.WTZT}
+        <if test="wtxxDTO.WTZT1 !=null">
+            or WTZT=#{wtxxDTO.WTZT1}
+        </if>
+        <if test="wtxxDTO.WTZT2 !=null">
+            or WTZT=#{wtxxDTO.WTZT2}
+        </if>
+        <if test="wtxxDTO.WTZT3 !=null">
+            or WTZT=#{wtxxDTO.WTZT3}
+        </if>)
+        <if test="wtxxDTO.LDPS!=null">
+            and LDPS=#{wtxxDTO.LDPS}
+        </if>
+        <if test="wtxxDTO.CJRID!=null">
+            and CJRID=#{wtxxDTO.CJRID}
+        </if>
+        <if test="wtxxDTO.LDPS!=null">
+            and LDPS=#{wtxxDTO.LDPS}
+        </if>
+        <if test="wtxxDTO.YZR !=null">
+            and YZR like '%' || #{wtxxDTO.YZR} || '%'
+        </if>
+        <if test="wtxxDTO.userName!=null">
+            <if test="wtxxDTO.type=='wtms'">
+                and WTMS like '%' || #{wtxxDTO.userName} || '%'
+            </if>
+            <if test="wtxxDTO.type=='scddh'">
+                and SCDDH like '%' || #{wtxxDTO.userName} || '%'
+            </if>
+            <if test="wtxxDTO.type=='cpxh'">
+                and CPXH like '%' || #{wtxxDTO.userName} || '%'
+            </if>
+            <if test="wtxxDTO.type=='wtmc'">
+                and WTMC like '%' || #{wtxxDTO.userName} || '%'
+            </if>
+            <if test="wtxxDTO.type=='wtly'">
+                and WTLY like '%' || #{wtxxDTO.userName} || '%'
+            </if>
+        </if>
+        order by CJSJ desc
+    </select>
+    <select id="selectWtxxData2" parameterType="com.ruoyi.project.question.domain.WtxxDTO"
+            resultType="com.ruoyi.project.question.domain.vo.WtxxVo">
+        select
+        LISTAGG(wy.YZR, ',') WITHIN GROUP (ORDER BY wy.CJSJ) YZR,
+        wy.CJSJ,
+        wy.WTMC,
+        wy.SCDDH,
+        wy.CPXH,
+        wy.WTLY,
+        wy.XWJJSJ,
+        wy.WTXL,
+        wy.ZYCD,
+        wy.YZRBM,
+        wy.WTLB,
+        wy.WTMS,
+        wy.WTZT,
+        wy.ID,
+        wy.GBSJ,
+        wy.WCTS,
+        wy.TJSJ,
+        wy.JSSJ,
+        wy.GZXT,
+        wy.JJSJ,
+        wy.WTDB,
+        wy.WDWT,
+        wy.CJBMID,
+        wy.CJKSID,
+        wy.CJRID,
+        wy.GXH,
+        wy.WTSJ,
+        wy.XCPHWT,
+        wy.LDPS,
+        wy.SCFJ,
+        wy.CQTS,
+        wy.WTBH,
+        wy.CJR,
+        wy.CJKS,
+        wy.CJBM,
+        wy.YXCD,
+        wy.YJSJ,
+        wy.DQZRR,
+        wy.WWCTS,
+        wy.SJRJS,
+        wy.LXFK,
+        wy.PC,
+        wy.SB,
+        wy.QWFKSJ,
+        wy.BHSJ,
+        wy.JHSJ,
+        wz.WTID,
+        wz.ZRRID,
+        wz.ZRBM,
+        wz.ZRKS,
+        wz.ZRR,
+        wz.ZRRZT ZRRZT,
+        wz.ZRBMID,
+        wz.ZRKSID,
+        wz.SFZZRR,
+        wz.XH
+        from WTGL_YWCJ wy
+        right join wtgl_zrdb wz on wy.ID=wz.WTID
+        where (wy.WTZT = #{wtxxDTO.WTZT}
+        <if test="wtxxDTO.WTZT1 !=null">
+            or wy.WTZT=#{wtxxDTO.WTZT1}
+        </if>
+        <if test="wtxxDTO.WTZT2 !=null">
+            or wy.WTZT=#{wtxxDTO.WTZT2}
+        </if>
+        <if test="wtxxDTO.WTZT3 !=null">
+            or wy.WTZT=#{wtxxDTO.WTZT3}
+        </if>)
+        <if test="wtxxDTO.ZRRID!=null">
+            and wz.ZRRID=#{wtxxDTO.ZRRID}
+        </if>
+        <if test="wtxxDTO.userName!=null">
+            <if test="wtxxDTO.type=='wtms'">
+                and wy.WTMS like '%' || #{wtxxDTO.userName} || '%'
+            </if>
+            <if test="wtxxDTO.type=='scddh'">
+                and wy.SCDDH like '%' || #{wtxxDTO.userName} || '%'
+            </if>
+            <if test="wtxxDTO.type=='cpxh'">
+                and wy.CPXH like '%' || #{wtxxDTO.userName} || '%'
+            </if>
+            <if test="wtxxDTO.type=='wtmc'">
+                and wy.WTMC like '%' || #{wtxxDTO.userName} || '%'
+            </if>
+            <if test="wtxxDTO.type=='wtly'">
+                and wy.WTLY like '%' || #{wtxxDTO.userName} || '%'
+            </if>
+        </if>
+        group by
+        wy.CJSJ,
+        wy.WTMC,
+        wy.SCDDH,
+        wy.CPXH,
+        wy.WTLY,
+        wy.XWJJSJ,
+        wy.WTXL,
+        wy.ZYCD,
+        wy.YZRBM,
+        wy.WTLB,
+        wy.WTMS,
+        wy.WTZT,
+        wy.ID,
+        wy.GBSJ,
+        wy.WCTS,
+        wy.TJSJ,
+        wy.JSSJ,
+        wy.GZXT,
+        wy.JJSJ,
+        wy.WTDB,
+        wy.WDWT,
+        wy.CJBMID,
+        wy.CJKSID,
+        wy.CJRID,
+        wy.GXH,
+        wy.WTSJ,
+        wy.XCPHWT,
+        wy.LDPS,
+        wy.SCFJ,
+        wy.CQTS,
+        wy.WTBH,
+        wy.CJR,
+        wy.CJKS,
+        wy.CJBM,
+        wy.YXCD,
+        wy.YJSJ,
+        wy.DQZRR,
+        wy.WWCTS,
+        wy.SJRJS,
+        wy.LXFK,
+        wy.PC,
+        wy.SB,
+        wy.QWFKSJ,
+        wy.BHSJ,
+        wy.JHSJ,
+        wz.WTID,
+        wz.ZRRID,
+        wz.ZRBM,
+        wz.ZRKS,
+        wz.ZRR,
+        wz.ZRRZT,
+        wz.ZRBMID,
+        wz.ZRKSID,
+        wz.SFZZRR,
+        wz.XH
+        order by wy.CJSJ desc
+    </select>
+    <select id="getProblemInteractionList" parameterType="com.ruoyi.project.question.domain.vo.Sjjh"
+            resultType="com.ruoyi.project.question.domain.vo.Sjjh">
+        select *
+        from WTGL_JHJL
+        <where>
+            <if test="sjjh.userName!=null">
+                <if test="sjjh.type=='hfxx'">
+                    and HFXX like '%' || #{sjjh.userName} || '%'
+                </if>
+                <if test="sjjh.type=='wtbt'">
+                    and WTBT like '%' || #{sjjh.userName} || '%'
+                </if>
+            </if>
+        </where>
+        order by WTCJSJ desc
+    </select>
+    <select id="getwtlyMethod" resultType="java.lang.String">
+        select CJD
+        from WTGL_YWZD
+        where ZJD = '问题来源'
+    </select>
+    <select id="getwtlbMethod" resultType="java.lang.String">
+        select CJD
+        from WTGL_YWZD
+        where ZJD = '问题类别'
+    </select>
+    <select id="getwtxlMethod" resultType="java.lang.String">
+        select CJD
+        from WTGL_YWZD
+        where ZJD = #{wtlb}
+    </select>
+    <select id="getjjcdMethod" resultType="java.lang.String">
+        select CJD
+        from WTGL_YWZD
+        where ZJD = '紧急程度'
+    </select>
+    <select id="selectMaxWtbh" resultType="java.lang.String">
+        select max(WTBH)
+        from WTGL_YWCJ
+        where WTBH >= #{wtbh}
+    </select>
+    <select id="getzerData" resultType="com.ruoyi.project.question.domain.vo.ZrrVO">
+        select *
+        from WTGL_ZRDB
+        where WTID = #{wtid}
+    </select>
+    <select id="getMyProblemList" resultType="com.ruoyi.project.question.domain.vo.WtxxVo">
+        select wy.*
+        from WTGL_YWCJ wy
+        right join WTGL_WTGZ ww on wy.id = ww.WTID
+        where ww.CJRID = #{wtxxDTO.CJRID}
+        and wy.WTZT = #{wtxxDTO.WTZT}
+        <if test="wtxxDTO.WTZT1 !=null">
+            or wy.WTZT=#{wtxxDTO.WTZT1}
+        </if>
+        <if test="wtxxDTO.WTZT2 !=null">
+            or wy.WTZT=#{wtxxDTO.WTZT2}
+        </if>
+        <if test="wtxxDTO.WTZT3 !=null">
+            or wy.WTZT=#{wtxxDTO.WTZT3}
+        </if>
+    </select>
+    <select id="selectJhjlByWtid" resultType="com.ruoyi.project.question.domain.vo.Sjjh">
+        select *
+        from WTGL_JHJL
+        where WTID = #{wtid}
+          and JHZT = #{jhzt}
+        order by WTCJSJ
+    </select>
+    <select id="selectldpsByWtid" resultType="com.ruoyi.project.question.domain.vo.Sjjh">
+        select *
+        from WTGL_JHJL
+        where WTID = #{wtid}
+          and JHZT = #{jhzt}
+        order by WTCJSJ DESC
+    </select>
+    <select id="selectJhjlByid" resultType="com.ruoyi.project.question.domain.vo.Sjjh">
+        select *
+        from WTGL_JHJL
+        where XH = #{id}
+          and JHZT = #{jhzt}
+    </select>
+    <select id="selectywcj" resultType="com.ruoyi.project.question.domain.vo.WtxxVo">
+        select *
+        from WTGL_YWCJ
+        where WTZT = '提交'
+          and CJRID = 'true'
+          and SJRJS &lt;&gt; '2'
+    </select>
+    <select id="selectzrr" resultType="com.ruoyi.project.question.domain.vo.ZrrVO">
+        select *
+        from wtgl_zrdb
+        where WTID = #{id}
+          and SFZZRR = 'true'
+    </select>
+    <select id="selectBysjzrzdone" resultType="java.lang.String">
+        select EJZRR
+        from wtgl_sjzrzd
+        where ZRBM = #{zrbm}
+          and YJZRRID = #{zrrid}
+    </select>
+    <select id="selectBysjzrzdtwo" resultType="java.lang.String">
+        select SJZRR
+        from wtgl_sjzrzd
+        where ZRBM = #{zrbm}
+          and EJZRR = #{zrrid}
+    </select>
+    <select id="selectWtxxData" resultType="com.ruoyi.project.question.domain.vo.WtxxVo">
+        select *
+        from WTGL_YWCJ
+    </select>
+    <select id="selectJhjlByEjhfppyj" resultType="com.ruoyi.project.question.domain.vo.Sjjh">
+        select *
+        from WTGL_JHJL
+        where EJHFPPYJ like '%' || #{id} || '%'
+    </select>
+    <select id="selectJhjlList" resultType="com.ruoyi.project.question.domain.SjjhDTO">
+        select *
+        from WTGL_JHJL
+        where WTID = #{wtxxDTO.ID}
+    </select>
+    <select id="getYwcj" resultType="com.ruoyi.project.question.domain.vo.WtxxVo">
+        select *
+        from WTGL_YWCJ
+        where ID = #{id}
+    </select>
+    <select id="selectJhjlByXh" resultType="com.ruoyi.project.question.domain.vo.Sjjh">
+        select *
+        from WTGL_JHJL
+        where XH = #{xh}
+    </select>
+
+    <!--
+    SELECT wy.*,
+       LISTAGG(wz.ZRR, ',') WITHIN GROUP (ORDER BY wz.ZRR) AS ZRR,
+       LISTAGG(wz.ZRBM, ',') WITHIN GROUP (ORDER BY wz.ZRBM) AS ZRBM,
+       LISTAGG(wz.ZRKS, ',') WITHIN GROUP (ORDER BY wz.ZRKS) AS ZRKS,
+       wz.ZRRZT AS ZRRZT
+            FROM WTGL_YWCJ wy
+            RIGHT JOIN wtgl_zrdb wz ON wy.ID = wz.WTID
+            WHERE wy.WTZT = :WTZT
+              OR wy.WTZT = :WTZT1
+              OR wy.WTZT = :WTZT2
+              OR wy.WTZT = :WTZT3
+              AND wz.ZRRID = :ZRRID
+              AND (
+                (:type = 'wtms' AND wy.WTMS LIKE '%' || :userName || '%') OR
+                (:type = 'scddh' AND wy.SCDDH LIKE '%' || :userName || '%') OR
+                (:type = 'cpxh' AND wy.CPXH LIKE '%' || :userName || '%') OR
+                (:type = 'wtmc' AND wy.WTMC LIKE '%' || :userName || '%') OR
+                (:type = 'wtly' AND wy.WTLY LIKE '%' || :userName || '%')
+              )
+            GROUP BY wz.WTID, wy.column1, wy.column2, ...
+            ORDER BY wy.CJSJ DESC
+    -->
+</mapper>

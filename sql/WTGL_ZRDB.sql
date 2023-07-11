@@ -1,0 +1,75 @@
+/*
+ Navicat Premium Data Transfer
+
+ Source Server         : oracle
+ Source Server Type    : Oracle
+ Source Server Version : 190000
+ Source Host           : localhost:1521
+ Source Schema         : SYSTEM
+
+ Target Server Type    : Oracle
+ Target Server Version : 190000
+ File Encoding         : 65001
+
+ Date: 10/07/2023 17:18:01
+*/
+
+
+-- ----------------------------
+-- Table structure for WTGL_ZRDB
+-- ----------------------------
+CREATE TABLE "WTGL_ZRDB" (
+  "WTID" VARCHAR2(255),
+  "ZRRID" VARCHAR2(255) NOT NULL,
+  "ZRBM" VARCHAR2(255),
+  "ZRKS" VARCHAR2(255),
+  "ZRR" VARCHAR2(255),
+  "ZRRZT" VARCHAR2(255),
+  "ZRBMID" VARCHAR2(255),
+  "ZRKSID" VARCHAR2(255),
+  "SFZZRR" VARCHAR2(255),
+  "XH" NUMBER NOT NULL
+)
+LOGGING
+NOCOMPRESS
+PCTFREE 10
+INITRANS 1
+STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
+  FREELISTS 1
+  FREELIST GROUPS 1
+  BUFFER_POOL DEFAULT
+)
+PARALLEL 1
+NOCACHE
+DISABLE ROW MOVEMENT
+;
+COMMENT ON COLUMN "WTGL_ZRDB"."WTID" IS '问题ID';
+COMMENT ON COLUMN "WTGL_ZRDB"."ZRRID" IS '问题责任人id';
+COMMENT ON COLUMN "WTGL_ZRDB"."ZRBM" IS '问题责任部门';
+COMMENT ON COLUMN "WTGL_ZRDB"."ZRKS" IS '问题责任科室';
+COMMENT ON COLUMN "WTGL_ZRDB"."ZRR" IS '问题责任人';
+COMMENT ON COLUMN "WTGL_ZRDB"."ZRRZT" IS '问题责任人状态';
+COMMENT ON COLUMN "WTGL_ZRDB"."ZRBMID" IS '问题责任部门ID';
+COMMENT ON COLUMN "WTGL_ZRDB"."ZRKSID" IS '问题责任科室id';
+COMMENT ON COLUMN "WTGL_ZRDB"."SFZZRR" IS '是否为主责任人';
+COMMENT ON COLUMN "WTGL_ZRDB"."XH" IS '序号';
+
+-- ----------------------------
+-- Records of WTGL_ZRDB
+-- ----------------------------
+
+-- ----------------------------
+-- Primary Key structure for table WTGL_ZRDB
+-- ----------------------------
+ALTER TABLE "WTGL_ZRDB" ADD CONSTRAINT "WTGL_ZRDB_PK" PRIMARY KEY ("XH");
+
+-- ----------------------------
+-- Checks structure for table WTGL_ZRDB
+-- ----------------------------
+ALTER TABLE "WTGL_ZRDB" ADD CONSTRAINT "SYS_C007480" CHECK ("ZRRID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "WTGL_ZRDB" ADD CONSTRAINT "SYS_C007498" CHECK ("XH" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "WTGL_ZRDB" ADD CONSTRAINT "SYS_C007782" CHECK ("ZRRID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;

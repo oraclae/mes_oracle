@@ -1,0 +1,88 @@
+/*
+ Navicat Premium Data Transfer
+
+ Source Server         : oracle
+ Source Server Type    : Oracle
+ Source Server Version : 190000
+ Source Host           : localhost:1521
+ Source Schema         : SYSTEM
+
+ Target Server Type    : Oracle
+ Target Server Version : 190000
+ File Encoding         : 65001
+
+ Date: 10/07/2023 17:16:04
+*/
+
+
+-- ----------------------------
+-- Table structure for WTGL_JHJL
+-- ----------------------------
+CREATE TABLE "WTGL_JHJL" (
+  "XH" VARCHAR2(255) NOT NULL,
+  "HFXX" VARCHAR2(255),
+  "WTBT" VARCHAR2(255),
+  "WTCJID" VARCHAR2(255),
+  "WTCJR" VARCHAR2(255),
+  "WTCJBM" VARCHAR2(255),
+  "WTCJKS" VARCHAR2(255),
+  "WTCJSJ" DATE,
+  "WTZRRID" VARCHAR2(255),
+  "WTZRRBM" VARCHAR2(255),
+  "WTZRR" VARCHAR2(255),
+  "WTID" VARCHAR2(255),
+  "HFR" VARCHAR2(255),
+  "JHZT" VARCHAR2(255),
+  "JS" VARCHAR2(255),
+  "YYD" VARCHAR2(255),
+  "EJHFPPYYJ" CLOB
+)
+LOGGING
+NOCOMPRESS
+PCTFREE 10
+INITRANS 1
+STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
+  FREELISTS 1
+  FREELIST GROUPS 1
+  BUFFER_POOL DEFAULT
+)
+PARALLEL 1
+NOCACHE
+DISABLE ROW MOVEMENT
+;
+COMMENT ON COLUMN "WTGL_JHJL"."XH" IS '序号';
+COMMENT ON COLUMN "WTGL_JHJL"."HFXX" IS '回复信息';
+COMMENT ON COLUMN "WTGL_JHJL"."WTBT" IS '问题标题';
+COMMENT ON COLUMN "WTGL_JHJL"."WTCJID" IS '问题创建人ID';
+COMMENT ON COLUMN "WTGL_JHJL"."WTCJR" IS '问题创建人';
+COMMENT ON COLUMN "WTGL_JHJL"."WTCJBM" IS '问题创建部门';
+COMMENT ON COLUMN "WTGL_JHJL"."WTCJKS" IS '问题创建科室';
+COMMENT ON COLUMN "WTGL_JHJL"."WTCJSJ" IS '问题创建时间';
+COMMENT ON COLUMN "WTGL_JHJL"."WTZRRID" IS '问题责任人ID';
+COMMENT ON COLUMN "WTGL_JHJL"."WTZRRBM" IS '问题责任人部门';
+COMMENT ON COLUMN "WTGL_JHJL"."WTZRR" IS '问题责任人';
+COMMENT ON COLUMN "WTGL_JHJL"."WTID" IS '问题ID';
+COMMENT ON COLUMN "WTGL_JHJL"."HFR" IS '回复人';
+COMMENT ON COLUMN "WTGL_JHJL"."JHZT" IS '交互记录的状态';
+COMMENT ON COLUMN "WTGL_JHJL"."JS" IS '问题的级数';
+COMMENT ON COLUMN "WTGL_JHJL"."YYD" IS '判断是否已阅读';
+COMMENT ON COLUMN "WTGL_JHJL".EJHFPPYJ IS '二级回复匹配一级';
+
+-- ----------------------------
+-- Records of WTGL_JHJL
+-- ----------------------------
+
+-- ----------------------------
+-- Primary Key structure for table WTGL_JHJL
+-- ----------------------------
+ALTER TABLE "WTGL_JHJL" ADD CONSTRAINT "WTGL_JHJL_PK" PRIMARY KEY ("XH");
+
+-- ----------------------------
+-- Checks structure for table WTGL_JHJL
+-- ----------------------------
+ALTER TABLE "WTGL_JHJL" ADD CONSTRAINT "SYS_C007462" CHECK ("XH" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "WTGL_JHJL" ADD CONSTRAINT "SYS_C007772" CHECK ("XH" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;

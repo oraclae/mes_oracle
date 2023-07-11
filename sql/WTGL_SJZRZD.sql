@@ -1,0 +1,76 @@
+/*
+ Navicat Premium Data Transfer
+
+ Source Server         : oracle
+ Source Server Type    : Oracle
+ Source Server Version : 190000
+ Source Host           : localhost:1521
+ Source Schema         : SYSTEM
+
+ Target Server Type    : Oracle
+ Target Server Version : 190000
+ File Encoding         : 65001
+
+ Date: 10/07/2023 17:16:35
+*/
+
+
+-- ----------------------------
+-- Table structure for WTGL_SJZRZD
+-- ----------------------------
+CREATE TABLE "WTGL_SJZRZD" (
+  "XH" VARCHAR2(255) NOT NULL,
+  "ZRBM" VARCHAR2(255),
+  "ZRKS" VARCHAR2(255),
+  "YJZRR" VARCHAR2(255),
+  "EJZRR" VARCHAR2(255),
+  "SJZRR" VARCHAR2(255),
+  "YJZRRID" VARCHAR2(255),
+  "EJZRRID" VARCHAR2(255),
+  "SJZRRID" VARCHAR2(255),
+  "DQZER" VARCHAR2(255),
+  "DQZERID" VARCHAR2(255)
+)
+LOGGING
+NOCOMPRESS
+PCTFREE 10
+INITRANS 1
+STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
+  FREELISTS 1
+  FREELIST GROUPS 1
+  BUFFER_POOL DEFAULT
+)
+PARALLEL 1
+NOCACHE
+DISABLE ROW MOVEMENT
+;
+COMMENT ON COLUMN "WTGL_SJZRZD"."XH" IS '序号';
+COMMENT ON COLUMN "WTGL_SJZRZD"."ZRBM" IS '责任部门';
+COMMENT ON COLUMN "WTGL_SJZRZD"."ZRKS" IS '责任科室';
+COMMENT ON COLUMN "WTGL_SJZRZD"."YJZRR" IS '一级责任人';
+COMMENT ON COLUMN "WTGL_SJZRZD"."EJZRR" IS '二级责任人';
+COMMENT ON COLUMN "WTGL_SJZRZD"."SJZRR" IS '三级责任人';
+COMMENT ON COLUMN "WTGL_SJZRZD"."YJZRRID" IS '一级责任人id';
+COMMENT ON COLUMN "WTGL_SJZRZD"."EJZRRID" IS '二级责任人id';
+COMMENT ON COLUMN "WTGL_SJZRZD"."SJZRRID" IS '三级责任人id';
+COMMENT ON COLUMN "WTGL_SJZRZD"."DQZER" IS '当前责任人';
+COMMENT ON COLUMN "WTGL_SJZRZD"."DQZERID" IS '当前责任人ID';
+
+-- ----------------------------
+-- Records of WTGL_SJZRZD
+-- ----------------------------
+
+-- ----------------------------
+-- Primary Key structure for table WTGL_SJZRZD
+-- ----------------------------
+ALTER TABLE "WTGL_SJZRZD" ADD CONSTRAINT "WTGL_SJZRZD_PK" PRIMARY KEY ("XH");
+
+-- ----------------------------
+-- Checks structure for table WTGL_SJZRZD
+-- ----------------------------
+ALTER TABLE "WTGL_SJZRZD" ADD CONSTRAINT "SYS_C007465" CHECK ("XH" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "WTGL_SJZRZD" ADD CONSTRAINT "SYS_C007776" CHECK ("XH" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;

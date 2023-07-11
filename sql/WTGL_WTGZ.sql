@@ -1,0 +1,61 @@
+/*
+ Navicat Premium Data Transfer
+
+ Source Server         : oracle
+ Source Server Type    : Oracle
+ Source Server Version : 190000
+ Source Host           : localhost:1521
+ Source Schema         : SYSTEM
+
+ Target Server Type    : Oracle
+ Target Server Version : 190000
+ File Encoding         : 65001
+
+ Date: 10/07/2023 17:16:57
+*/
+
+
+-- ----------------------------
+-- Table structure for WTGL_WTGZ
+-- ----------------------------
+DROP TABLE "WTGL_WTGZ";
+CREATE TABLE "WTGL_WTGZ" (
+  "WTID" VARCHAR2(255) NOT NULL,
+  "CJRID" VARCHAR2(255) NOT NULL
+)
+LOGGING
+NOCOMPRESS
+PCTFREE 10
+INITRANS 1
+STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
+  FREELISTS 1
+  FREELIST GROUPS 1
+  BUFFER_POOL DEFAULT
+)
+PARALLEL 1
+NOCACHE
+DISABLE ROW MOVEMENT
+;
+COMMENT ON COLUMN "WTGL_WTGZ"."WTID" IS '问题ID';
+COMMENT ON COLUMN "WTGL_WTGZ"."CJRID" IS '创建人ID';
+
+-- ----------------------------
+-- Records of WTGL_WTGZ
+-- ----------------------------
+
+-- ----------------------------
+-- Primary Key structure for table WTGL_WTGZ
+-- ----------------------------
+ALTER TABLE "WTGL_WTGZ" ADD CONSTRAINT "WTGL_WTGZ_PK" PRIMARY KEY ("WTID", "CJRID");
+
+-- ----------------------------
+-- Checks structure for table WTGL_WTGZ
+-- ----------------------------
+ALTER TABLE "WTGL_WTGZ" ADD CONSTRAINT "SYS_C007468" CHECK ("WTID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "WTGL_WTGZ" ADD CONSTRAINT "SYS_C007469" CHECK ("CJRID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "WTGL_WTGZ" ADD CONSTRAINT "SYS_C007786" CHECK ("WTID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "WTGL_WTGZ" ADD CONSTRAINT "SYS_C007794" CHECK ("CJRID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;

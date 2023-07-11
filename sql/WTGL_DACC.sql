@@ -1,0 +1,88 @@
+/*
+ Navicat Premium Data Transfer
+
+ Source Server         : qxd
+ Source Server Type    : Oracle
+ Source Server Version : 190000
+ Source Host           : localhost:1521
+ Source Schema         : SYSTEM
+
+ Target Server Type    : Oracle
+ Target Server Version : 190000
+ File Encoding         : 65001
+
+ Date: 29/06/2023 21:26:25
+*/
+
+
+-- ----------------------------
+-- Table structure for WTGL_DACC
+-- ----------------------------
+CREATE TABLE "WTGL_DACC" (
+  "WTID" NVARCHAR2(255),
+  "WTMC" NVARCHAR2(255),
+  "ZRRID" NVARCHAR2(255),
+  "ZRR" NVARCHAR2(255),
+  "GBSJ" NVARCHAR2(255),
+  "DAXX" NCLOB,
+  "CJR" NVARCHAR2(255),
+  "CJRID" NVARCHAR2(255),
+  "GJC" NVARCHAR2(255),
+  "WTLB" NVARCHAR2(255),
+  "WTXL" NVARCHAR2(255),
+  "DAXXID" NVARCHAR2(255) NOT NULL,
+  "RD" NUMBER(11,0),
+  "WTMS" NVARCHAR2(255),
+  "GXH" NVARCHAR2(255),
+  "GXMC" NVARCHAR2(255)
+)
+LOGGING
+NOCOMPRESS
+PCTFREE 10
+INITRANS 1
+STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
+  FREELISTS 1
+  FREELIST GROUPS 1
+  BUFFER_POOL DEFAULT
+)
+PARALLEL 1
+NOCACHE
+DISABLE ROW MOVEMENT
+;
+COMMENT ON COLUMN "SYSTEM"."WTGL_DACC"."WTID" IS '问题ID';
+COMMENT ON COLUMN "SYSTEM"."WTGL_DACC"."WTMC" IS '问题名称';
+COMMENT ON COLUMN "SYSTEM"."WTGL_DACC"."ZRRID" IS '责任人ID';
+COMMENT ON COLUMN "SYSTEM"."WTGL_DACC"."ZRR" IS '责任人';
+COMMENT ON COLUMN "SYSTEM"."WTGL_DACC"."GBSJ" IS '关闭时间';
+COMMENT ON COLUMN "SYSTEM"."WTGL_DACC"."DAXX" IS '答案信息';
+COMMENT ON COLUMN "SYSTEM"."WTGL_DACC"."CJR" IS '问题创建人';
+COMMENT ON COLUMN "SYSTEM"."WTGL_DACC"."CJRID" IS '问题创建人ID';
+COMMENT ON COLUMN "SYSTEM"."WTGL_DACC"."GJC" IS '关键词';
+COMMENT ON COLUMN "SYSTEM"."WTGL_DACC"."WTLB" IS '问题类别';
+COMMENT ON COLUMN "SYSTEM"."WTGL_DACC"."WTXL" IS '问题细类';
+COMMENT ON COLUMN "SYSTEM"."WTGL_DACC"."DAXXID" IS '答案信息ID';
+COMMENT ON COLUMN "SYSTEM"."WTGL_DACC"."RD" IS '热度';
+COMMENT ON COLUMN "SYSTEM"."WTGL_DACC"."WTMS" IS '问题描述';
+COMMENT ON COLUMN "SYSTEM"."WTGL_DACC"."GXH" IS '工序号';
+COMMENT ON COLUMN "SYSTEM"."WTGL_DACC"."GXMC" IS '工序名称';
+
+-- ----------------------------
+-- Records of WTGL_DACC
+-- ----------------------------
+INSERT INTO "SYSTEM"."WTGL_DACC" VALUES ('117d2888-1945-47e8-9354-38365bd7bb96', '生产问题', '1', 'admin', '2023-06-29 10:09:29', '三级,一级,四级', 'admin', '1', NULL, '123', '1615', '66dc3a7d-058c-431b-a830-291bc3071767', '0', NULL, NULL, NULL);
+INSERT INTO "SYSTEM"."WTGL_DACC" VALUES ('0c9dc107-687a-462f-9f4f-1d18ebba51aa', '生产问题', '1', 'admin', '2023-06-29 11:21:34', '一级,二级,三级,二-一级', 'admin', '1', NULL, NULL, NULL, 'b8cda211-cf6e-495c-b4d2-4302edc33c07', '0', 'asdsa', NULL, NULL);
+INSERT INTO "SYSTEM"."WTGL_DACC" VALUES ('117d2888-1945-47e8-9354-38365bd7bb96', '生产问题', '2', '李华', '2023-06-29 10:09:29', '一级-2,二级,一级-1', 'admin', '1', NULL, '123', '1615', 'cf9f956b-374e-4fc1-8e82-5edbf4b714ba', '0', NULL, NULL, NULL);
+
+-- ----------------------------
+-- Primary Key structure for table WTGL_DACC
+-- ----------------------------
+ALTER TABLE "SYSTEM"."WTGL_DACC" ADD CONSTRAINT "SYS_C007583" PRIMARY KEY ("DAXXID");
+
+-- ----------------------------
+-- Checks structure for table WTGL_DACC
+-- ----------------------------
+ALTER TABLE "SYSTEM"."WTGL_DACC" ADD CONSTRAINT "SYS_C007582" CHECK ("DAXXID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
