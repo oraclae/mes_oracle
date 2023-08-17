@@ -14,9 +14,16 @@
         <el-button type="primary" style="background-color: red"
                    v-if="queryParams.radios!=='已关闭'&&queryParams.radios!=='待关闭'" size="small" @click="closeQuestion">关闭
         </el-button>
-        <!--        <el-button type="primary" size="small" :disabled="single" @click="handleUpdate">修改</el-button>-->
-        <!--        <el-button type="primary" size="small" @click="saveData">保存</el-button>-->
         <el-button type="primary" size="small" :disabled="multiple" @click="deleteData">删除</el-button>
+        <el-button
+          type="primary"
+          plain
+          :disabled="single"
+          icon="el-icon-download"
+          size="mini"
+          @click="handleUpload"
+        >上传附件
+        </el-button>
         <el-button type="warning" size="small" @click="shuaxin">刷新</el-button>
         <el-select style="margin-left: 10px" v-model="queryParams.type" clearable placeholder="请选择">
           <el-option
@@ -590,51 +597,6 @@
         </div>
       </div>
       <div style="height: 10px;margin-top: 15px;margin-bottom: 5px">
-        <!--        <div style="float: left;">
-                  <label style="font-weight: 200;">附件上传:</label>
-                  <el-button type="primary" size="mini" style="margin-left: 10px" @click="shangchuangfujian" round>上传附件
-                  </el-button>
-                  <el-popover
-                    placement="right"
-                    width="500"
-                    trigger="click">
-                    <el-table
-                      :data="fileData"
-                      border
-                      style="width: 100%">
-                      <el-table-column
-                        prop="fileType"
-                        label="人员"
-                        show-overflow-tooltip
-                        width="100">
-                      </el-table-column>
-                      <el-table-column
-                        prop="fileName"
-                        label="文件名称"
-                        show-overflow-tooltip
-                        width="120">
-                      </el-table-column>
-                      <el-table-column
-                        prop="fileCity"
-                        label="上传时间"
-                        show-overflow-tooltip
-                        width="120">
-                      </el-table-column>
-                      <el-table-column
-                        fixed="right"
-                        label="操作"
-                        width="120">
-                        <template slot-scope="scope">
-                          <el-button @click="handleClick(scope.row)" type="warning" icon="el-icon-download" circle></el-button>
-                          <el-button type="error" icon="el-icon-delete" circle></el-button>
-                        </template>
-                      </el-table-column>
-                    </el-table>
-                    <el-button slot="reference" type="success" size="mini" style="margin-left: 10px" @click="refreshAttachment"
-                               round>附件预览
-                    </el-button>
-                  </el-popover>
-                </div>-->
         <div style="float: right">
           <el-button type="danger" size="mini" @click="lishidaanchaxun">历史答案查询</el-button>
           <el-button type="primary" size="mini" @click="createQuestionCloseButten">取 消</el-button>
@@ -800,7 +762,9 @@
                              style="margin-left: 25px;color: white">
                   附件预览
                 </el-checkbox>
-                <el-button style="margin-left: 25px;background-color: #15f901" size="mini">上传附件</el-button>
+                <el-button style="margin-left: 25px;background-color: #15f901" size="mini" @click="handleUpload('弹窗')">
+                  上传附件
+                </el-button>
                 <el-button v-if="this.closureID.lxfk==='例行反馈'" style="margin-left: 25px;background-color: #ffba00"
                            size="mini"
                            @click="lixingfankuiDialogMethod">例行反馈
@@ -889,7 +853,7 @@
               <div v-show="isContextMenuVisible" class="context-menu"
                    :style="{ top: contextMenuPosition.y + 'px', left: contextMenuPosition.x + 'px' }">
                 <!-- 菜单内容 -->
-                <div class="menu-item" @click="uploadAttachment">上传附件</div>
+                <div class="menu-item" @click="handleUpload('弹窗',itemJhjl)">上传附件</div>
                 <div class="menu-item" @click="deleteJhjl">删除</div>
               </div>
             </div>
@@ -902,25 +866,26 @@
                     <label style="margin-left: 100px;font-size: 18px;">问题附件预览</label>
                   </div>
                   <el-table
-                    :data="fileData"
+                    :data="fileList"
+                    @row-dblclick="downLoadFile"
                     border
                     size="mini"
                     max-height="250px"
                     style="width: 100%;margin-top: 26px;">
                     <el-table-column
-                      prop="name"
+                      prop="cjr"
                       label="人员"
                       show-overflow-tooltip
                     >
                     </el-table-column>
                     <el-table-column
-                      prop="fileName"
+                      prop="wjmc"
                       label="文件名称"
                       show-overflow-tooltip
                     >
                     </el-table-column>
                     <el-table-column
-                      prop="fileType"
+                      prop="scsj"
                       label="上传时间"
                       show-overflow-tooltip
                     >
@@ -934,25 +899,26 @@
                     <label style="margin-left: 100px;font-size: 18px;">回复附件预览</label>
                   </div>
                   <el-table
-                    :data="fileData"
+                    :data="jhjlFileList"
                     border
                     size="mini"
                     max-height="250px"
+                    @row-dblclick="downLoadFile"
                     style="width: 100%;margin-top: 26px">
                     <el-table-column
-                      prop="name"
+                      prop="cjr"
                       label="人员"
                       show-overflow-tooltip
                     >
                     </el-table-column>
                     <el-table-column
-                      prop="fileName"
+                      prop="wjmc"
                       label="文件名称"
                       show-overflow-tooltip
                     >
                     </el-table-column>
                     <el-table-column
-                      prop="fileType"
+                      prop="scsj"
                       label="上传时间"
                       show-overflow-tooltip
                     >
@@ -1103,6 +1069,11 @@
         <el-button @click="shifoumanyiDialog=false" style="margin-left: 20px">取消</el-button>
       </span>
     </el-dialog>
+    <!--  上传问题的弹出框  -->
+    <el-dialog v-if="openScfj" @close="reload" class="xcssjyk" append-to-body title="上传附件" :visible.sync="openScfj"
+               width="40%" append-to-body>
+      <fj v-if="openScfj" :fileList="fileList" :row="selectFj"></fj>
+    </el-dialog>
   </div>
 </template>
 
@@ -1120,11 +1091,13 @@ import {addCjls, updateDaccToRd} from "@/api/question/upQuestion";
 import deptTreeSelect from "@/views/question/myquestion/deptTreeSelect"
 import zdhf from "@/views/question/WTGL_ZDHF/index";
 import xiangxixinxi from "@/views/question/myquestion/xiangxixinxi";
+import {listById, getFjByIds} from "@/api/fj/fj";
+import fj from "@/views/fj/fj";
 
 export default {
   name: 'Myquestion',
   components: {
-    deptTreeSelect, zdhf, xiangxixinxi
+    deptTreeSelect, zdhf, xiangxixinxi, fj
   },
   computed: {
     getTimeText() {
@@ -1159,6 +1132,11 @@ export default {
   },
   data() {
     return {
+      fileList: [],//文件的集合
+      jhjlFileList: [],//交互记录文件
+      openScfj: false,//是否打开上传附件弹出框
+      whoFjBut: '',//谁的附件上传按钮
+      selectFj: '',//查询附件
       shifoumanyiDialog: false,//是否满意的弹出框
       xiangxiDialog: false,//详细信息是否弹出框
       jhsjListDia: [],//交互数据的数据集合
@@ -1199,39 +1177,6 @@ export default {
       isShow: false,//判断附件预览是否展示
       withd: '1090px',//回复预览弹出框的大小1390
       fujian: false,//附件多选框是否确定
-      fileData: [
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }
-        , {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }
-        , {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }
-      ],
       zrrList: [],//回复预览页面的责任人数据集合
       title: "",
       open: false,//是否打开回复预览页面
@@ -1329,8 +1274,38 @@ export default {
     }
   },
   methods: {
+    //下载文件
+    downLoadFile(row) {
+      var name = row.wjmc;
+      var url = row.lj;
+      var first = name.substring(0, name.lastIndexOf("."));
+      var suffix = url.substring(url.lastIndexOf("."), url.length);
+      const a = document.createElement('a')
+      a.setAttribute('download', first + suffix)
+      a.setAttribute('target', '_blank')
+      a.setAttribute('href', url)
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    },
+    //上传附件的弹出框关闭的执行方法
+    reload() {
+      this.fileList = [];
+      if (this.whoFjBut === '弹窗') {
+        this.dialogReload();
+      }
+    },
+    //上传附件按钮对用的方法
+    handleUpload(str, data) {
+      this.whoFjBut = str;
+      this.selectFj = data || this.closureID
+      listById({id: this.selectFj.xh || this.selectFj.id}).then(res => {
+        this.fileList = res.rows;
+        this.openScfj = true;
+      });
+    },
     //给表格的表头设置颜色
-    styleFunc({row,column,rowIndex, columnIndex}) {
+    styleFunc({row, column, rowIndex, columnIndex}) {
       if (column.property === 'wtms' || column.property === 'wtmc') {
         return "background:orange";
       }
@@ -1576,10 +1551,6 @@ export default {
         }
       });
     },
-    //上传附件的方法
-    shangchuangfujian() {
-
-    },
     //判断是否使例行反馈还是回复的数据
     huifuyangshi(ejhfppyj, xh, islxfk) {
       this.huifuTest = '';
@@ -1593,19 +1564,21 @@ export default {
       this.ejhfppyj = ejhfppyj;
     },
     //获得交互记录的数据
-    loadJhjlList(jhzt) {
+    loadJhjlList(jhzt, str) {
       if (jhzt === '领导批示') {
         getLDPS({WTID: this.closureID.id, JHZT: jhzt}).then(res => {
           if (res.code === 200) {
             this.ldpiList = res.rows;
-            if (this.ldpiList.length > 0) {
-              this.withd = '1390px';
-              this.isShowLdps = true;
-              this.isShow = false;
-            } else {
-              this.withd = '1090px';
-              this.isShowLdps = false;
-              this.isShow = false;
+            if (str !== '刷新') {
+              if (this.ldpiList.length > 0) {
+                this.withd = '1390px';
+                this.isShowLdps = true;
+                this.isShow = false;
+              } else {
+                this.withd = '1090px';
+                this.isShowLdps = false;
+                this.isShow = false;
+              }
             }
           }
         });
@@ -1613,26 +1586,27 @@ export default {
         getJhjl({WTID: this.closureID.id, JHZT: jhzt}).then(res => {
           if (res.code === 200) {
             this.jhsjList = res.rows;
+            let xhs = [{id: this.closureID.id}]
+            for (let jhsjListElement of this.jhsjList) {
+              xhs.push({id: jhsjListElement.xh})
+            }
+            getFjByIds(xhs).then(res => {
+              let fjs = []
+              fjs = res.rows
+              this.fileList = []
+              this.jhjlFileList = []
+              for (let fjsdata of fjs) {
+                if (fjsdata.id === this.closureID.id) {
+                  this.fileList.push(fjsdata)
+                } else {
+                  this.jhjlFileList.push(fjsdata)
+                }
+              }
+            })
           }
         });
       }
     },
-    /*//判断这条数据是否可以看例行反馈数据
-    switchMethod() {
-      if (this.closureID.gzxt === 'true') {
-        if (this.islxfk) {
-          this.islxfk = true;
-          this.jhsjList = [];
-          this.loadJhjlList('例行反馈');
-        } else {
-          this.islxfk = false;
-          this.jhsjList = [];
-          this.loadJhjlList('回复');
-        }
-      } else {
-        this.islxfk = false;
-      }
-    },*/
     //回复按钮的取消方法
     huifuCancel(id, type) {
       this.huifuDialog = false;
@@ -1967,23 +1941,21 @@ export default {
         }
       });
     },
+    //弹窗内刷新
     dialogReload() {
-      this.isLdps = false;
-      this.isShowLdps = false;
-      this.isShow = false;
       this.currentDivIndex = '';
       this.jhsjList = [];
       this.wtms = '';
-      this.fujian = false;
-      this.islxfk = false;
+      this.fileList = []
+      this.jhjlFileList = []
       if (this.closureID.lxfk === '例行反馈') {
-        this.loadJhjlList('例行反馈');
+        this.loadJhjlList('例行反馈', '刷新');
         this.islxfk = true;
       } else {
-        this.loadJhjlList('回复');
+        this.loadJhjlList('回复', '刷新');
         this.islxfk = false;
       }
-      this.loadJhjlList('领导批示');
+      this.loadJhjlList('领导批示', '刷新');
       this.open = true;
       this.title = "回复/预览";
       this.loadzerData();
@@ -2099,7 +2071,7 @@ export default {
         }
         selectZrrArray.push(zrrVo)
       })
-      this.selectYzrList.forEach(item=>{
+      this.selectYzrList.forEach(item => {
         yzridList.push(item.userId);
         yzrbmList.push(item.dept.deptName)
         yzrList.push(item.nickName)
@@ -2404,19 +2376,24 @@ export default {
 .myQuestionTable .el-table--medium .el-table__cell {
   padding: 0;
 }
-.dialog .el-table .el-table__header-wrapper th, .el-table .el-table__fixed-header-wrapper th{
+
+.dialog .el-table .el-table__header-wrapper th, .el-table .el-table__fixed-header-wrapper th {
   color: black;
 }
-.dialog .el-aside{
+
+.dialog .el-aside {
   background-color: transparent;
 }
-.dialog .el-checkbox__input.is-checked+.el-checkbox__label{
+
+.dialog .el-checkbox__input.is-checked + .el-checkbox__label {
   color: black;
 }
-.dialogRad .el-checkbox__label{
+
+.dialogRad .el-checkbox__label {
   color: black;
 }
-.dialogRad .el-checkbox__input.is-checked + .el-checkbox__label{
+
+.dialogRad .el-checkbox__input.is-checked + .el-checkbox__label {
   color: black;
 }
 </style>

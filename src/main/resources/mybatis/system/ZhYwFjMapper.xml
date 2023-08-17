@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.ZhYwFjMapper">
+    
+    <resultMap type="ZhYwFj" id="ZhYwFjResult">
+        <result property="xh"    column="xh"    />
+        <result property="id"    column="id"    />
+        <result property="wjmc"    column="wjmc"    />
+        <result property="scsj"    column="scsj"    />
+        <result property="lj"    column="lj"    />
+        <result property="cjr"    column="cjr"    />
+    </resultMap>
+
+    <sql id="selectZhYwFjVo">
+        select xh, id, wjmc, scsj, lj, cjr from ZH_YW_FJ
+    </sql>
+
+    <select id="selectZhYwFjList" parameterType="ZhYwFj" resultMap="ZhYwFjResult">
+        <include refid="selectZhYwFjVo"/>
+        <where>  
+            <if test="wjmc != null  and wjmc != ''"> and wjmc = #{wjmc}</if>
+            <if test="id != null  and id != ''"> and id = #{id}</if>
+        </where>
+    </select>
+    
+    <select id="selectZhYwFjByXh" parameterType="string" resultMap="ZhYwFjResult">
+        <include refid="selectZhYwFjVo"/>
+        where xh = #{xh}
+    </select>
+    <select id="selectZhYwFjListByIds" resultType="com.ruoyi.project.system.domain.ZhYwFj">
+        <include refid="selectZhYwFjVo"/>
+        <where>
+            id in (
+            <foreach collection="list" separator="," item="item">
+                #{item.id}
+            </foreach>
+            )
+        </where>
+    </select>
+
+    <insert id="insertZhYwFj" parameterType="ZhYwFj">
+        insert into ZH_YW_FJ
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="xh != null and xh != ''">xh,</if>
+            <if test="id != null and id != ''">id,</if>
+            <if test="wjmc != null">wjmc,</if>
+            <if test="scsj != null">scsj,</if>
+            <if test="lj != null">lj,</if>
+            <if test="cjr != null">cjr,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="xh != null and xh != ''">#{xh},</if>
+            <if test="id != null and id != ''">#{id},</if>
+            <if test="wjmc != null">#{wjmc},</if>
+            <if test="scsj != null">#{scsj},</if>
+            <if test="lj != null">#{lj},</if>
+            <if test="cjr != null">#{cjr},</if>
+         </trim>
+    </insert>
+
+    <update id="updateZhYwFj" parameterType="ZhYwFj">
+        update ZH_YW_FJ
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="id != null and id != ''">id = #{id},</if>
+            <if test="wjmc != null">wjmc = #{wjmc},</if>
+            <if test="scsj != null">scsj = #{scsj},</if>
+            <if test="lj != null">lj = #{lj},</if>
+        </trim>
+        where xh = #{xh}
+    </update>
+
+    <delete id="deleteZhYwFjByXh" parameterType="string">
+        delete from ZH_YW_FJ where xh = #{xh}
+    </delete>
+
+    <delete id="deleteZhYwFjByXhs" parameterType="String">
+        delete from ZH_YW_FJ where xh in 
+        <foreach item="xh" collection="array" open="(" separator="," close=")">
+            #{xh}
+        </foreach>
+    </delete>
+</mapper>

@@ -387,7 +387,8 @@
                 <el-checkbox class="fj" v-model="fujian" @change="fujianyulan" style="margin-left: 25px;color: black">
                   附件预览
                 </el-checkbox>
-                <el-button style="margin-left: 25px;background-color: #15f901" size="mini">上传附件</el-button>
+                <el-button style="margin-left: 25px;background-color: #15f901" size="mini" @click="handleUpload('弹窗')">上传附件
+                </el-button>
                 <el-button v-if="this.closureID.lxfk==='例行反馈'" style="margin-left: 25px" size="mini" type="warning"
                 >例行反馈
                 </el-button>
@@ -473,7 +474,7 @@
               </el-card>
               <div v-show="isContextMenuVisible" class="context-menu" :style="{ top: contextMenuPosition.y + 'px', left: contextMenuPosition.x + 'px' }">
                 <!-- 菜单内容 -->
-                <div class="menu-item" @click="uploadAttachment">上传附件</div>
+                <div class="menu-item" @click="handleUpload('弹窗',itemJhjl)">上传附件</div>
                 <div class="menu-item">删除</div>
               </div>
             </div>
@@ -486,25 +487,26 @@
                     <label style="margin-left: 100px;font-size: 18px;">问题附件预览</label>
                   </div>
                   <el-table
-                    :data="fileData"
+                    :data="fileList"
+                    @row-dblclick="downLoadFile"
                     border
                     size="mini"
                     max-height="250px"
                     style="width: 100%;margin-top: 26px">
                     <el-table-column
-                      prop="name"
+                      prop="cjr"
                       label="人员"
                       show-overflow-tooltip
                     >
                     </el-table-column>
                     <el-table-column
-                      prop="fileName"
+                      prop="wjmc"
                       label="文件名称"
                       show-overflow-tooltip
                     >
                     </el-table-column>
                     <el-table-column
-                      prop="fileType"
+                      prop="scsj"
                       label="上传时间"
                       show-overflow-tooltip
                     >
@@ -518,25 +520,26 @@
                     <label style="margin-left: 100px;font-size: 18px;">回复附件预览</label>
                   </div>
                   <el-table
-                    :data="fileData"
+                    :data="jhjlFileList"
+                    @row-dblclick="downLoadFile"
                     border
                     size="mini"
                     max-height="250px"
                     style="width: 100%;margin-top: 26px">
                     <el-table-column
-                      prop="name"
+                      prop="cjr"
                       label="人员"
                       show-overflow-tooltip
                     >
                     </el-table-column>
                     <el-table-column
-                      prop="fileName"
+                      prop="wjmc"
                       label="文件名称"
                       show-overflow-tooltip
                     >
                     </el-table-column>
                     <el-table-column
-                      prop="fileType"
+                      prop="scsj"
                       label="上传时间"
                       show-overflow-tooltip
                     >
@@ -633,6 +636,10 @@
         <el-button type="primary" @click.once="huifuSubmit(ejhfppyj,huifuId,'领导批示',1)">确 定</el-button>
       </span>
     </el-dialog>
+    <!--  上传问题的弹出框  -->
+    <el-dialog v-if="openScfj" @close="reload" class="xcssjyk" append-to-body title="上传附件" :visible.sync="openScfj" width="40%" append-to-body>
+      <fj v-if="openScfj" :fileList="fileList" :row="selectFj"></fj>
+    </el-dialog>
   </div>
 </template>
 
@@ -643,9 +650,19 @@ import {
   getzerData, saveJhjlList, updateQuestionsStatus, savegzwtList,
   deleteJhjlByXh, updateQuestionWTDBToZero, updateQuestionWdwt,
 } from "@/api/question/question";
+import {getFjByIds, listById} from "@/api/fj/fj";
+import fj from "@/views/fj/fj";
+
 export default {
+  components: {
+    fj
+  },
   data() {
     return {
+      fileList: [],//文件的集合
+      openScfj: false,//是否打开上传附件弹出框
+      whoFjBut: '',//谁的附件上传按钮
+      selectFj: '',//查询附件
       wwcts: '',//未完成天数
       cqts: '',//超期天数
       wcts: '',//完成天数
@@ -667,24 +684,7 @@ export default {
       isShow:false,//判断附件预览是否展示
       withd:'1090px',//回复预览弹出框的大小1390
       fujian: false,//附件多选框是否确定
-      fileData: [
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }],
+      jhjlFileList: [],//交互记录文件
       zrrList:[],//回复预览页面的责任人数据集合
       title: "",
       open: false,//是否打开回复预览页面
@@ -732,6 +732,43 @@ export default {
     };
   },
   methods: {
+    //下载文件
+    downLoadFile(row) {
+      var name = row.wjmc;
+      var url = row.lj;
+      var first = name.substring(0, name.lastIndexOf("."));
+      var suffix = url.substring(url.lastIndexOf("."), url.length);
+      const a = document.createElement('a')
+      a.setAttribute('download', first + suffix)
+      a.setAttribute('target', '_blank')
+      a.setAttribute('href', url)
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    },
+    //上传附件的弹出框关闭的执行方法
+    reload() {
+      this.fileList = [];
+      if (this.whoFjBut === '弹窗') {
+        this.dialogReload();
+      }
+    },
+    //上传附件按钮对用的方法
+    handleUpload(str, data) {
+      this.whoFjBut = str;
+      this.selectFj = data || this.closureID
+      listById({id: this.selectFj.xh || this.selectFj.id}).then(res => {
+        this.fileList = res.rows;
+        this.openScfj = true;
+      });
+    },
+    //获取附件列表
+    getFJList() {
+      listById({id: this.closureID.xh}).then(res => {
+        this.fileList = res.rows;
+        this.fileData = res.rows;
+      });
+    },
     //给表格的表头设置颜色
     styleFunc({row,column,rowIndex, columnIndex}) {
       if (column.property === 'wtms' || column.property === 'wtmc') {
@@ -870,14 +907,21 @@ export default {
       this.ejhfppyj = ejhfppyj;
     },
     //获得交互记录的数据
-    loadJhjlList(jhzt) {
+    loadJhjlList(jhzt, str) {
       if (jhzt === '领导批示') {
-        getLDPS({WTID:this.closureID.id,JHZT:jhzt}).then(res=>{
+        getLDPS({WTID: this.closureID.id, JHZT: jhzt}).then(res => {
           if (res.code === 200) {
             this.ldpiList = res.rows;
-            if (this.ldpiList.length > 0) {
-              this.withd='1390px'
-              this.isShowLdps = true;
+            if (str !== '刷新') {
+              if (this.ldpiList.length > 0) {
+                this.withd = '1390px';
+                this.isShowLdps = true;
+                this.isShow = false;
+              } else {
+                this.withd = '1090px';
+                this.isShowLdps = false;
+                this.isShow = false;
+              }
             }
           }
         });
@@ -885,6 +929,23 @@ export default {
         getJhjl({WTID:this.closureID.id,JHZT:jhzt}).then(res => {
           if (res.code === 200) {
             this.jhsjList = res.rows;
+            let xhs = [{id: this.closureID.id}]
+            for (let jhsjListElement of this.jhsjList) {
+              xhs.push({id: jhsjListElement.xh})
+            }
+            getFjByIds(xhs).then(res=>{
+              let fjs = []
+              fjs = res.rows
+              this.fileList = []
+              this.jhjlFileList = []
+              for (let fjsdata of fjs) {
+                if (fjsdata.id === this.closureID.id) {
+                  this.fileList.push(fjsdata)
+                }else {
+                  this.jhjlFileList.push(fjsdata)
+                }
+              }
+            })
           }
         });
       }
@@ -1128,22 +1189,19 @@ export default {
     },
     //弹窗内刷新按钮
     dialogReload() {
-      this.isLdps = false;
-      this.isShowLdps = false;
-      this.isShow = false;
       this.currentDivIndex = '';
       this.jhsjList = [];
       this.wtms = '';
-      this.fujian = false;
-      this.islxfk = false;
+      this.fileList = []
+      this.jhjlFileList = []
       if (this.closureID.lxfk === '例行反馈') {
-        this.loadJhjlList('例行反馈');
+        this.loadJhjlList('例行反馈', '刷新');
         this.islxfk = true;
       } else {
-        this.loadJhjlList('回复');
+        this.loadJhjlList('回复', '刷新');
         this.islxfk = false;
       }
-      this.loadJhjlList('领导批示');
+      this.loadJhjlList('领导批示', '刷新');
       this.open = true;
       this.title = "回复/预览";
       this.loadzerData();
