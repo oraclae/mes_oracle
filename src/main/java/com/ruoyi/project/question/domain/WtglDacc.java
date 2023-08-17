@@ -107,6 +107,21 @@ public class WtglDacc{
      */
     private String WTCX;
 
+    /**
+     * 产品型号
+     */
+    private String CPXH;
+
+    /**
+     * 序号
+     */
+    private String JH;
+
+    /**
+     * 关键字
+     */
+    private String KEYWORDS;
+
     /** 请求参数 */
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Map<String, Object> params;

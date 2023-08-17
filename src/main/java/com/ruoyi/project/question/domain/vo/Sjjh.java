@@ -3,6 +3,7 @@ package com.ruoyi.project.question.domain.vo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,7 +37,7 @@ public class Sjjh {
    private String WTCJBM;     //问题创建部门
    private String WTCJKS;     //问题创建科室
    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-   private Date   WTCJSJ;     //问题创建时间
+   private String WTCJSJ;     //问题创建时间
    private String WTZRRID;    //问题责任人ID
    private String WTZRRBM;    //问题责任人部门
    private String WTZRR;      //问题责任人

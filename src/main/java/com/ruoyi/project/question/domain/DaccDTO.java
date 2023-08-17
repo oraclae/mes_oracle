@@ -17,4 +17,7 @@ public class DaccDTO {
    private String WTXL;
    private String WTMS;
    private String GXH;
+   private String ZRR;
+   private String CPXH;
+   private String JH;
 }

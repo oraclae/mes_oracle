@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container home">
+  <div class="app-container">
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
@@ -43,7 +43,7 @@
       </el-col>
     </el-row>
 
-    <el-table border v-loading="loading" :data="daccList" @selection-change="handleSelectionChange">
+    <el-table border height="calc(100vh - 220px)" v-loading="loading" :data="daccList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="序号" type="index" width="50"/>
       <el-table-column show-overflow-tooltip label="问题名称" align="center" prop="wtmc" />
@@ -55,6 +55,10 @@
       <el-table-column show-overflow-tooltip label="问题细类" align="center" prop="wtxl" />
       <el-table-column show-overflow-tooltip label="热度" align="center" prop="rd" />
       <el-table-column show-overflow-tooltip label="问题描述" align="center" prop="wtms" />
+      <el-table-column show-overflow-tooltip label="件号" align="center" prop="jh" />
+      <el-table-column show-overflow-tooltip label="产品型号" align="center" prop="cpxh" />
+      <el-table-column show-overflow-tooltip label="工序号" align="center" prop="gxh" />
+      <el-table-column show-overflow-tooltip label="关键字" align="center" prop="keywords" />
     </el-table>
 
     <pagination
@@ -95,6 +99,9 @@
         <el-form-item label="问题描述" prop="wtms">
           <el-input v-model="form.wtms" placeholder="请输入问题描述" />
         </el-form-item>
+        <el-form-item label="关键字" prop="wtms">
+          <el-input v-model="form.keywords" placeholder="请输入关键字" />
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -105,7 +112,7 @@
 </template>
 
 <script>
-import { listDacc, getDacc, delDacc, updateDacc } from "@/api/question/upQuestion";
+import {listDacc, getDacc, delDacc, updateDacc} from "@/api/question/upQuestion";
 
 export default {
   name: "WTGL_DACC",
@@ -173,6 +180,7 @@ export default {
         wtxl: null,
         rd: null,
         wtms: null,
+        keywords: null,
       };
       this.resetForm("form");
     },
@@ -250,10 +258,6 @@ export default {
 };
 </script>
 <style>
-.home ::-webkit-scrollbar {
-  width: 8px; /* 设置滚动条的宽度 */
-  height: 8px;
-}
 .addDialog .el-dialog {
   border-radius: 30px;
 }

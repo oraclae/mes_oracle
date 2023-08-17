@@ -1,59 +1,59 @@
-<template>
+5<template>
   <div class="app-container">
-      <el-row :gutter="10" class="mb8">
-        <el-col :span="1.5">
-          <el-button
-            type="danger"
-            plain
-            icon="el-icon-delete"
-            size="mini"
-            :disabled="multiple"
-            @click="handleDelete"
-          >删除
-          </el-button>
-        </el-col>
-        <el-col :span="1.5">
-          <el-button
-            type="success"
-            plain
-            icon="el-icon-edit"
-            size="mini"
-            :disabled="single"
-            @click="handleUpdate"
-          >修改</el-button>
-        </el-col>
-        <el-col :span="1.5">
-          <el-button
-            type="primary"
-            plain
-            icon="el-icon-refresh-right"
-            size="mini"
-            @click="getList"
-          >刷新
-          </el-button>
-        </el-col>
-        <el-col :span="1.5" style="height: 30px">
-          <el-select size="mini" style="margin-left: 10px;width: 150px" v-model="queryParams.selectType" clearable placeholder="请选择">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-          <el-input
-            size="mini"
-            v-model="queryParams.selectData"
-            placeholder="请输入"
-            clearable
-            style="width: 200px;margin-left: 20px;margin-right: 10px"
-            @keyup.enter.native="handleQuery"
-          />
-              <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-              <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+    <el-row :gutter="10" class="mb8">
+      <el-col :span="1.5">
+        <el-button
+          type="danger"
+          plain
+          icon="el-icon-delete"
+          size="mini"
+          :disabled="multiple"
+          @click="handleDelete"
+        >删除
+        </el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="success"
+          plain
+          icon="el-icon-edit"
+          size="mini"
+          :disabled="single"
+          @click="handleUpdate"
+        >修改</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          plain
+          icon="el-icon-refresh-right"
+          size="mini"
+          @click="getList"
+        >刷新
+        </el-button>
+      </el-col>
+      <el-col :span="1.5" style="height: 30px">
+        <el-select size="mini" style="margin-left: 10px;width: 150px" v-model="queryParams.selectType" clearable placeholder="请选择">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+        <el-input
+          size="mini"
+          v-model="queryParams.selectData"
+          placeholder="请输入"
+          clearable
+          style="width: 200px;margin-left: 20px;margin-right: 10px"
+          @keyup.enter.native="handleQuery"
+        />
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
 
-        </el-col>
-      </el-row>
+      </el-col>
+    </el-row>
     <el-table border v-loading="loading" :data="upCjlsList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="序号" type="index" width="50"/>
@@ -87,13 +87,222 @@
       <el-table-column show-overflow-tooltip width="100px" label="被叫人ID" align="center" prop="bjrid" />
       <el-table-column show-overflow-tooltip width="100px" label="接收人ID" align="center" prop="jsrid" />
     </el-table>
-      <pagination
-        v-show="total>0"
-        :total="total"
-        :page.sync="queryParams.pageNum"
-        :limit.sync="queryParams.pageSize"
-        @pagination="getList"
-      />
+
+    <!--      <el-table border v-loading="loading" :data="upCjlsList" @selection-change="handleSelectionChange"
+                    :cell-class-name=tableRowClassName
+                    @cell-dblclick="celldblClick">
+            <el-table-column type="selection" width="55" align="center"/>
+            <el-table-column
+              label="序号"
+              type="index"
+              width="50">
+            </el-table-column>
+            <el-table-column show-overflow-tooltip width="100px" label="创建部门科室" align="center" prop="cjbmks">
+              <template slot-scope="scope">
+                <el-input v-if="entityIndex === scope.$index && entityName === 'cjbmks'"
+                          v-model="scope.row.cjbmks"
+                          @blur="out(scope)"/>
+                <span v-else>{{ scope.row.cjbmks }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column show-overflow-tooltip label="创建时间" align="center" prop="cjsj" width="120px">
+              <template slot-scope="scope">
+                <span>{{ parseTime(scope.row.cjsj, '{y}-{m}-{d}') }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column show-overflow-tooltip label="问题名称" align="center" prop="wtmc">
+              <template slot-scope="scope">
+                <el-input v-if="entityIndex === scope.$index && entityName === 'wtmc'"
+                          v-model="scope.row.wtmc"
+                          @blur="out(scope)"/>
+                <span v-else>{{ scope.row.wtmc }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column show-overflow-tooltip label="问题状态" align="center" prop="wtzt">
+              <template slot-scope="scope">
+                <el-input v-if="entityIndex === scope.$index && entityName === 'wtzt'"
+                          v-model="scope.row.wtzt"
+                          @blur="out(scope)"/>
+                <span v-else>{{ scope.row.wtzt }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column show-overflow-tooltip label="问题类别" align="center" prop="wtlb">
+              <template slot-scope="scope">
+                <el-input v-if="entityIndex === scope.$index && entityName === 'wtlb'"
+                          v-model="scope.row.wtlb"
+                          @blur="out(scope)"/>
+                <span v-else>{{ scope.row.wtlb }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column show-overflow-tooltip label="问题细类" align="center" prop="wtxl">
+              <template slot-scope="scope">
+                <el-input v-if="entityIndex === scope.$index && entityName === 'wtxl'"
+                          v-model="scope.row.wtxl"
+                          @blur="out(scope)"/>
+                <span v-else>{{ scope.row.wtxl }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column show-overflow-tooltip width="100px" label="生产订单号" align="center" prop="scddh">
+              <template slot-scope="scope">
+                <el-input v-if="entityIndex === scope.$index && entityName === 'scddh'"
+                          v-model="scope.row.scddh"
+                          @blur="out(scope)"/>
+                <span v-else>{{ scope.row.scddh }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column show-overflow-tooltip label="产品型号" align="center" prop="jh">
+              <template slot-scope="scope">
+                <el-input v-if="entityIndex === scope.$index && entityName === 'jh'"
+                          v-model="scope.row.jh"
+                          @blur="out(scope)"/>
+                <span v-else>{{ scope.row.jh }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column show-overflow-tooltip label="班产日期" align="center" prop="bcrq">
+              <template slot-scope="scope">
+                <el-input v-if="entityIndex === scope.$index && entityName === 'bcrq'"
+                          v-model="scope.row.bcrq"
+                          @blur="out(scope)"/>
+                <span v-else>{{ scope.row.bcrq }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column show-overflow-tooltip label="批次" align="center" prop="pc">
+              <template slot-scope="scope">
+                <el-input v-if="entityIndex === scope.$index && entityName === 'pc'"
+                          v-model="scope.row.pc"
+                          @blur="out(scope)"/>
+                <span v-else>{{ scope.row.pc }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column show-overflow-tooltip label="工序号" align="center" prop="gxh">
+              <template slot-scope="scope">
+                <el-input v-if="entityIndex === scope.$index && entityName === 'gxh'"
+                          v-model="scope.row.gxh"
+                          @blur="out(scope)"/>
+                <span v-else>{{ scope.row.gxh }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column show-overflow-tooltip label="工序名称" align="center" prop="gxmc">
+              <template slot-scope="scope">
+                <el-input v-if="entityIndex === scope.$index && entityName === 'gxmc'"
+                          v-model="scope.row.gxmc"
+                          @blur="out(scope)"/>
+                <span v-else>{{ scope.row.gxmc }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column show-overflow-tooltip label="问题描述" align="center" prop="wtms">
+              <template slot-scope="scope">
+                <el-input v-if="entityIndex === scope.$index && entityName === 'wtms'"
+                          v-model="scope.row.wtms"
+                          @blur="out(scope)"/>
+                <span v-else>{{ scope.row.wtms }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column show-overflow-tooltip label="设备型号" align="center" prop="sbxh">
+              <template slot-scope="scope">
+                <el-input v-if="entityIndex === scope.$index && entityName === 'sbxh'"
+                          v-model="scope.row.sbxh"
+                          @blur="out(scope)"/>
+                <span v-else>{{ scope.row.sbxh }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column show-overflow-tooltip label="提报人" align="center" prop="tbr">
+              <template slot-scope="scope">
+                <el-input v-if="entityIndex === scope.$index && entityName === 'tbr'"
+                          v-model="scope.row.tbr"
+                          @blur="out(scope)"/>
+                <span v-else>{{ scope.row.tbr }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column show-overflow-tooltip width="100px" label="被叫责任科室" align="center" prop="bjzrks">
+              <template slot-scope="scope">
+                <el-input v-if="entityIndex === scope.$index && entityName === 'bjzrks'"
+                          v-model="scope.row.bjzrks"
+                          @blur="out(scope)"/>
+                <span v-else>{{ scope.row.bjzrks }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column show-overflow-tooltip label="被叫人" align="center" prop="bjzrr">
+              <template slot-scope="scope">
+                <el-input v-if="entityIndex === scope.$index && entityName === 'bjzrr'"
+                          v-model="scope.row.bjzrr"
+                          @blur="out(scope)"/>
+                <span v-else>{{ scope.row.bjzrr }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column show-overflow-tooltip width="120px" label="提报-接收时间" align="center" prop="tbjssj">
+              <template slot-scope="scope">
+                <el-input v-if="entityIndex === scope.$index && entityName === 'tbjssj'"
+                          v-model="scope.row.tbjssj"
+                          @blur="out(scope)"/>
+                <span v-else>{{ scope.row.tbjssj }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column show-overflow-tooltip width="120px" label="提报-当前时间" align="center" prop="tbdqst">
+              <template slot-scope="scope">
+                <el-input v-if="entityIndex === scope.$index && entityName === 'tbdqst'"
+                          v-model="scope.row.tbdqst"
+                          @blur="out(scope)"/>
+                <span v-else>{{ scope.row.tbdqst }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column show-overflow-tooltip label="接收人" align="center" prop="jsr">
+              <template slot-scope="scope">
+                <el-input v-if="entityIndex === scope.$index && entityName === 'jsr'"
+                          v-model="scope.row.jsr"
+                          @blur="out(scope)"/>
+                <span v-else>{{ scope.row.jsr }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column show-overflow-tooltip label="解决方案" align="center" prop="jjfa">
+              <template slot-scope="scope">
+                <el-input v-if="entityIndex === scope.$index && entityName === 'jjfa'"
+                          v-model="scope.row.jjfa"
+                          @blur="out(scope)"/>
+                <span v-else>{{ scope.row.jjfa }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column show-overflow-tooltip label="是否满意" align="center" prop="sfmy">
+              <template slot-scope="scope">
+                <el-input v-if="entityIndex === scope.$index && entityName === 'sfmy'"
+                          v-model="scope.row.sfmy"
+                          @blur="out(scope)"/>
+                <span v-else>{{ scope.row.sfmy }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column show-overflow-tooltip label="提报人ID" align="center" prop="tbrid">
+              <template slot-scope="scope">
+                <el-input v-if="entityIndex === scope.$index && entityName === 'tbrid'"
+                          v-model="scope.row.tbrid"
+                          @blur="out(scope)"/>
+                <span v-else>{{ scope.row.tbrid }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column show-overflow-tooltip label="被叫人ID" align="center" prop="bjrid">
+              <template slot-scope="scope">
+                <el-input v-if="entityIndex === scope.$index && entityName === 'bjrid'"
+                          v-model="scope.row.bjrid"
+                          @blur="out(scope)"/>
+                <span v-else>{{ scope.row.bjrid }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column show-overflow-tooltip label="接收人ID" align="center" prop="jsrid">
+              <template slot-scope="scope">
+                <el-input v-if="entityIndex === scope.$index && entityName === 'jsrid'"
+                          v-model="scope.row.jsrid"
+                          @blur="out(scope)"/>
+                <span v-else>{{ scope.row.jsrid }}</span>
+              </template>
+            </el-table-column>
+          </el-table>-->
+
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="queryParams.pageNum"
+      :limit.sync="queryParams.pageSize"
+      @pagination="getList"
+    />
 
     <!-- 添加或修改创建流水对话框 -->
     <el-dialog title="修改" :visible.sync="open" width="500px" append-to-body>
@@ -125,11 +334,11 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
-    </div>
+  </div>
 </template>
 
 <script>
-import {listCjls, delCjls, getCjls, updateCjls,} from "@/api/question/upQuestion";
+import {listCjls, updateupCjlsList, delCjls, getCjls, updateCjls,} from "@/api/question/upQuestion";
 
 export default {
   name: "UpCjls",
@@ -257,10 +466,10 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           updateCjls(this.form).then(response => {
-              this.$modal.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
+            this.$modal.msgSuccess("修改成功");
+            this.open = false;
+            this.getList();
+          });
         }
       });
     },
@@ -283,7 +492,6 @@ export default {
     },
     /*双击事件*/
     celldblClick(row, column, cell, event) {
-      console.log(row.index, column.property)
       this.entityIndex = row.index;
       this.entityName = column.property
     },

@@ -4,10 +4,7 @@ import com.ruoyi.framework.aspectj.lang.enums.BusinessType;
 import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.framework.web.page.TableDataInfo;
-import com.ruoyi.project.question.domain.WtglCjls;
-import com.ruoyi.project.question.domain.WtglCjlsDTO;
-import com.ruoyi.project.question.domain.WtglDacc;
-import com.ruoyi.project.question.domain.Ywzd;
+import com.ruoyi.project.question.domain.*;
 import com.ruoyi.project.question.domain.vo.NumberVO;
 import com.ruoyi.project.question.domain.vo.WtxxVo;
 import com.ruoyi.project.question.service.IWtglCjlsService;
@@ -37,7 +34,6 @@ public class WtglCjlsController extends BaseController
     public TableDataInfo list(WtglCjlsDTO wtglCjls)
     {
         startPage();
-        System.out.println(wtglCjls);
         List<WtglCjls> list = wtglCjlsService.selectWtglCjlsList(wtglCjls);
         return getDataTable(list);
     }
@@ -112,7 +108,7 @@ public class WtglCjlsController extends BaseController
     /**
      * 删除提出问题
      */
-	@DeleteMapping("/{LSIDs}")
+    @DeleteMapping("/{LSIDs}")
     public AjaxResult remove(@PathVariable String[] LSIDs)
     {
         return toAjax(wtglCjlsService.deleteWtglCjlsByLSIDs(LSIDs));
@@ -121,16 +117,16 @@ public class WtglCjlsController extends BaseController
     /**
      * 修改问题状态
      */
-	@PostMapping("/{wtzt}/changewtzt")
-    public AjaxResult changewtzt(@PathVariable String wtzt,@RequestBody String[] ids)
+    @PostMapping("/{wtzt}/changewtzt")
+    public AjaxResult changewtzt(@PathVariable String wtzt,@RequestBody List<WtglCjls> cjlsList)
     {
-        return toAjax(wtglCjlsService.changewtzt(ids,wtzt));
+        return toAjax(wtglCjlsService.changewtzt(cjlsList,wtzt));
     }
 
     /**
      * 问题接收
      */
-	@PostMapping("/{whether}/wtjs")
+    @PostMapping("/{whether}/wtjs")
     public AjaxResult wtjsIt(@PathVariable String whether, @RequestBody List<WtglCjls> selectedRows)
     {
         return toAjax(wtglCjlsService.wtjsIt(selectedRows,whether));
@@ -139,7 +135,7 @@ public class WtglCjlsController extends BaseController
     /**
      * 修改解决方案
      */
-	@PostMapping("/{id}/updatejjfa")
+    @PostMapping("/{id}/updatejjfa")
     public AjaxResult updatejjfa(@PathVariable String id, @RequestBody String str)
     {
         return toAjax(wtglCjlsService.updatejjfa(id,str));
@@ -148,7 +144,7 @@ public class WtglCjlsController extends BaseController
     /**
      * 获取完成、未完成数量
      */
-	@GetMapping("/getwcsl")
+    @GetMapping("/getwcsl")
     public TableDataInfo getwcsl()
     {
         List<NumberVO> list = wtglCjlsService.getwcsl();
@@ -158,7 +154,7 @@ public class WtglCjlsController extends BaseController
     /**
      * 获取部门科室数量
      */
-	@GetMapping("/getcjksbmNumber")
+    @GetMapping("/getcjksbmNumber")
     public TableDataInfo getcjksbmNumber()
     {
         List<NumberVO> list = wtglCjlsService.getcjksbmNumber();
@@ -168,7 +164,7 @@ public class WtglCjlsController extends BaseController
     /**
      * 获取接收人列表
      */
-	@GetMapping("/{wtlb}/getjsrBywtlb")
+    @GetMapping("/{wtlb}/getjsrBywtlb")
     public TableDataInfo getjsrBywtlb(@PathVariable String wtlb)
     {
         List<String> list = wtglCjlsService.getjsrBywtlb(wtlb);
@@ -188,6 +184,18 @@ public class WtglCjlsController extends BaseController
     {
         startPage();
         List<WtglDacc> list = wtglCjlsService.listDacc(wtglDacc);
+        System.out.println(list);
+        return getDataTable(list);
+    }
+
+    /**
+     * 智能查询
+     */
+    @GetMapping("/listDaccToZN")
+    public TableDataInfo listDaccToZN(WtglDacc wtglDacc)
+    {
+        startPage();
+        List<WtglDacc> list = wtglCjlsService.listDaccToZN(wtglDacc);
         System.out.println(list);
         return getDataTable(list);
     }
@@ -218,6 +226,15 @@ public class WtglCjlsController extends BaseController
     public AjaxResult updateDacc(@RequestBody WtglDacc wtglDacc)
     {
         return toAjax(wtglCjlsService.updateDacc(wtglDacc));
+    }
+
+    /**
+     * 根据答案表的id增加热度
+     */
+    @PutMapping("/updateDaccToRd")
+    public AjaxResult updateDaccToRd(@RequestBody WtglDacc wtglDacc)
+    {
+        return toAjax(wtglCjlsService.updateDaccToRd(wtglDacc.getDAXXID()));
     }
 
     /**
@@ -276,5 +293,54 @@ public class WtglCjlsController extends BaseController
         return toAjax(wtglCjlsService.delYwzd(xhs));
     }
 
+    /**
+     * 查询提出问题按钮列表
+     */
+    @GetMapping("/getUpButtons")
+    public TableDataInfo getUpButtons()
+    {
+        List<UpButton> list = wtglCjlsService.getUpButtons();
+        return getDataTable(list);
+    }
+
+    /**
+     * 查询提出问题按钮
+     */
+    @GetMapping(value = "/getUpButton/{xh}")
+    public AjaxResult getUpButton(@PathVariable("xh") String xh)
+    {
+        return success(wtglCjlsService.getUpButton(xh));
+    }
+
+
+    /**
+     * 新增提出问题按钮
+     */
+    @PostMapping("/addUpButton")
+    public AjaxResult addUpButton(@RequestBody UpButton upButton)
+    {
+        return toAjax(wtglCjlsService.addUpButton(upButton));
+    }
+
+    /**
+     * 修改提出问题按钮
+     */
+    @PutMapping("/updateUpButton")
+    public AjaxResult updateUpButton(@RequestBody UpButton upButton)
+    {
+        return toAjax(wtglCjlsService.updateUpButton(upButton));
+    }
+
+
+    /**
+     * 删除提出问题按钮
+     */
+    @DeleteMapping("/delangl/{xhs}")
+    public AjaxResult delangl(@PathVariable String[] xhs)
+    {
+        return toAjax(wtglCjlsService.delangl(xhs));
+    }
+
 
 }
+

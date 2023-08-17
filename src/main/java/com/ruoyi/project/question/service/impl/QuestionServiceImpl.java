@@ -7,6 +7,10 @@ import com.ruoyi.project.question.domain.WtxxDTO;
 import com.ruoyi.project.question.domain.vo.*;
 import com.ruoyi.project.question.mapper.QuestionMapper;
 import com.ruoyi.project.question.service.QuestionService;
+import com.ruoyi.project.system.domain.SysDept;
+import com.ruoyi.project.system.domain.SysUser;
+import com.ruoyi.project.system.mapper.SysDeptMapper;
+import com.ruoyi.project.system.mapper.SysUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +31,12 @@ import java.util.stream.Collectors;
 public class QuestionServiceImpl implements QuestionService {
     @Autowired
     private QuestionMapper questionMapper;
+
+    @Autowired
+    private SysDeptMapper sysDeptMapper;
+
+    @Autowired
+    private SysUserMapper sysUserMapper;
 
     /**
      * 我的问题查询数据（通过单选框的判断）
@@ -173,7 +183,11 @@ public class QuestionServiceImpl implements QuestionService {
     //获取问题细类数据的方法
     @Override
     public List<String> getwtxlMethod(String wtlb) {
-        return questionMapper.getwtxlMethod(wtlb);
+        if (wtlb!=null) {
+            return questionMapper.getwtxlMethod(wtlb);
+        }else {
+            return new ArrayList<>();
+        }
     }
 
     //获取紧急程度
@@ -187,11 +201,25 @@ public class QuestionServiceImpl implements QuestionService {
         Long userId = SecurityUtils.getUserId();
         wtxxDTO.setCJRID(userId + "");//创建人id
         wtxxDTO.setCJR(SecurityUtils.getUsername());//创建人
-
         //创建人科室
         //创建人部门
-        wtxxDTO.setID(UUID.randomUUID().toString());
+        String id = UUID.randomUUID().toString();
+        wtxxDTO.setID(id);
         wtxxDTO.setWTZT("提交");
+        wtxxDTO.setCJBMID(SecurityUtils.getDeptId().toString());
+        SysDept sysDept = sysDeptMapper.selectDeptById(SecurityUtils.getDeptId());
+        wtxxDTO.setCJBM(sysDept.getDeptName());
+        List<ZrrVO> zrrVOList = wtxxDTO.getZRRVOLIST();
+        if (zrrVOList.size()!=0) {
+            for (ZrrVO zrrVO : zrrVOList) {
+                if ("true".equals(zrrVO.getSFZZRR())) {
+                    wtxxDTO.setDQZRR(zrrVO.getZRR());
+                }
+                zrrVO.setWTID(id);
+                zrrVO.setXH(UUID.randomUUID().toString());
+            }
+            questionMapper.createZRDB(zrrVOList);
+        }
         questionMapper.createQuestion(wtxxDTO);
     }
 
@@ -225,9 +253,11 @@ public class QuestionServiceImpl implements QuestionService {
      */
     @Override
     public void saveJhjlList(Sjjh sjjh) {
-        sjjh.setWTZRRID(SecurityUtils.getUserId() + "");
-        sjjh.setWTZRR(SecurityUtils.getUsername());
-        sjjh.setHFR(SecurityUtils.getUsername());
+        Long userId = SecurityUtils.getUserId();
+        sjjh.setWTZRRID(userId.toString());
+        SysUser sysUser = sysUserMapper.selectUserById(userId);
+        sjjh.setWTZRR(sysUser.getNickName());
+        sjjh.setHFR(sysUser.getNickName());
         List<WtxxDTO> wtxxDTOS = new ArrayList<>();
         if (sjjh.getXH() != null&&!sjjh.getXH().isEmpty()&&!"领导批示".equals(sjjh.getJHZT())) {
             if ("接收".equals(sjjh.getValue())&&sjjh.getUserName()!=null) {
@@ -293,7 +323,8 @@ public class QuestionServiceImpl implements QuestionService {
             wtxxDTO.setWTZT1("接收");
             wtxxDTO.setWTZT2("反馈");
             wtxxDTO.setWTZT3("待关闭");
-            return questionMapper.getMyProblemList(wtxxDTO);
+            List<WtxxVo> myProblemList = questionMapper.getMyProblemList(wtxxDTO);
+            return myProblemList;
         } else {
             wtxxDTO.setWTZT("已关闭");
             return questionMapper.getMyProblemList(wtxxDTO);
@@ -345,8 +376,8 @@ public class QuestionServiceImpl implements QuestionService {
      */
     @Override
     public List<Sjjh> getLDPS(String wtid,String jhzt) {
-            List<Sjjh> sjjhList = questionMapper.selectldpsByWtid(wtid,jhzt);
-            return sjjhList;
+        List<Sjjh> sjjhList = questionMapper.selectldpsByWtid(wtid,jhzt);
+        return sjjhList;
     }
 
     /**
@@ -535,7 +566,6 @@ public class QuestionServiceImpl implements QuestionService {
         WtxxDTO wtxxDTO = new WtxxDTO();
         wtxxDTO.setID(sjjh.getWTID());
         wtxxDTO.setWTDB(1);
-        wtxxDTO.setSFDZFK(1);
         questionMapper.updateQuestionWddb(wtxxDTO);
     }
 
@@ -584,51 +614,36 @@ public class QuestionServiceImpl implements QuestionService {
         if (sjjh.size() == 0) {
             return;
         }
-        questionMapper.updateQuestionStatus(sjjh.get(0).getWTID(), "已关闭");
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String format = simpleDateFormat.format(new Date());
-        List<DaccVO> daccVOS = new ArrayList<>();
-        Set<String> wtZrrIds = new HashSet<>();
-        for (SjjhDTO sjjhDTO : sjjh) {
-            String wtzrrid = sjjhDTO.getWTZRRID();
-            wtZrrIds.add(wtzrrid);
-        }
-        List<List<SjjhDTO>> list = new ArrayList<>();
-        for (String wtZrrId : wtZrrIds) {
-            List<SjjhDTO> sjjhDTOStream = sjjh.stream().filter(new Predicate<SjjhDTO>() {
-                @Override
-                public boolean test(SjjhDTO sjjhDTO) {
-                    return sjjhDTO.getWTZRRID().equals(wtZrrId);
-                }
-            }).collect(Collectors.toList());
-            list.add(sjjhDTOStream);
-        }
-        for (List<SjjhDTO> sjjhDTOS : list) {
+        //给当前问题修改为已关闭状态
+        questionMapper.updateQuestionStatusSJ(sjjh.get(0).getWTID(), "已关闭",format);
             DaccVO daccVO = new DaccVO();
-            for (SjjhDTO sjjhDTO : sjjhDTOS) {
+            for (SjjhDTO sjjhDTO : sjjh) {
                 daccVO.setWTID(sjjhDTO.getWTID());
                 daccVO.setCJRID(sjjhDTO.getWTCJID());
                 daccVO.setCJR(sjjhDTO.getWTCJR());
-                daccVO.setZRR(sjjhDTO.getWTZRR());
-                daccVO.setZRRID(sjjhDTO.getWTZRRID());
+                daccVO.setWTMC(sjjhDTO.getWTBT());
                 daccVO.setGBSJ(format);
                 daccVO.setRD(0);
+                daccVO.setZRR(daccDTO.getZRR());
+                daccVO.setCPXH(daccDTO.getCPXH());
+                daccVO.setJH(daccDTO.getJH());
                 daccVO.setWTLB(daccDTO.getWTLB());
                 daccVO.setWTXL(daccDTO.getWTXL());
-                daccVO.setWTMC(sjjhDTO.getWTBT());
                 daccVO.setGXH(daccDTO.getGXH());
                 daccVO.setGXMC(daccDTO.getGXH());
                 daccVO.setWTMS(daccDTO.getWTMS());
                 daccVO.setDAXXID(UUID.randomUUID() + "");
                 if (daccVO.getDAXX() != null) {
-                    daccVO.setDAXX(daccVO.getDAXX() + "," + sjjhDTO.getHFXX());
+                    daccVO.setDAXX(daccVO.getDAXX() + "$$" + sjjhDTO.getHFXX());
                 } else {
                     daccVO.setDAXX(sjjhDTO.getHFXX());
                 }
             }
-            daccVOS.add(daccVO);
+        if (daccVO.getWTID() != null) {
+            questionMapper.saveDaccList(daccVO);
         }
-        questionMapper.saveDaccList(daccVOS);
     }
 
     /**
@@ -661,7 +676,6 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public void updateQuestion(WtxxDTO wtxxDTO) {
         questionMapper.updateQuestion(wtxxDTO);
-
     }
 
     /**
@@ -681,11 +695,32 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     /**
+     * 根据问题id查询所有交互数据
+     */
+    @Override
+    public List<Sjjh> getJhjlByWtid(String wtid) {
+        List<Sjjh> jhjlByWtid = questionMapper.getJhjlByWtid(wtid);
+        List<Sjjh> sjjhResult = new ArrayList<>();
+        for (Sjjh sjjh : jhjlByWtid) {
+            if ("1".equals(sjjh.getJS())) {
+                sjjhResult.add(sjjh);
+            }
+        }
+        for (Sjjh sjjh : sjjhResult) {
+            if (sjjh.getEJHFPPYJ() != null && !"".equals(sjjh.getEJHFPPYJ())) {
+                zhengli(sjjh, sjjh.getJHZT(), jhjlByWtid);
+            }
+        }
+        return sjjhResult;
+    }
+
+    /**
      * 获得阅知人的问题信息
      */
     @Override
     public List<WtxxVo> getQuestionYzrList(WtxxDTO wtxxDTO) {
-        wtxxDTO.setYZR(SecurityUtils.getUserId() + "");
+        wtxxDTO.setYZRID(SecurityUtils.getUserId()+"");
+        wtxxDTO.setYZRBMID(SecurityUtils.getDeptId()+"");
         if ("待办".equals(wtxxDTO.getRadios())) {
             wtxxDTO.setWTZT("提交");
             return questionMapper.selectWtxxData1(wtxxDTO);

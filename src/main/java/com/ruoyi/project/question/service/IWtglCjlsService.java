@@ -1,9 +1,6 @@
 package com.ruoyi.project.question.service;
 
-import com.ruoyi.project.question.domain.WtglCjls;
-import com.ruoyi.project.question.domain.WtglCjlsDTO;
-import com.ruoyi.project.question.domain.WtglDacc;
-import com.ruoyi.project.question.domain.Ywzd;
+import com.ruoyi.project.question.domain.*;
 import com.ruoyi.project.question.domain.vo.NumberVO;
 import com.ruoyi.project.question.domain.vo.WtxxVo;
 
@@ -15,11 +12,11 @@ import java.util.List;
  * @author LiHai
  * @date 2023-06-19
  */
-public interface IWtglCjlsService 
+public interface IWtglCjlsService
 {
     /**
      * 查询提出问题
-     * 
+     *
      * @param LSID 提出问题主键
      * @return 提出问题
      */
@@ -27,7 +24,7 @@ public interface IWtglCjlsService
 
     /**
      * 查询提出问题列表
-     * 
+     *
      * @param wtglCjls 提出问题
      * @return 提出问题集合
      */
@@ -43,7 +40,7 @@ public interface IWtglCjlsService
 
     /**
      * 新增提出问题
-     * 
+     *
      * @param wtglCjls 提出问题
      * @return 结果
      */
@@ -51,7 +48,7 @@ public interface IWtglCjlsService
 
     /**
      * 修改提出问题
-     * 
+     *
      * @param wtglCjls 提出问题
      * @return 结果
      */
@@ -59,7 +56,7 @@ public interface IWtglCjlsService
 
     /**
      * 批量删除提出问题
-     * 
+     *
      * @param LSIDs 需要删除的提出问题主键集合
      * @return 结果
      */
@@ -67,7 +64,7 @@ public interface IWtglCjlsService
 
     /**
      * 删除提出问题信息
-     * 
+     *
      * @param LSID 提出问题主键
      * @return 结果
      */
@@ -82,11 +79,10 @@ public interface IWtglCjlsService
 
     /**
      * 修改问题状态
-     * @param ids 需要修改的id
      * @param wtzt 问题状态
      * @return 结果
      */
-    int changewtzt(String[] ids, String wtzt);
+    int changewtzt(List<WtglCjls> cjlsList, String wtzt);
 
     /**
      * 问题接收
@@ -173,4 +169,39 @@ public interface IWtglCjlsService
      * 删除业务字典
      */
     int delYwzd(String[] xhs);
+
+    /**
+     * 智能查询
+     */
+    List<WtglDacc> listDaccToZN(WtglDacc wtglDacc);
+
+    /**
+     * 根据答案表的id增加热度
+     */
+    int updateDaccToRd(String daxxid);
+
+    /**
+     * 查询提出问题按钮列表
+     */
+    List<UpButton> getUpButtons();
+
+    /**
+     * 查询提出问题按钮
+     */
+    UpButton getUpButton(String xh);
+
+    /**
+     * 新增提出问题按钮
+     */
+    int addUpButton(UpButton upButton);
+
+    /**
+     * 修改提出问题按钮
+     */
+    int updateUpButton(UpButton upButton);
+
+    /**
+     * 删除提出问题按钮
+     */
+    int delangl(String[] xhs);
 }

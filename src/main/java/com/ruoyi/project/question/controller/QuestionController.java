@@ -10,13 +10,19 @@ import com.ruoyi.project.question.domain.vo.Sjjh;
 import com.ruoyi.project.question.domain.vo.WtxxVo;
 import com.ruoyi.project.question.domain.vo.ZrrVO;
 import com.ruoyi.project.question.service.QuestionService;
+import net.sourceforge.tess4j.ITesseract;
+import net.sourceforge.tess4j.Tesseract;
+import net.sourceforge.tess4j.TesseractException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -198,7 +204,7 @@ public class QuestionController extends BaseController {
     @PostMapping("/myquestion/createQuestion")
     public AjaxResult createQuestion(@RequestBody WtxxDTO wtxxDTO) {
         questionService.createQuestion(wtxxDTO);
-        return AjaxResult.success("成功创建");
+        return AjaxResult.success("修改成功");
     }
 
 
@@ -259,6 +265,15 @@ public class QuestionController extends BaseController {
     @GetMapping("/myquestion/getJhjl")
     public TableDataInfo getJhjl(Sjjh sjjh) {
         List<Sjjh> list = questionService.getJhjl(sjjh.getWTID(),sjjh.getJHZT());
+        return getDataTable(list);
+    }
+
+    /**
+     * 根据问题id查询所有交互数据
+     */
+    @GetMapping("/myquestion/getJhjlByWtid")
+    public TableDataInfo getJhjlByWtid(Sjjh sjjh) {
+        List<Sjjh> list = questionService.getJhjlByWtid(sjjh.getWTID());
         return getDataTable(list);
     }
 
@@ -434,6 +449,36 @@ public class QuestionController extends BaseController {
     public AjaxResult updateJHJL(@RequestBody SjjhDTO sjjhDTO) {
         questionService.updateJHJL(sjjhDTO);
         return AjaxResult.success("修改成功");
+    }
+
+    @PostMapping("/myquestion/upload")
+    public AjaxResult upload(@RequestParam("image") MultipartFile multipartFile) {
+        try {
+
+            File file = File.createTempFile("temp", ".png");
+
+            // 将 MultipartFile 的内容复制到临时文件
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            FileCopyUtils.copy(multipartFile.getInputStream(), fileOutputStream);
+            fileOutputStream.close();
+            //String path = "C:\\Users\\Administrator\\Desktop\\微信图片_20230711164942.png";
+            //File file = new File(path);
+            String lagnguagePath = "D:\\tessdata";
+            ITesseract tesseract = new Tesseract();
+            tesseract.setDatapath(lagnguagePath);
+            tesseract.setLanguage("chi_sim");
+            String rus = null;
+            rus = tesseract.doOCR(file);
+            System.out.println(rus);
+        } catch (TesseractException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return AjaxResult.success("");
+
     }
 
 }

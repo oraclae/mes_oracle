@@ -1,9 +1,11 @@
 package com.ruoyi.project.question.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ruoyi.project.question.domain.vo.ZrrVO;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Author: QXD
@@ -87,5 +89,6 @@ public class WtxxDTO {
    private String DQZRR;  //当前责任人
    private String BHSJ;  //闭环时间
    private String JHSJ;  //激活时间
-   private Integer SFDZFK;  //是否当周反馈
+   private List<ZrrVO> ZRRVOLIST;//责任人实体类列表
+   private String JH;//件号
 }

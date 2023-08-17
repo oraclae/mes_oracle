@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.question.mapper.ZhiNengWenDaMapper">
+
+    <select id="selectDataByNotId" resultType="com.ruoyi.project.question.domain.vo.ZhiNengWenDaSelectVO">
+        select DAXXID,DAXX from WTGL_DACC
+        <where>
+            <if test="WTMC != null  and WTMC != ''">and WTMC like concat('%', #{WTMC}, '%')
+            </if>
+            <if test="WTLB != null  and WTLB != ''">and WTLB = #{WTLB}</if>
+            <if test="WTXL != null  and WTXL != ''">and WTXL = #{WTXL}</if>
+            <if test="WTMS != null  and WTMS != ''">and WTMS like concat('%', #{WTMS}, '%')
+            </if>
+            <if test="GXH != null  and GXH != ''">and GXH = #{GXH}</if>
+            <if test="CPXH != null  and CPXH != ''">and CPXH = #{CPXH}</if>
+            <if test="JH != null  and JH != ''">and JH = #{JH}</if>
+            <if test="ids != null and ids != '' and ids.length != 0">and DAXXID not in (
+                <foreach collection="ids" separator="," item="id">
+                    #{id}
+                </foreach>
+                )
+            </if>
+            and RD = (
+            select MAX(RD) from WTGL_DACC
+            <where>
+                <if test="WTMC != null  and WTMC != ''">and WTMC like concat('%', #{WTMC}, '%')
+                </if>
+                <if test="WTLB != null  and WTLB != ''">and WTLB = #{WTLB}</if>
+                <if test="WTXL != null  and WTXL != ''">and WTXL = #{WTXL}</if>
+                <if test="WTMS != null  and WTMS != ''">and WTMS like concat('%', #{WTMS}, '%')
+                </if>
+                <if test="GXH != null  and GXH != ''">and GXH = #{GXH}</if>
+                <if test="CPXH != null  and CPXH != ''">and CPXH = #{CPXH}</if>
+                <if test="JH != null  and JH != ''">and JH = #{JH}</if>
+                <if test="ids != null and ids != '' and ids.length != 0">and DAXXID not in (
+                    <foreach collection="ids" separator="," item="id">
+                        #{id}
+                    </foreach>
+                    )
+                </if>
+            </where>
+            )
+        </where>
+    </select>
+</mapper>

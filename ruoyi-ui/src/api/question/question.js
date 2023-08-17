@@ -266,7 +266,18 @@ export function getJhjl(data) {
     method: 'get',
     params:data
   })
-}//得到领导批示的数据
+}
+
+
+export function getJhjlByWtid(data) {
+  return request({
+    url: '/myquestion/getJhjlByWtid',
+    method: 'get',
+    params:data
+  })
+}
+
+//得到领导批示的数据
 export function getLDPS(data) {
   return request({
     url: '/myquestion/getLDPS',
@@ -274,6 +285,7 @@ export function getLDPS(data) {
     params:data
   })
 }
+
 
 //责任人闭环按钮的方法
 export function closedLoop(data) {

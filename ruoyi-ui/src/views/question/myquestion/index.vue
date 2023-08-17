@@ -12,9 +12,9 @@
         <el-button type="success" size="small" @click="createQuestion">创建问题</el-button>
         <el-button type="success" size="small" :disabled="single" @click="handleAdd">回复/预览</el-button>
         <el-button type="primary" style="background-color: red"
-                   v-if="queryParams.radios!=='已关闭'&&queryParams.radios!=='待办'" size="small" @click="closeQuestion">关闭
+                   v-if="queryParams.radios!=='已关闭'&&queryParams.radios!=='待关闭'" size="small" @click="closeQuestion">关闭
         </el-button>
-<!--        <el-button type="primary" size="small" :disabled="single" @click="handleUpdate">修改</el-button>-->
+        <!--        <el-button type="primary" size="small" :disabled="single" @click="handleUpdate">修改</el-button>-->
         <!--        <el-button type="primary" size="small" @click="saveData">保存</el-button>-->
         <el-button type="primary" size="small" :disabled="multiple" @click="deleteData">删除</el-button>
         <el-button type="warning" size="small" @click="shuaxin">刷新</el-button>
@@ -34,13 +34,14 @@
           @keyup.enter.native="handleQuery"
         />
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-col>
     </el-row>
     <el-row :gutter="24">
       <el-col :span="24" :xs="24">
         <div class="myQuestionTable">
           <el-table
+            :header-cell-style="styleFunc"
+            height="calc(100vh - 220px)"
             :data="tableData"
             v-loading="loading"
             :show-overflow-tooltip="true"
@@ -88,46 +89,21 @@
                 />
               </template>
             </el-table-column>
-            <el-table-column
-              align="center"
-              label="反馈预警"
-              show-overflow-tooltip
-            >
-              <template slot-scope="scope">
-                <img
-                  style="width: 30px"
-                  v-if="getFkyjText(scope.row)==='红'&&scope.row.lxfk==='例行反馈'"
-                  :src="require('@/assets/questionIcons/红警告.png')"
-                />
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="wtdb"
-              label="我的问题待办数量"
-              show-overflow-tooltip
-            >
+            <el-table-column prop="wtdb" label="我的问题待办数量" show-overflow-tooltip>
               <template slot-scope="scope">
                 <!--              <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'wtdb'"-->
                 <!--                        v-model="scope.row.wtdb" @blur="inputBlur(scope)"></el-input>-->
                 <span>{{ scope.row.wtdb }}</span>
               </template>
             </el-table-column>
-            <el-table-column
-              prop="wtbh"
-              label="问题编号"
-              show-overflow-tooltip
-            >
+            <el-table-column prop="wtbh" label="问题编号" show-overflow-tooltip>
               <template slot-scope="scope">
                 <!--              <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'wtbh'"-->
                 <!--                        v-model="scope.row.wtbh" @blur="inputBlur(scope)"></el-input>-->
                 <span>{{ scope.row.wtbh }}</span>
               </template>
             </el-table-column>
-            <el-table-column
-              prop="cjr"
-              label="人员"
-              show-overflow-tooltip
-            >
+            <el-table-column prop="cjr" label="人员" show-overflow-tooltip>
               <template slot-scope="scope">
                 <!--              <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'cjr'"-->
                 <!--                        v-model="scope.row.cjr" @blur="inputBlur(scope)"></el-input>-->
@@ -143,17 +119,6 @@
                 <!--              <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'cjbm'"-->
                 <!--                        v-model="scope.row.cjbm" @blur="inputBlur(scope)"></el-input>-->
                 <span>{{ scope.row.cjbm }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="cjks"
-              label="科室"
-              show-overflow-tooltip
-            >
-              <template slot-scope="scope">
-                <!--              <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'cjks'"-->
-                <!--                        v-model="scope.row.cjks" @blur="inputBlur(scope)"></el-input>-->
-                <span>{{ scope.row.cjks }}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -212,6 +177,17 @@
               </template>
             </el-table-column>
             <el-table-column
+              prop="jh"
+              label="件号"
+              show-overflow-tooltip
+            >
+              <template slot-scope="scope">
+                <!--              <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'cpxh'"-->
+                <!--                        v-model="scope.row.cpxh" @blur="inputBlur(scope)"></el-input>-->
+                <span>{{ scope.row.cpxh }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
               prop="wtly"
               label="问题来源"
               show-overflow-tooltip
@@ -256,14 +232,14 @@
               </template>
             </el-table-column>
             <el-table-column
-              prop="yrzbm"
+              prop="yzrbm"
               label="阅知人部门"
               show-overflow-tooltip
             >
               <template slot-scope="scope">
-                <!--              <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'yrzbm'"-->
-                <!--                        v-model="scope.row.yrzbm" @blur="inputBlur(scope)"></el-input>-->
-                <span>{{ scope.row.yrzbm }}</span>
+                <!--              <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'yzrbm'"-->
+                <!--                        v-model="scope.row.yzrbm" @blur="inputBlur(scope)"></el-input>-->
+                <span>{{ scope.row.yzrbm }}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -301,14 +277,14 @@
             </el-table-column>
 
             <el-table-column
-              prop="sjzrr"
-              label="升级责任人"
+              prop="dqzrr"
+              label="主责任人"
               show-overflow-tooltip
             >
               <template slot-scope="scope">
                 <!--              <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'sjzrr'"-->
                 <!--                        v-model="scope.row.sjzrr" @blur="inputBlur(scope)"></el-input>-->
-                <span>{{ scope.row.sjzrr }}</span>
+                <span>{{ scope.row.dqzrr }}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -432,7 +408,9 @@
         />
       </el-col>
     </el-row>
-    <el-dialog class="dialogRad" title="创建问题" width="700px" :close-on-click-modal="false" @close="createQuestionCloseButten"
+    <el-dialog class="dialogRad" title="创建问题" width="700px" :close-on-click-modal="false"
+               @close="createQuestionCloseButten"
+               v-if="dialogTableVisible"
                :visible.sync="dialogTableVisible">
       <div style="overflow: auto">
         <div style="margin-bottom: 45px">
@@ -446,7 +424,7 @@
             <label style="color: red;margin-right: 5px;">*</label>
             <label>主责任人:</label>
             <!--            <el-button @click="chuansuokuang=true">请选择</el-button>-->
-            <div style="display: inline-block" @click="zrrAndYzr('选择责任人')">
+            <div style="display: inline-block" @click="treeVisual = true, selectTitle = '选择责任人'">
               <el-tooltip effect="dark" :content="zrrstr" placement="top" :open-delay="500"
                           :disabled="zrrstr == null || zrrstr === ''">
                 <el-input placeholder="请选择责任人" :disabled="true" style="width: 200px; margin-left: 27px"
@@ -477,7 +455,7 @@
           </div>
           <div style="float: right;margin-right: 25px">
             <label>阅知人:</label>
-            <div style="display: inline-block" @click="zrrAndYzr('选择阅知人')">
+            <div style="display: inline-block" @click="treeVisual = true, selectTitle = '选择阅知人'">
               <el-tooltip effect="dark" :content="yzrstr" placement="top" :open-delay="500"
                           :disabled="yzrstr == null || yzrstr === ''">
                 <el-input placeholder="请选择阅知人" :disabled="true" style="width: 200px; margin-left: 27px"
@@ -588,6 +566,13 @@
           </div>
 
         </div>
+        <div style="margin-bottom: 450px">
+          <div style="float: left">
+            <label style="margin-left: 10px">件 号:</label>
+            <el-input placeholder="请输入件号" style="width: 200px;margin-left: 48px;height: 15px" v-model="form.jh"/>
+          </div>
+
+        </div>
         <div>
           <div style="float: left">
             <label style="margin-right: 5px;color: red">*</label>
@@ -605,59 +590,60 @@
         </div>
       </div>
       <div style="height: 10px;margin-top: 15px;margin-bottom: 5px">
-        <div style="float: left;">
-          <label style="font-weight: 200;">附件上传:</label>
-          <el-button type="primary" size="mini" style="margin-left: 10px" @click="shangchuangfujian" round>上传附件
-          </el-button>
-          <el-popover
-            placement="right"
-            width="500"
-            trigger="click">
-            <el-table
-              :data="fileData"
-              border
-              style="width: 100%">
-              <el-table-column
-                prop="fileType"
-                label="人员"
-                show-overflow-tooltip
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="fileName"
-                label="文件名称"
-                show-overflow-tooltip
-                width="120">
-              </el-table-column>
-              <el-table-column
-                prop="fileCity"
-                label="上传时间"
-                show-overflow-tooltip
-                width="120">
-              </el-table-column>
-              <el-table-column
-                fixed="right"
-                label="操作"
-                width="120">
-                <template slot-scope="scope">
-                  <el-button @click="handleClick(scope.row)" type="warning" icon="el-icon-download" circle></el-button>
-                  <el-button type="error" icon="el-icon-delete" circle></el-button>
-                </template>
-              </el-table-column>
-            </el-table>
-            <el-button slot="reference" type="success" size="mini" style="margin-left: 10px" @click="refreshAttachment"
-                       round>附件预览
-            </el-button>
-          </el-popover>
-        </div>
+        <!--        <div style="float: left;">
+                  <label style="font-weight: 200;">附件上传:</label>
+                  <el-button type="primary" size="mini" style="margin-left: 10px" @click="shangchuangfujian" round>上传附件
+                  </el-button>
+                  <el-popover
+                    placement="right"
+                    width="500"
+                    trigger="click">
+                    <el-table
+                      :data="fileData"
+                      border
+                      style="width: 100%">
+                      <el-table-column
+                        prop="fileType"
+                        label="人员"
+                        show-overflow-tooltip
+                        width="100">
+                      </el-table-column>
+                      <el-table-column
+                        prop="fileName"
+                        label="文件名称"
+                        show-overflow-tooltip
+                        width="120">
+                      </el-table-column>
+                      <el-table-column
+                        prop="fileCity"
+                        label="上传时间"
+                        show-overflow-tooltip
+                        width="120">
+                      </el-table-column>
+                      <el-table-column
+                        fixed="right"
+                        label="操作"
+                        width="120">
+                        <template slot-scope="scope">
+                          <el-button @click="handleClick(scope.row)" type="warning" icon="el-icon-download" circle></el-button>
+                          <el-button type="error" icon="el-icon-delete" circle></el-button>
+                        </template>
+                      </el-table-column>
+                    </el-table>
+                    <el-button slot="reference" type="success" size="mini" style="margin-left: 10px" @click="refreshAttachment"
+                               round>附件预览
+                    </el-button>
+                  </el-popover>
+                </div>-->
         <div style="float: right">
+          <el-button type="danger" size="mini" @click="lishidaanchaxun">历史答案查询</el-button>
           <el-button type="primary" size="mini" @click="createQuestionCloseButten">取 消</el-button>
           <el-button size="mini" style="background-color: #a8ff00" @click="saveDataDialog">确定并提交</el-button>
         </div>
       </div>
     </el-dialog>
     <!-- 1090   1390-->
-    <el-dialog class="dialog dialogRad" :visible.sync="open" :width="withd"
+    <el-dialog class="dialog dialogRad" @close="shuaxin" :visible.sync="open" :width="withd"
                style="padding-top: 0;padding-bottom: 0;margin-top:1px;" append-to-body>
       <div class="app-container indexHeight">
         <el-card shadow="always" class="box-card"
@@ -665,20 +651,21 @@
           <div style="line-height: 15px;">
             <label style="font-size: 18px">回复/预览</label>
             <el-button style="margin-left: 10px" type="warning" size="small" @click="open=false">退出</el-button>
+            <el-button style="margin-left: 10px" size="small" @click="dialogReload">刷新</el-button>
             <el-button style="background-color: red" v-if="queryParams.radios==='待关闭'" type="warning" size="small"
                        @click="applyForClosure(closureID)">关闭
             </el-button>
             <div style="display: inline-block;text-align: center;margin-left: 240px;font-size: 15px">
               <div><label>未完成天数</label></div>
-              <div><label>{{ closureID.wwcts }}</label></div>
+              <div><label>{{ wwcts === 'NAN天' ? '0天' : wwcts }}</label></div>
             </div>
             <div style="display: inline-block;text-align: center;margin-left: 120px;font-size: 15px">
               <div><label>超期天数</label></div>
-              <div><label>{{ closureID.cqts }}</label></div>
+              <div><label>{{ cqts === 'NAN天' ? '0天' : cqts }}</label></div>
             </div>
             <div style="display: inline-block;text-align: center;margin-left: 140px;font-size: 15px">
               <div><label>完成天数</label></div>
-              <div><label>{{ closureID.wcts }}</label></div>
+              <div><label>{{ wcts === 'NAN天' ? '0天' : wcts }}</label></div>
             </div>
           </div>
         </el-card>
@@ -741,7 +728,7 @@
             </div>
             <div>
               <el-card shadow="always" class="box-card card tablec"
-                       style="background: linear-gradient(to bottom, #2982C3, #93bec1);width: 300px;border-radius: 20px;border-radius: 20px">
+                       style="background: linear-gradient(to bottom, rgba(7, 129, 230,1), #93bec1);width: 300px;border-radius: 20px;border-radius: 20px">
                 <el-table
                   :data="zrrList"
                   height="300px"
@@ -749,7 +736,7 @@
                   border
                   size="mini"
                   style="background: linear-gradient(to bottom, #0781E6, #7ED4D9);width: 100%">
-                  <el-table-column width="150px" label="操作">
+                  <el-table-column width="150px" label="操作" v-if="queryParams.radios!=='已关闭'">
                     <template slot-scope="scope">
                       <el-button @click="bihuanButton(scope.row)" style="font-size: 13px;background-color: #ffba00"
                                  size="small">闭环
@@ -804,19 +791,16 @@
               </el-card>
               <el-card shadow="always" class="box-card"
                        style="background: linear-gradient(to bottom, #0781E6, #7ED4D9);width: 750px;border-radius: 20px">
-                <!--                <el-switch
-                                  v-model="islxfk"
-                                  @change="switchMethod"
-                                  active-text="例行反馈"
-                                  inactive-text="业务交互">
-                                </el-switch>-->
-                <label style="font-size: 16px" v-if="this.closureID.lxfk==='例行反馈'">例行反馈</label>
-                <label style="font-size: 16px" v-else>业务交互</label>
+                <label style="font-size: 16px;background-image: linear-gradient(90deg, #ff1515, #021fd6);
+                  -webkit-background-clip: text; -webkit-text-fill-color: transparent"
+                       v-if="this.closureID.lxfk==='例行反馈'">例行反馈</label>
+                <label style="font-size: 16px;background-image: linear-gradient(90deg, #ff1515, #021fd6);
+                  -webkit-background-clip: text; -webkit-text-fill-color: transparent" v-else>业务交互</label>
                 <el-checkbox class="fj fjyl" v-model="fujian" @change="fujianyulan"
                              style="margin-left: 25px;color: white">
                   附件预览
                 </el-checkbox>
-                <el-button style="margin-left: 25px;background-color: #db607a" size="mini">上传附件</el-button>
+                <el-button style="margin-left: 25px;background-color: #15f901" size="mini">上传附件</el-button>
                 <el-button v-if="this.closureID.lxfk==='例行反馈'" style="margin-left: 25px;background-color: #ffba00"
                            size="mini"
                            @click="lixingfankuiDialogMethod">例行反馈
@@ -827,45 +811,71 @@
                 <!--                <el-button style="margin-left: 55px" @click="lingdaopishiDialogMethod" size="mini" type="danger">领导批示</el-button>-->
               </el-card>
               <el-card shadow="always" class="box-card"
-                       style="width: 750px;height:400px;overflow-y: auto;border-radius: 20px">
-                <div v-for="item in jhsjList">
+                       style="width: 750px;height:400px;overflow-y: auto;white-space:normal;overflow-x: scroll; border-radius: 20px">
+                <div style="width: 1000px" v-for="item in jhsjList" :key="item.xh">
                   <div class="chatName" v-text="item.hfr"></div>
-                  <div @contextmenu="showContextMenu($event,item)" @click="huifuyangshione(item.xh)"
-                       :class="{ 'clicked': currentDivIndex === item.xh }"
-                       @dblclick="huifuyangshi(item.ejhfppyj,item.xh,islxfk)" class="chatBox chatBox-left"
-                       v-text="item.hfxx"></div>
-                  <div class="chatTime"><span style="font-size: 14px">{{ item.wtcjsj }}</span></div>
+                  <div style="vertical-align: top;display: inline-block">
+                    <div @contextmenu="showContextMenu($event,item)" @click="huifuyangshione(item.xh)"
+                         :class="{ 'clicked': currentDivIndex === item.xh }"
+                         @dblclick="huifuyangshi(item.ejhfppyj,item.xh,islxfk)" class="chatBox chatBox-left"
+                         style="word-wrap: break-word;max-width: 375px;white-space: normal;"
+                         v-text="item.hfxx"></div>
+                    <div class="chatTime"><span
+                      style="font-size: 14px;vertical-align: bottom;margin-left: 3px">{{ item.wtcjsj }}</span></div>
+                  </div>
                   <div v-if="item.sjjhs.length>0">
-                    <div style="margin-left: 60px" v-for="item in item.sjjhs">
+                    <div style="margin-left: 60px" v-for="item in item.sjjhs" :key="item.xh">
                       <div class="chatName" v-text="item.hfr"></div>
-                      <div @contextmenu="showContextMenu($event,item)" @click="huifuyangshione(item.xh)"
-                           :class="{ 'clicked': currentDivIndex === item.xh }"
-                           @dblclick="huifuyangshi(item.ejhfppyj,item.xh,islxfk)" class="chatBox chatBox-left"
-                           v-text="item.hfxx"></div>
-                      <div class="chatTime"><span style="font-size: 14px">{{ item.wtcjsj }}</span></div>
+                      <div style="vertical-align: top;display: inline-block">
+                        <div @contextmenu="showContextMenu($event,item)" @click="huifuyangshione(item.xh)"
+                             :class="{ 'clicked': currentDivIndex === item.xh }"
+                             @dblclick="huifuyangshi(item.ejhfppyj,item.xh,islxfk)" class="chatBox chatBox-left"
+                             style="word-wrap: break-word;max-width: 375px;white-space: normal;"
+                             v-text="item.hfxx"></div>
+                        <div class="chatTime"><span
+                          style="font-size: 14px;vertical-align: bottom;margin-left: 3px">{{ item.wtcjsj }}</span></div>
+                      </div>
                       <div v-if="item.sjjhs.length>0">
-                        <div style="margin-left: 60px" v-for="item in item.sjjhs">
+                        <div style="margin-left: 60px" v-for="item in item.sjjhs" :key="item.xh">
                           <div class="chatName" v-text="item.hfr"></div>
-                          <div @contextmenu="showContextMenu($event,item)" @click="huifuyangshione(item.xh)"
-                               :class="{ 'clicked': currentDivIndex === item.xh }"
-                               @dblclick="huifuyangshi(item.ejhfppyj,item.xh,islxfk)" class="chatBox chatBox-left"
-                               v-text="item.hfxx"></div>
-                          <div class="chatTime"><span style="font-size: 14px">{{ item.wtcjsj }}</span></div>
+                          <div style="vertical-align: top;display: inline-block">
+                            <div @contextmenu="showContextMenu($event,item)" @click="huifuyangshione(item.xh)"
+                                 :class="{ 'clicked': currentDivIndex === item.xh }"
+                                 @dblclick="huifuyangshi(item.ejhfppyj,item.xh,islxfk)" class="chatBox chatBox-left"
+                                 style="word-wrap: break-word;max-width: 375px;white-space: normal;"
+                                 v-text="item.hfxx"></div>
+                            <div class="chatTime"><span style="font-size: 14px;vertical-align: bottom;margin-left: 3px">{{
+                                item.wtcjsj
+                              }}</span></div>
+                          </div>
                           <div v-if="item.sjjhs.length>0">
-                            <div style="margin-left: 60px" v-for="item in item.sjjhs">
+                            <div style="margin-left: 60px" v-for="item in item.sjjhs" :key="item.xh">
                               <div class="chatName" v-text="item.hfr"></div>
-                              <div @contextmenu="showContextMenu($event,item)" @click="huifuyangshione(item.xh)"
-                                   :class="{ 'clicked': currentDivIndex === item.xh }"
-                                   @dblclick="huifuyangshi(item.ejhfppyj,item.xh,islxfk)" class="chatBox chatBox-left"
-                                   v-text="item.hfxx"></div>
-                              <div class="chatTime"><span style="font-size: 14px">{{ item.wtcjsj }}</span></div>
+                              <div style="vertical-align: top;display: inline-block">
+                                <div @contextmenu="showContextMenu($event,item)" @click="huifuyangshione(item.xh)"
+                                     :class="{ 'clicked': currentDivIndex === item.xh }"
+                                     @dblclick="huifuyangshi(item.ejhfppyj,item.xh,islxfk)" class="chatBox chatBox-left"
+                                     style="word-wrap: break-word;max-width: 375px;white-space: normal;"
+                                     v-text="item.hfxx"></div>
+                                <div class="chatTime"><span
+                                  style="font-size: 14px;vertical-align: bottom;margin-left: 3px">{{
+                                    item.wtcjsj
+                                  }}</span></div>
+                              </div>
                               <div v-if="item.sjjhs.length>0">
-                                <div style="margin-left: 60px" v-for="item in item.sjjhs">
+                                <div style="margin-left: 60px" v-for="item in item.sjjhs" :key="item.xh">
                                   <div class="chatName" v-text="item.hfr"></div>
-                                  <div @contextmenu="showContextMenu($event,item)" @click="huifuyangshione(item.xh)"
-                                       :class="{ 'clicked': currentDivIndex === item.xh }" class="chatBox chatBox-left"
-                                       v-text="item.hfxx"></div>
-                                  <div class="chatTime"><span style="font-size: 14px">{{ item.wtcjsj }}</span></div>
+                                  <div style="vertical-align: top;display: inline-block">
+                                    <div @contextmenu="showContextMenu($event,item)" @click="huifuyangshione(item.xh)"
+                                         :class="{ 'clicked': currentDivIndex === item.xh }"
+                                         class="chatBox chatBox-left"
+                                         style="word-wrap: break-word;max-width: 375px;white-space: normal;"
+                                         v-text="item.hfxx"></div>
+                                    <div class="chatTime"><span
+                                      style="font-size: 14px;vertical-align: bottom;margin-left: 3px">{{
+                                        item.wtcjsj
+                                      }}</span></div>
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -953,43 +963,23 @@
             </div>
             <div v-show="isShowLdps" style="width: 300px;display: inline-block;float: right;">
               <el-card v-show="isShowLdps" shadow="always" class="box-card cards tablec"
-                       style="white-space:nowrap;overflow-x: scroll;height: 695px;border-radius: 20px">
+                       style="white-space:nowrap;overflow-x: scroll;height: 695px;overflow-y: auto;background: linear-gradient(to bottom, #0781E6, #7ED4D9);width: 300px;border-radius: 20px">
                 <div style="margin-top: 20px;margin-bottom: 20px">
                   <label style="margin-left: 115px;font-size: 18px;">领导批示</label>
                 </div>
                 <div v-for="item in ldpiList">
                   <div class="chatName" v-text="item.hfr"></div>
-                  <div @contextmenu="showContextMenu($event,item)" @click="huifuyangshione(item.xh)"
-                       :class="{ 'clicked': currentDivIndex === item.xh }"
-                       class="chatBox chatBox-left"
-                       v-text="item.hfxx" style="word-wrap: break-word;max-width: 200px;white-space: normal"></div>
-                  <div class="chatTime"><span style="font-size: 14px">{{ item.wtcjsj }}</span></div>
+                  <div style="vertical-align: top;display: inline-block">
+                    <div @contextmenu="showContextMenu($event,item)"
+                         @click="huifuyangshione(item.xh)"
+                         :class="{ 'clicked': currentDivIndex === item.xh }"
+                         class="chatBox chatBox-left"
+                         v-text="item.hfxx"
+                         style="word-wrap: break-word;max-width: 200px;white-space: normal"></div>
+                    <div class="chatTime"><span
+                      style="font-size: 14px;vertical-align: bottom;margin-left: 3px">{{ item.wtcjsj }}</span></div>
+                  </div>
                 </div>
-                <!--                <el-table
-                                  class="tablec"
-                                  :data="ldpiList"
-                                  border
-                                  size="mini"
-                                  style="width: 100%;margin-top: 26px;">
-                                  <el-table-column
-                                    prop="hfr"
-                                    label="人员"
-                                    show-overflow-tooltip
-                                  >
-                                  </el-table-column>
-                                  <el-table-column
-                                    prop="hfxx"
-                                    label="回复信息"
-                                    show-overflow-tooltip
-                                  >
-                                  </el-table-column>
-                                  <el-table-column
-                                    prop="wtcjsj"
-                                    label="时间"
-                                    show-overflow-tooltip
-                                  >
-                                  </el-table-column>
-                                </el-table>-->
               </el-card>
             </div>
           </el-main>
@@ -1001,6 +991,7 @@
       class="buttonDialog dialogRad"
       title="回复"
       @open="dialogOpened"
+      v-if="huifuDialog"
       :visible.sync="huifuDialog"
       width="30%"
     >
@@ -1014,7 +1005,7 @@
       </el-input>
       <span slot="footer" class="dialog-footer">
         <el-button @click="huifuDialog=false">取 消</el-button>
-        <el-button type="primary" @click="huifuSubmit(ejhfppyj,huifuId,'回复','1')">确 定</el-button>
+        <el-button type="primary" @click.once="huifuSubmit(ejhfppyj,huifuId,'回复','1')">确 定</el-button>
       </span>
     </el-dialog>
     <!--  例行反馈的按钮的弹出框  -->
@@ -1023,6 +1014,7 @@
       @open="dialogLXFKOpened"
       style="margin-top: 150px"
       title="例行反馈"
+      v-if="lixingfankuiDialog"
       :visible.sync="lixingfankuiDialog"
       width="30%">
       <el-input
@@ -1034,13 +1026,14 @@
       </el-input>
       <span slot="footer" class="dialog-footer">
         <el-button @click="lixingfankuiDialog = false">取 消</el-button>
-        <el-button type="primary" @click="huifuSubmit(ejhfppyj,huifuId,'例行反馈','1')">确 定</el-button>
+        <el-button type="primary" @click.once="huifuSubmit(ejhfppyj,huifuId,'例行反馈','1')">确 定</el-button>
       </span>
     </el-dialog>
     <el-dialog
       @open="dialogLDPSOpened"
       class="buttonDialog dialogRad"
       title="领导批示"
+      v-if="lingdaopishiDialog"
       :visible.sync="lingdaopishiDialog"
       width="30%">
       <el-input
@@ -1053,11 +1046,11 @@
       </el-input>
       <span slot="footer" class="dialog-footer">
         <el-button @click="lingdaopishiDialog = false">取 消</el-button>
-        <el-button type="primary" @click="huifuSubmit(ejhfppyj,huifuId,'领导批示','1')">确 定</el-button>
+        <el-button type="primary" @click.once="huifuSubmit(ejhfppyj,huifuId,'领导批示','1')">确 定</el-button>
       </span>
     </el-dialog>
 
-    <el-dialog class="dialogRad" title="选择答案" :visible.sync="xuanzedaan" @open="clearSelect">
+    <el-dialog class="dialogRad" title="选择答案" v-if="xuanzedaan" :visible.sync="xuanzedaan" @open="clearSelect">
       <el-table
         ref="daanTable"
         @selection-change="handleChangeSelection"
@@ -1071,10 +1064,11 @@
       </el-table>
       <span slot="footer" class="dialog-footer">
         <el-button @click="xuanzedaan = false">取 消</el-button>
-        <el-button type="primary" @click="confirmAnswer()">确 定</el-button>
+        <el-button type="primary" @click="confirmAnswer(closureID)">确 定</el-button>
       </span>
     </el-dialog>
-    <el-dialog class="dialogRad" :close-on-click-modal="false" :title="selectTitle" width="1200px" :visible.sync="treeVisual">
+    <el-dialog class="dialogRad" :close-on-click-modal="false" :title="selectTitle" width="1200px"
+               :visible.sync="treeVisual">
       <deptTreeSelect :selectZrrList="selectTitle==='选择责任人'?selectZrrList:selectYzrList"
                       :text="selectTitle"
                       @selectDialogCancel="treeVisual=false"
@@ -1084,42 +1078,53 @@
 
       </deptTreeSelect>
     </el-dialog>
-    <!--    <tree-transfer title="选择责任人" :from_data='fromData' :to_data='toData' :defaultProps="{label:'label'}"             @addBtn='add' @removeBtn='remove' :mode='mode' height='540px' filter openAll>
-        </tree-transfer>-->
+    <el-dialog class="dialogRad" :close-on-click-modal="false" title="历史答案查询" width="1200px"
+               :visible.sync="lishidaanDialog">
+      <zdhf ref="cxda" @xiangxixinxi="xiangxixinxi" v-if="lishidaanDialog" :form="form"></zdhf>
+    </el-dialog>
+    <!--详细信息弹窗-->
+    <el-dialog class="zdhfDialog" :close-on-click-modal="false" @close="shifoumanyi" title="详细信息"
+               :visible.sync="xiangxiDialog">
+      <xiangxixinxi v-if="xiangxiDialog" :jhsj-list="jhsjList" :form="form"></xiangxixinxi>
+    </el-dialog>
+    <!--是否满意-->
+    <el-dialog
+      :close-on-click-modal="false"
+      class="zdhfButDialog"
+      title
+      center
+      v-if="shifoumanyiDialog"
+      :visible.sync="shifoumanyiDialog" width="500px">
+      <span slot="title" style="font-size: 30px;">系统提示</span>
+      <div style="font-size: 20px;text-align: center;width: 100%">问题解决方案是否满意?</div>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click.once="closeitOK">满 意</el-button>
+        <el-button type="primary" @click.once="shifoumanyiDialog=false" style="margin-left: 20px">不满意</el-button>
+        <el-button @click="shifoumanyiDialog=false" style="margin-left: 20px">取消</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import {
-  getwtbhMethod,
-  getjjcdMethod,
-  getwtxlMethod,
-  getwtlyMethod,
-  getwtlbMethod,
-  selectWtxxData,
-  createQuestion,
-  deleteQuestions,
-  updateQuestions,
-  updateQuestionsStatus,
-  getJhjl,
-  selectJhjlList,
-  answerSelectOff,
-  updateQuestionStatus,
-  getLDPS,
-  //回复预览弹出框的方法
-  //获取责任人的数据js
-  getzerData,
-  //回复信息js
-  saveJhjlList,
-  closedLoop, activate,
-  deleteJhjlByXh, updateQuestionWTDBToZero, updateQuestionWddb,
+  getwtbhMethod, getjjcdMethod, getwtxlMethod,
+  getwtlyMethod, getwtlbMethod, selectWtxxData,
+  createQuestion, deleteQuestions, updateQuestions,
+  updateQuestionsStatus, getJhjl, getLDPS,
+  selectJhjlList, answerSelectOff, updateQuestionStatus,
+  getzerData, saveJhjlList, closedLoop, activate,
+  deleteJhjlByXh, updateQuestionWTDBToZero, updateQuestionWddb, getJhjlByWtid,
 } from "@/api/question/question";
-import {addCjls} from "@/api/question/upQuestion";
+import {addCjls, updateDaccToRd} from "@/api/question/upQuestion";
 import deptTreeSelect from "@/views/question/myquestion/deptTreeSelect"
+import zdhf from "@/views/question/WTGL_ZDHF/index";
+import xiangxixinxi from "@/views/question/myquestion/xiangxixinxi";
 
 export default {
+  name: 'Myquestion',
   components: {
-    deptTreeSelect
+    deptTreeSelect, zdhf, xiangxixinxi
   },
   computed: {
     getTimeText() {
@@ -1147,73 +1152,6 @@ export default {
           const date = new Date();
           const week = date.getDay();
           return '红';
-          /*switch (row.qwfksj) {
-            case '一':
-              if (week === 6) {
-                return '绿';
-              }else if (week === 0) {
-                return '黄';
-              } else if (week===1){
-                return '红';
-              }
-              break;
-            case '二':
-              if (week === 0) {
-                return '绿';
-              }else if (week === 1) {
-                return '黄';
-              } else if (week===2){
-                return '红';
-              }
-              break;
-            case '三':
-              if (week === 1) {
-                return '绿';
-              }else if (week === 2) {
-                return '黄';
-              } else if (week===3){
-                return '红';
-              }
-              break;
-            case '四':
-              if (week === 2) {
-                return '绿';
-              }else if (week === 3) {
-                return '黄';
-              } else if (week===4){
-                return '红';
-              }
-              break;
-            case '五':
-              if (week === 3) {
-                return '绿';
-              }else if (week === 4) {
-                return '黄';
-              } else if (week===5){
-                return '红';
-              }
-              break;
-            case '六':
-              if (week === 4) {
-                return '绿';
-              }else if (week === 5) {
-                return '黄';
-              } else if (week===6){
-                return '红';
-              }
-              break;
-            case '日':
-              if (week === 5) {
-                return '绿';
-              }else if (week === 6) {
-                return '黄';
-              } else if (week===0){
-                return '红';
-              }
-              break;
-            default:
-              console.log("数据存储错误");
-          }*/
         }
 
       };
@@ -1221,6 +1159,13 @@ export default {
   },
   data() {
     return {
+      shifoumanyiDialog: false,//是否满意的弹出框
+      xiangxiDialog: false,//详细信息是否弹出框
+      jhsjListDia: [],//交互数据的数据集合
+      wwcts: '',//未完成天数
+      cqts: '',//超期天数
+      wcts: '',//完成天数
+      lishidaanDialog: false,//历史答案查询的是否弹出框
       selectYzrList: [],//选中的阅知人集合
       selectZrrList: [],//选中的责任人集合
       zrrstr: '',//创建任务弹窗的责任人
@@ -1229,7 +1174,7 @@ export default {
       selectTitle: '',//选择责任人或阅知人弹出框的标题
       treeVisual: false,//弹出选择责任人和阅知人的弹窗
 
-
+      isone: true,
       updateIds: [],//存储需要修改的id值
       openUpdate: false,//修改的弹出框
       single: true,//多选就不好使
@@ -1294,7 +1239,6 @@ export default {
       ldpiList: [],//领导批示数据的集合
       huifuxinxiList: [],//显示需要选择的正确答案列表
 
-
       options: [
         {
           value: 'wtmc',
@@ -1311,31 +1255,7 @@ export default {
         }, {
           value: 'wtms',
           label: '问题描述'
-        }],
-      optionMZ: [
-        {
-          value: '一',
-          label: '每周一'
-        }, {
-          value: '二',
-          label: '每周二'
-        }, {
-          value: '三',
-          label: '每周三'
-        }, {
-          value: '四',
-          label: '每周四'
-        }, {
-          value: '五',
-          label: '每周五'
-        }, {
-          value: '六',
-          label: '每周六'
-        }, {
-          value: '日',
-          label: '每周日'
-        }
-      ],
+        }],//选择可以查询的字段
 
       isQwfksj: true,//期望解决时间的是否可以写数据
       canceTime: false,//希望解决时间是否可以写数据
@@ -1409,6 +1329,75 @@ export default {
     }
   },
   methods: {
+    //给表格的表头设置颜色
+    styleFunc({row,column,rowIndex, columnIndex}) {
+      if (column.property === 'wtms' || column.property === 'wtmc') {
+        return "background:orange";
+      }
+    },
+    //详细信息的方法
+    xiangxixinxi(row) {
+      this.daccid = row.daxxid;
+      this.jhsjList = [];
+      getJhjlByWtid({WTID: row.wtid}).then(res => {
+        if (res.code === 200) {
+          this.jhsjList = res.rows;
+        }
+      });
+      this.xiangxiDialog = true
+    },
+    //满意的按钮执行方法
+    closeitOK() {
+      updateDaccToRd({daxxid: this.daccid}).then(res => {
+        if (res.code === 200) {
+          this.$message.success("已满意！");
+          this.$refs.cxda.getList();
+        } else {
+          this.$message.error("操作失败");
+        }
+      });
+      this.shifoumanyiDialog = false;
+    },
+    //关闭详细信息执行的方法
+    shifoumanyi() {
+      this.shifoumanyiDialog = true;
+    },
+    //计算完成天数，未完成天数等数据
+    computTime(data) {
+      //计算超期天数
+      var currentDate = new Date();
+      var xwjjsjDate = new Date(data.xwjjsj);
+      // 计算时间差（以毫秒为单位）
+      var xwjjsjms = xwjjsjDate.getTime() - currentDate.getTime();
+      // 将时间差转换为分钟
+      var xwjjsjmin = Math.floor(xwjjsjms / (1000 * 60 * 60 * 24));
+      this.cqts = xwjjsjmin.toString() + "天";
+
+      //计算完成天数
+      if (data.wtzt === '已关闭') {
+        var gbsjDate = new Date(data.gbsj);
+        // 计算时间差（以毫秒为单位）
+        var gbsjms = currentDate.getTime() - gbsjDate.getTime();
+        // 将时间差转换为分钟
+        var gbsjmin = Math.floor(gbsjms / (1000 * 60 * 60 * 24));
+        this.wcts = gbsjmin.toString() + "天";
+      }
+      //计算未完成天数
+      if (data.wtzt !== '已关闭') {
+        var cjsjDate = new Date(data.cjsj);
+        // 计算时间差（以毫秒为单位）
+        var cjsjms = currentDate.getTime() - cjsjDate.getTime();
+        // 将时间差转换为分钟
+        var cjsjmin = Math.floor(cjsjms / (1000 * 60 * 60 * 24));
+        this.wwcts = cjsjmin.toString() + "天";
+      } else {
+        this.wwcts = '已完成';
+      }
+    },
+    //历史记录的查寻的方法
+    lishidaanchaxun() {
+      this.lishidaanDialog = true;
+    },
     //创建问题弹窗的取消按钮
     createQuestionCloseButten() {
       this.selectZrrList = []
@@ -1425,8 +1414,8 @@ export default {
         let zrbmStr = []
         this.selectZrrList = list
         this.selectZrrList.forEach(item => {
-          zrrStr.push(item.name)
-          zrbmStr.push(item.deptName)
+          zrrStr.push(item.nickName)
+          zrbmStr.push(item.dept.deptName)
         })
         this.zrrstr = zrrStr.join(",")
         this.zrbmstr = zrbmStr.join(",")
@@ -1434,7 +1423,7 @@ export default {
         let yzrStr = []
         this.selectYzrList = list
         this.selectYzrList.forEach(item => {
-          yzrStr.push(item.name)
+          yzrStr.push(item.nickName)
         })
         this.yzrstr = yzrStr.join(",")
       }
@@ -1450,7 +1439,11 @@ export default {
       this.$refs.daanTable.clearSelection();
     },
     //关闭选择信息的确定按钮
-    confirmAnswer() {
+    confirmAnswer(row) {
+      if (this.handleSelectGB.length === 0) {
+        this.$message.error("请至少选择一条数据")
+        return
+      }
       this.$confirm('是否确认答案选择项?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -1458,10 +1451,13 @@ export default {
       }).then(() => {
         answerSelectOff({
           sjjhDTOS: this.handleSelectGB,
-          wtxl: this.closureID.wtxl,
-          wtlb: this.closureID.wtlb,
-          gxh: this.closureID.gxh,
-          wtms: this.closureID.wtms
+          wtxl: row.wtxl,
+          wtlb: row.wtlb,
+          gxh: row.gxh,
+          wtms: row.wtms,
+          jh: row.jh,
+          cpxh: row.cpxh,
+          zrr: row.dqzrr,
         }).then(res => {
           if (res.code === 200) {
             this.$message.success("答案保存并且关闭成功");
@@ -1476,13 +1472,13 @@ export default {
     //实现双击弹出回复预览弹出框
     openDialog(row) {
       if (this.editingProperty === 'wtmc' || this.editingProperty === 'wtms') {
+        this.computTime(row);
         this.isLdps = false;
         this.isShowLdps = false;
         this.isShow = false;
         this.withd = '1090px';
         this.currentDivIndex = '';
         this.jhsjList = [];
-        this.closureID = {};
         this.wtms = '';
         this.fujian = false;
         this.islxfk = false;
@@ -1501,7 +1497,6 @@ export default {
         this.loadzerData();
         updateQuestionWTDBToZero({id: this.closureID.id}).then(res => {
           if (res.code === 200) {
-            this.shuaxin();
           }
         });
       }
@@ -1603,7 +1598,6 @@ export default {
         getLDPS({WTID: this.closureID.id, JHZT: jhzt}).then(res => {
           if (res.code === 200) {
             this.ldpiList = res.rows;
-            console.log(res.rows);
             if (this.ldpiList.length > 0) {
               this.withd = '1390px';
               this.isShowLdps = true;
@@ -1645,6 +1639,7 @@ export default {
     },
     //回复按钮的确定方法
     huifuSubmit(ejhfppyj, id, type, js) {
+      this.huifuDialog = false;
       let sjjh = {
         value: this.closureID.wtzt,
         hfxx: this.huifuTest,
@@ -1711,7 +1706,6 @@ export default {
       }
       updateQuestionWddb(sjjh).then(res => {
         if (res.code === 200) {
-          console.log(res.msg);
         }
       });
     },
@@ -1780,23 +1774,10 @@ export default {
         if (res.code === 200) {
           this.huifuxinxiList = res.rows;
         } else {
-          console.log("数据不存在");
         }
       });
       //先弹出一个弹出框，并且选择答案。
       this.xuanzedaan = true;
-      /*let ids = [];
-      const id = {id: closureID.id, value: ''};
-      id.value = type;
-      ids.push(id);
-      this.open = false;
-      this.$modal.confirm('是否确认关闭数据项？').then(function () {
-        updateQuestionsStatus(ids)
-      }).then(() => {
-        this.$message.success("关闭成功");
-        this.load();
-      }).catch(() => {
-      });*/
     },
     //判断问题升级，如果问题升级为true，那么希望解决时间变灰
     cancellationTime() {
@@ -1810,10 +1791,10 @@ export default {
     wtlbChange() {
       this.form.wtxl = '';
       this.wtxlMethod();
-      let nameList = ['工艺','调度','生产','设备'];
+      let nameList = ['工艺', '调度', '生产', '设备'];
       this.isXcphwt = true;
       for (let string of nameList) {
-        if(this.form.wtlb.indexOf(string) !== -1){
+        if (this.form.wtlb.indexOf(string) !== -1) {
           this.isXcphwt = false;
         }
       }
@@ -1879,7 +1860,6 @@ export default {
       getwtbhMethod().then(res => {
         if (res.code === 200) {
           this.form.wtbh = res.msg;
-          console.log(this.form.wtbh);
         }
       })
     },
@@ -1899,15 +1879,7 @@ export default {
     },
     //按照条件查询数据
     handleQuery() {
-      this.queryParams.pageNum = 1;
       this.load();
-    },
-    /** 重置按钮操作 */
-    resetQuery() {
-      this.queryParams.userName = null
-      this.queryParams.type = '';
-      this.resetForm("queryForm");
-      this.handleQuery();
     },
     //关闭按钮
     closeQuestion() {
@@ -1956,23 +1928,6 @@ export default {
           this.$message.error("修改失败");
         }
       });
-
-      /*console.log(this.tableData)
-      if (this.handleSelect.length > 0) {
-        let ids = [];
-        this.handleSelect.forEach(item=>{
-          ids.push(item.yd01);
-        })
-        deleteQuestions(ids).then(res=>{
-          if (res.code === 200) {
-            this.$message.success("保存成功");
-            this.handleSelect = [];
-            this.load();
-          } else {
-            this.$message.error("删除失败");
-          }
-        })
-      }*/
     },
     handleAdd() {
       this.isLdps = false;
@@ -1981,7 +1936,6 @@ export default {
       this.withd = '1090px';
       this.currentDivIndex = '';
       this.jhsjList = [];
-      this.closureID = {};
       this.wtms = '';
       this.fujian = false;
       let number = this.handleSelect.length;
@@ -1995,6 +1949,7 @@ export default {
       }
       this.islxfk = false;
       this.closureID = this.handleSelect[0];
+      this.computTime(this.closureID);
       this.wtms = this.handleSelect[0].wtms;
       if (this.closureID.lxfk === '例行反馈') {
         this.loadJhjlList('例行反馈');
@@ -2009,10 +1964,29 @@ export default {
       this.loadzerData();
       updateQuestionWTDBToZero({id: this.closureID.id}).then(res => {
         if (res.code === 200) {
-          console.log(res.msg);
-          this.shuaxin();
         }
       });
+    },
+    dialogReload() {
+      this.isLdps = false;
+      this.isShowLdps = false;
+      this.isShow = false;
+      this.currentDivIndex = '';
+      this.jhsjList = [];
+      this.wtms = '';
+      this.fujian = false;
+      this.islxfk = false;
+      if (this.closureID.lxfk === '例行反馈') {
+        this.loadJhjlList('例行反馈');
+        this.islxfk = true;
+      } else {
+        this.loadJhjlList('回复');
+        this.islxfk = false;
+      }
+      this.loadJhjlList('领导批示');
+      this.open = true;
+      this.title = "回复/预览";
+      this.loadzerData();
     },
     //删除问题的方法
     deleteData() {
@@ -2031,17 +2005,6 @@ export default {
       this.handleSelect.forEach(item => {
         ids.push(item.id);
       })
-      /*for (let i = 0; i < num; i++) {
-        let data = {yd01: '',index:''};
-        data.yd01 = this.handleSelect[i].yd01;
-        data.index = this.handleSelect[i].index;
-        this.handleSelect[i].isDelete = 'true';
-        this.tableData.forEach(item => {
-          if (item.yd01 === data.yd01) {
-            this.tableData.splice(this.tableData.indexOf(item, 0), 1)
-          }
-        })
-      }*/
       this.$confirm('是否确认删除数据项?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -2063,6 +2026,9 @@ export default {
     },
     //弹出框的确定并提交方法的执行方法
     saveDataDialog() {
+      if (!this.isone) {
+        return;
+      }
       if (this.form.wtms === '') {
         this.$message.error("请输入问题描述的数据");
         return;
@@ -2078,19 +2044,22 @@ export default {
       if (this.form.xcphwt) {
         let data = {
           wtmc: this.form.wtmc,
-          jh: this.form.cpxh,
+          cpxh: this.form.cpxh,
+          jh: this.form.jh,
           scddh: this.form.scddh,
           wtms: this.form.wtms,
           pc: this.form.pc,
           sbxh: this.form.sb,
           gxh: this.form.gxh,
           wtlb: this.form.wtlb,
-          wtxl: this.form.wtxl,
-          cjbmks: '热表处理'
+          wtxl: this.form.wtxl
         };
+        this.isone = false
         addCjls(data).then(res => {
           this.$message.success(res.msg);
           this.dialogTableVisible = false;
+          this.createQuestionShuaxin();
+          this.isone = true
         });
         return;
       }
@@ -2099,7 +2068,7 @@ export default {
       } else {
         this.form.lxfk = '业务交互';
       }
-      if (this.form.wtsj === false) {
+      if (!this.form.wtsj) {
         if (this.form.xwjjsj === null || this.form.xwjjsj === '') {
           this.$message.error("没有选择期望解决时间");
           return;
@@ -2112,7 +2081,6 @@ export default {
           const minutes = String(date.getMinutes()).padStart(2, '0');
           const seconds = String(date.getSeconds()).padStart(2, '0');
           this.form.xwjjsj = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-          console.log(this.form.xwjjsj);
         }
       }
       let selectZrrArray = []
@@ -2120,16 +2088,22 @@ export default {
       let yzrbmList = []
       let yzrList = []
       let yzrbmidList = []
-      this.selectZrrList.forEach(item=>{
+      this.selectZrrList.forEach(item => {
         const zrrVo = {
-          zrrid: item.id,
+          zrrid: item.userId,
           zrrzt: '未处理',
-          zrbm: item.deptName,
-          zrr: item.name,
+          zrbm: item.dept.deptName,
+          zrr: item.nickName,
           zrbmid: item.deptId,
           sfzzrr: item.sfzzrr
         }
         selectZrrArray.push(zrrVo)
+      })
+      this.selectYzrList.forEach(item=>{
+        yzridList.push(item.userId);
+        yzrbmList.push(item.dept.deptName)
+        yzrList.push(item.nickName)
+        yzrbmidList.push(item.deptId)
       })
       this.form.zrrvolist = selectZrrArray;
       this.form.yzrid = yzridList.join(',')
@@ -2139,18 +2113,25 @@ export default {
       ////////////////////////////////////////////////////////
       this.form.cjbm = '未得到的创建部门'//this.userInfo.deptName
       ////////////////////////////////////////////////////////
+      this.isone = false
       createQuestion(this.form).then(res => {
         if (res.code === 200) {
           this.$message.success("创建问题成功");
+          this.dialogTableVisible = false;
+          this.createQuestionShuaxin();
           this.load();
+          this.isone = true
         } else {
           this.$message.success("创建失败");
+          this.dialogTableVisible = false;
+          this.createQuestionShuaxin();
+          this.isone = true
         }
       });
       this.selectZrrList = []
       this.selectYzrList = []
-      this.createQuestionShuaxin();
-      this.dialogTableVisible = false;
+
+
     },
     //刷新创建问题的数据情况
     createQuestionShuaxin() {
@@ -2239,7 +2220,6 @@ export default {
     },
     //例行反馈的数据改变触发的方法
     lxfkMethod() {
-      console.log(this.form.lxfk)
       if (this.form.lxfk === true) {
         this.isQwfksj = false;
         this.canceTime = false;
@@ -2266,12 +2246,7 @@ export default {
         this.isWtsj = true;
       }
     },
-    zrrAndYzr(title) {
-      console.log('打破了');
-      this.treeVisual = true;
-      this.selectTitle = title;
-    },
-    //点击回复信息变颜色的方法
+    //小气泡的触发事件
     handlePageClick(event) {
       // 检查点击事件是否发生在小气泡上
       const isBubbleClicked = event.target.closest('.chatBox');
@@ -2280,19 +2255,19 @@ export default {
         this.currentDivIndex = null; // 点击的是其他地方，将当前小气泡的索引设为 null，恢复原来的颜色
       }
     },
-    //设置回复的焦点事件
+    //打开弹出框的焦点事件
     dialogOpened() {
       this.$nextTick(() => {
         this.$refs.huifuInput.focus();
       });
     },
-    //设置领导批示的焦点事件
+    //打开弹出框的焦点事件
     dialogLDPSOpened() {
       this.$nextTick(() => {
         this.$refs.lingdaoInput.focus();
       });
     },
-    //设置例行反馈焦点事件
+    //打开弹出框的焦点事件
     dialogLXFKOpened() {
       this.$nextTick(() => {
         this.$refs.lixingfankuiInput.focus();
@@ -2305,17 +2280,49 @@ export default {
     document.addEventListener('click', this.handlePageClick);
   },
   beforeDestroy() {
+    //注销弹窗清空右侧树形框
     document.removeEventListener('click', this.handlePageClick);
   }
 };
 </script>
 
 <style>
-
-.home ::-webkit-scrollbar {
-  width: 8px; /* 设置滚动条的宽度 */
-  height: 8px;
+.zdhfButDialog .el-dialog {
+  border-radius: 10px;
 }
+
+.zdhfButDialog .el-dialog__close {
+  font-size: 30px;
+}
+
+.zdhfButDialog .el-dialog__headerbtn .el-dialog__close {
+  color: red;
+}
+
+.zdhfButDialog .el-dialog:not(.is-fullscreen) {
+  margin-top: 15% !important;
+}
+
+.zdhfDialog .el-dialog:not(.is-fullscreen) {
+  margin-top: 10% !important;
+}
+
+.zdhfDialog .el-dialog__body {
+  padding: 0 10px;
+}
+
+.zdhfDialog .el-dialog {
+  border-radius: 10px;
+}
+
+.zdhfDialog .el-dialog__close {
+  font-size: 30px;
+}
+
+.zdhfDialog .el-dialog__headerbtn {
+  color: red;
+}
+
 .tablefirst .el-table__cell {
   height: 40px;
 }
@@ -2396,6 +2403,21 @@ export default {
 
 .myQuestionTable .el-table--medium .el-table__cell {
   padding: 0;
+}
+.dialog .el-table .el-table__header-wrapper th, .el-table .el-table__fixed-header-wrapper th{
+  color: black;
+}
+.dialog .el-aside{
+  background-color: transparent;
+}
+.dialog .el-checkbox__input.is-checked+.el-checkbox__label{
+  color: black;
+}
+.dialogRad .el-checkbox__label{
+  color: black;
+}
+.dialogRad .el-checkbox__input.is-checked + .el-checkbox__label{
+  color: black;
 }
 </style>
 <style scoped lang="scss">
@@ -2479,6 +2501,7 @@ export default {
   word-break: break-all;
   border: 1px solid #989898;
   cursor: default;
+  margin-bottom: 10px;
 }
 
 .chatBox-left::before {
@@ -2488,9 +2511,9 @@ export default {
   position: absolute;
   border: 5px solid;
   border-right-color: greenyellow;
-  border-left-color: #ffffff;
-  border-top-color: #ffffff;
-  border-bottom-color: #ffffff;
+  border-left-color: transparent;
+  border-top-color: transparent;
+  border-bottom-color: transparent;
 }
 
 .chatName {
@@ -2499,7 +2522,6 @@ export default {
   border-radius: 30px;
   padding: 5px;
   font-size: 16px;
-  margin-bottom: 10px;
 }
 
 .chatTime {

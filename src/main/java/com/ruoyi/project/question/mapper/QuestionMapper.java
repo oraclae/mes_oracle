@@ -3,6 +3,7 @@ package com.ruoyi.project.question.mapper;
 import com.ruoyi.project.question.domain.SjjhDTO;
 import com.ruoyi.project.question.domain.WtxxDTO;
 import com.ruoyi.project.question.domain.vo.*;
+import com.ruoyi.project.system.domain.SysUser;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -204,12 +205,13 @@ public interface QuestionMapper {
     /**
      * 保存答案列表
      */
-    void saveDaccList(@Param("daccVOS") List<DaccVO> daccVOS);
+    void saveDaccList(@Param("dacc") DaccVO daccVO);
 
     /**
      * 更新问题状态
      */
     void updateQuestionStatus(@Param("wtid") String wtid, @Param("status") String status);
+    void updateQuestionStatusSJ(@Param("wtid") String wtid, @Param("status") String status, @Param("format") String format);
 
     /**
      * 更新问题的判断当周反馈没有
@@ -235,4 +237,18 @@ public interface QuestionMapper {
      * 根据id更新交互数据
      */
     void updateJHJL(SjjhDTO sjjhDTO);
+    /**
+     * 查询责任人表主责任人根据问题id
+     */
+    ZrrVO selectZrrByWtidAndZhu(@Param("wtid") String wtid);
+
+    /**
+     * 根据问题id查询所有交互数据
+     */
+    List<Sjjh> getJhjlByWtid(@Param("wtid") String wtid);
+
+    /**
+     * 创建责任代办
+     */
+    void createZRDB(List<ZrrVO> zrrVOList);
 }

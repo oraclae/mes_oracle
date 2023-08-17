@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container home">
+  <div class="app-container">
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
@@ -53,7 +53,7 @@
       </el-col>
     </el-row>
 
-    <el-table border v-loading="loading" :data="ywzdList" @selection-change="handleSelectionChange">
+    <el-table height="calc(100vh - 220px)" border v-loading="loading" :data="ywzdList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="序号" type="index" width="50"/>
       <el-table-column label="主节点(父)" align="center" prop="zjd" />
@@ -235,10 +235,6 @@ export default {
 };
 </script>
 <style>
-.home ::-webkit-scrollbar {
-  width: 8px; /* 设置滚动条的宽度 */
-  height: 8px;
-}
 .butDialog .el-dialog {
   border-radius: 30px;
 }

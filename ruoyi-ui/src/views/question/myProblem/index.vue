@@ -34,6 +34,8 @@
       <el-col :span="24" :xs="24">
         <div class="MyProblemTable">
           <el-table
+            :header-cell-style="styleFunc"
+            height="calc(100vh - 220px)"
             :data="tableData"
             v-loading="loading"
             :show-overflow-tooltip="true"
@@ -100,17 +102,6 @@
                 <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'cjbm'"
                           v-model="scope.row.cjbm" @blur="inputBlur(scope)"></el-input>
                 <span v-else>{{ scope.row.cjbm}}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="cjks"
-              label="科室"
-              show-overflow-tooltip
-            >
-              <template slot-scope="scope">
-                <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'cjks'"
-                          v-model="scope.row.cjks" @blur="inputBlur(scope)"></el-input>
-                <span v-else>{{ scope.row.cjks }}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -213,47 +204,14 @@
               </template>
             </el-table-column>
             <el-table-column
-              prop="zrbm"
-              label="责任部门"
-              show-overflow-tooltip
-            >
-              <template slot-scope="scope">
-                <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'zrbm'"
-                          v-model="scope.row.zrbm" @blur="inputBlur(scope)"></el-input>
-                <span v-else>{{ scope.row.zrbm }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="zrks"
-              label="责任科室"
-              show-overflow-tooltip
-            >
-              <template slot-scope="scope">
-                <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'zrks'"
-                          v-model="scope.row.zrks" @blur="inputBlur(scope)"></el-input>
-                <span v-else>{{ scope.row.zrks }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="zrr"
-              label="责任人"
-              show-overflow-tooltip
-            >
-              <template slot-scope="scope">
-                <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'zrr'"
-                          v-model="scope.row.zrr" @blur="inputBlur(scope)"></el-input>
-                <span v-else>{{ scope.row.zrr }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="yrzbm"
+              prop="yzrbm"
               label="阅知人部门"
               show-overflow-tooltip
             >
               <template slot-scope="scope">
-                <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'yrzbm'"
-                          v-model="scope.row.yrzbm" @blur="inputBlur(scope)"></el-input>
-                <span v-else>{{ scope.row.yrzbm }}</span>
+                <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'yzrbm'"
+                          v-model="scope.row.yzrbm" @blur="inputBlur(scope)"></el-input>
+                <span v-else>{{ scope.row.yzrbm }}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -290,14 +248,14 @@
               </template>
             </el-table-column>
             <el-table-column
-              prop="sjzrr"
-              label="升级责任人"
+              prop="dqzrr"
+              label="主责任人"
               show-overflow-tooltip
             >
               <template slot-scope="scope">
                 <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'sjzrr'"
                           v-model="scope.row.sjzrr" @blur="inputBlur(scope)"></el-input>
-                <span v-else>{{ scope.row.sjzrr }}</span>
+                <span v-else>{{ scope.row.dqzrr }}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -426,24 +384,25 @@
     <el-dialog class="dialog dialogRad" :visible.sync="open" :width="withd"
                style="padding-top: 0;padding-bottom: 0;margin-top:1px;" append-to-body>
       <div class="app-container indexHeight">
-        <el-card shadow="always" class="box-card" style="background: linear-gradient(to bottom, #93bec1, #2982C3);width: 100%;border-radius: 30px">
+        <el-card shadow="always" class="box-card" style="background: linear-gradient(to bottom, rgba(7, 129, 230,0.52), rgba(7, 129, 230,1));width: 100%;border-radius: 30px">
           <div style="line-height: 15px;">
             <label style="font-size: 18px">回复/预览</label>
             <el-button style="margin-left: 10px" type="warning" size="small" @click="open=false">退出</el-button>
+            <el-button style="margin-left: 10px" size="small" @click="dialogReload">刷新</el-button>
             <el-button style="background-color: red" type="primary" size="small"
                        @click="applyForClosure(closureID)">申请关闭
             </el-button>
             <div style="display: inline-block;text-align: center;margin-left: 240px;font-size: 15px">
               <div><label>未完成天数</label></div>
-              <div><label>{{ closureID.wwcts }}</label></div>
+              <div><label>{{ wwcts === 'NAN天' ? '0天' : wwcts }}</label></div>
             </div>
             <div style="display: inline-block;text-align: center;margin-left: 120px;font-size: 15px">
               <div><label>超期天数</label></div>
-              <div><label>{{ closureID.cqts }}</label></div>
+              <div><label>{{ cqts === 'NAN天' ? '0天' : cqts }}</label></div>
             </div>
             <div style="display: inline-block;text-align: center;margin-left: 140px;font-size: 15px">
               <div><label>完成天数</label></div>
-              <div><label>{{ closureID.wcts }}</label></div>
+              <div><label>{{ wcts === 'NAN天' ? '0天' : wcts }}</label></div>
             </div>
           </div>
         </el-card>
@@ -451,15 +410,11 @@
           <el-aside width="300px">
             <div>
               <el-card shadow="always" class="box-card"
-                       style="background: linear-gradient(to right, #2982C3, #93bec1);width: 300px;border-radius: 20px">
+                       style="height: 291px; background: linear-gradient(to bottom, rgba(7, 129, 230,1), rgba(7, 129, 230,0.52));width: 300px;border-radius: 20px">
                 <div>
                   <div>
                     <label>创建部门:</label>
                     <span style="margin-left: 15px" v-text="closureID.cjbm"></span>
-                  </div>
-                  <div>
-                    <label>创建科室:</label>
-                    <span style="margin-left: 15px" v-text="closureID.cjks"></span>
                   </div>
                   <div>
                     <label>创建人:</label>
@@ -490,7 +445,7 @@
             </div>
             <div>
               <el-card shadow="always" class="box-card"
-                       style="background: linear-gradient(to right, #2982C3, #93bec1);width: 300px;border-radius: 20px">
+                       style="background: linear-gradient(to bottom, rgba(7, 129, 230,1), rgba(7, 129, 230,0.52));width: 300px;border-radius: 20px">
                 <div>
                   <div>
                     <label>紧急程度:</label>
@@ -506,14 +461,14 @@
             </div>
             <div>
               <el-card shadow="always" class="box-card card tablec"
-                       style="background: linear-gradient(to right, #2982C3, #93bec1);width: 300px;border-radius: 20px;border-radius: 20px">
+                       style="background: linear-gradient(to bottom, rgba(7, 129, 230,1), rgba(7, 129, 230,0.52));width: 300px;border-radius: 20px;border-radius: 20px">
                 <el-table
                   :data="zrrList"
                   height="300px"
                   max-height="300px"
                   border
                   size="mini"
-                  style="background: linear-gradient(to right, #2982C3, #93bec1);width: 100%">
+                  style="background: linear-gradient(to bottom, rgba(7, 129, 230,1), rgba(7, 129, 230,0.52));width: 100%">
                   <el-table-column
                     prop="zrrzt"
                     label="责任人状态"
@@ -539,7 +494,7 @@
           <el-main>
             <div style="display: inline-block;float: left">
               <el-card shadow="always" class="box-card"
-                       style="background: linear-gradient(to right, #2982C3, #93bec1);width: 750px;border-radius: 20px">
+                       style="background: linear-gradient(to bottom, rgba(7, 129, 230,1), rgba(7, 129, 230,0.52));width: 750px;border-radius: 20px">
                 <div style="margin-bottom: 8px">
                   <label style="font-size: 18px">问题名称:</label>
                   <label style="font-size: 18px">{{closureID.wtmc}}</label>
@@ -557,19 +512,22 @@
                 </div>
               </el-card>
               <el-card shadow="always" class="box-card"
-                       style="background: linear-gradient(to right, #2982C3, #93bec1);width: 750px;border-radius: 20px">
+                       style="background: linear-gradient(to bottom, rgba(7, 129, 230,1), rgba(7, 129, 230,0.52));width: 750px;border-radius: 20px">
                 <!--                <el-switch
                                   v-model="islxfk"
                                   @change="switchMethod"
                                   active-text="例行反馈"
                                   inactive-text="业务交互">
                                 </el-switch>-->
-                <label style="font-size: 16px" v-if="this.closureID.lxfk==='例行反馈'">例行反馈</label>
-                <label style="font-size: 16px" v-else>业务交互</label>
-                <el-checkbox class="fj" v-model="fujian" @change="fujianyulan" style="margin-left: 25px;color: white">
+                <label style="font-size: 16px;background-image: linear-gradient(90deg, #ff1515, #021fd6);
+                  -webkit-background-clip: text; -webkit-text-fill-color: transparent"
+                       v-if="this.closureID.lxfk==='例行反馈'">例行反馈</label>
+                <label style="font-size: 16px;background-image: linear-gradient(90deg, #ff1515, #021fd6);
+                  -webkit-background-clip: text; -webkit-text-fill-color: transparent" v-else>业务交互</label>
+                <el-checkbox class="fj" v-model="fujian" @change="fujianyulan" style="margin-left: 25px;color: black">
                   附件预览
                 </el-checkbox>
-                <el-button style="margin-left: 25px;background-color: #db607a" size="mini">上传附件</el-button>
+                <el-button style="margin-left: 25px;background-color: #15f901" size="mini">上传附件</el-button>
                 <el-button v-if="this.closureID.lxfk==='例行反馈'" style="margin-left: 25px;background-color: #ffba00" size="mini"
                            @click="lixingfankuiDialogMethod">例行反馈
                 </el-button>
@@ -578,42 +536,71 @@
                 <!--                <el-button style="margin-left: 55px" @click="lingdaopishiDialogMethod" size="mini" type="danger">领导批示</el-button>-->
               </el-card>
               <el-card shadow="always" class="box-card"
-                       style="width: 750px;height:400px;overflow-y: auto;border-radius: 20px">
-                <div v-for="item in jhsjList">
+                       style="width: 750px;height:400px;overflow-y: auto;white-space:normal;overflow-x: scroll; border-radius: 20px">
+                <div style="width: 1000px" v-for="item in jhsjList" :key="item.xh">
                   <div class="chatName" v-text="item.hfr"></div>
-                  <div @contextmenu="showContextMenu($event,item)" @click="huifuyangshione(item.xh)"
-                       :class="{ 'clicked': currentDivIndex === item.xh }"
-                       @dblclick="huifuyangshi(item.ejhfppyj,item.xh,islxfk)" class="chatBox chatBox-left"
-                       v-text="item.hfxx"></div>
-                  <div class="chatTime"><span style="font-size: 14px">{{ item.wtcjsj }}</span></div>
+                  <div style="vertical-align: top;display: inline-block">
+                    <div @contextmenu="showContextMenu($event,item)" @click="huifuyangshione(item.xh)"
+                         :class="{ 'clicked': currentDivIndex === item.xh }"
+                         @dblclick="huifuyangshi(item.ejhfppyj,item.xh,islxfk)" class="chatBox chatBox-left"
+                         style="word-wrap: break-word;max-width: 375px;white-space: normal;"
+                         v-text="item.hfxx"></div>
+                    <div class="chatTime"><span
+                      style="font-size: 14px;vertical-align: bottom;margin-left: 3px">{{ item.wtcjsj }}</span></div>
+                  </div>
                   <div v-if="item.sjjhs.length>0">
-                    <div style="margin-left: 60px" v-for="item in item.sjjhs">
+                    <div style="margin-left: 60px" v-for="item in item.sjjhs" :key="item.xh">
                       <div class="chatName" v-text="item.hfr"></div>
-                      <div @contextmenu="showContextMenu($event,item)" @click="huifuyangshione(item.xh)" :class="{ 'clicked': currentDivIndex === item.xh }"
-                           @dblclick="huifuyangshi(item.ejhfppyj,item.xh,islxfk)" class="chatBox chatBox-left"
-                           v-text="item.hfxx"></div>
-                      <div class="chatTime"><span style="font-size: 14px">{{ item.wtcjsj }}</span></div>
+                      <div style="vertical-align: top;display: inline-block">
+                        <div @contextmenu="showContextMenu($event,item)" @click="huifuyangshione(item.xh)"
+                             :class="{ 'clicked': currentDivIndex === item.xh }"
+                             @dblclick="huifuyangshi(item.ejhfppyj,item.xh,islxfk)" class="chatBox chatBox-left"
+                             style="word-wrap: break-word;max-width: 375px;white-space: normal;"
+                             v-text="item.hfxx"></div>
+                        <div class="chatTime"><span
+                          style="font-size: 14px;vertical-align: bottom;margin-left: 3px">{{ item.wtcjsj }}</span></div>
+                      </div>
                       <div v-if="item.sjjhs.length>0">
-                        <div style="margin-left: 60px" v-for="item in item.sjjhs">
+                        <div style="margin-left: 60px" v-for="item in item.sjjhs" :key="item.xh">
                           <div class="chatName" v-text="item.hfr"></div>
-                          <div @contextmenu="showContextMenu($event,item)" @click="huifuyangshione(item.xh)" :class="{ 'clicked': currentDivIndex === item.xh }"
-                               @dblclick="huifuyangshi(item.ejhfppyj,item.xh,islxfk)" class="chatBox chatBox-left"
-                               v-text="item.hfxx"></div>
-                          <div class="chatTime"><span style="font-size: 14px">{{ item.wtcjsj }}</span></div>
+                          <div style="vertical-align: top;display: inline-block">
+                            <div @contextmenu="showContextMenu($event,item)" @click="huifuyangshione(item.xh)"
+                                 :class="{ 'clicked': currentDivIndex === item.xh }"
+                                 @dblclick="huifuyangshi(item.ejhfppyj,item.xh,islxfk)" class="chatBox chatBox-left"
+                                 style="word-wrap: break-word;max-width: 375px;white-space: normal;"
+                                 v-text="item.hfxx"></div>
+                            <div class="chatTime"><span style="font-size: 14px;vertical-align: bottom;margin-left: 3px">{{
+                                item.wtcjsj
+                              }}</span></div>
+                          </div>
                           <div v-if="item.sjjhs.length>0">
-                            <div style="margin-left: 60px" v-for="item in item.sjjhs">
+                            <div style="margin-left: 60px" v-for="item in item.sjjhs" :key="item.xh">
                               <div class="chatName" v-text="item.hfr"></div>
-                              <div @contextmenu="showContextMenu($event,item)" @click="huifuyangshione(item.xh)" :class="{ 'clicked': currentDivIndex === item.xh }"
-                                   @dblclick="huifuyangshi(item.ejhfppyj,item.xh,islxfk)" class="chatBox chatBox-left"
-                                   v-text="item.hfxx"></div>
-                              <div class="chatTime"><span style="font-size: 14px">{{ item.wtcjsj }}</span></div>
+                              <div style="vertical-align: top;display: inline-block">
+                                <div @contextmenu="showContextMenu($event,item)" @click="huifuyangshione(item.xh)"
+                                     :class="{ 'clicked': currentDivIndex === item.xh }"
+                                     @dblclick="huifuyangshi(item.ejhfppyj,item.xh,islxfk)" class="chatBox chatBox-left"
+                                     style="word-wrap: break-word;max-width: 375px;white-space: normal;"
+                                     v-text="item.hfxx"></div>
+                                <div class="chatTime"><span
+                                  style="font-size: 14px;vertical-align: bottom;margin-left: 3px">{{
+                                    item.wtcjsj
+                                  }}</span></div>
+                              </div>
                               <div v-if="item.sjjhs.length>0">
-                                <div style="margin-left: 60px" v-for="item in item.sjjhs">
+                                <div style="margin-left: 60px" v-for="item in item.sjjhs" :key="item.xh">
                                   <div class="chatName" v-text="item.hfr"></div>
-                                  <div @contextmenu="showContextMenu($event,item)" @click="huifuyangshione(item.xh)"
-                                       :class="{ 'clicked': currentDivIndex === item.xh }" class="chatBox chatBox-left"
-                                       v-text="item.hfxx"></div>
-                                  <div class="chatTime"><span style="font-size: 14px">{{ item.wtcjsj }}</span></div>
+                                  <div style="vertical-align: top;display: inline-block">
+                                    <div @contextmenu="showContextMenu($event,item)" @click="huifuyangshione(item.xh)"
+                                         :class="{ 'clicked': currentDivIndex === item.xh }"
+                                         class="chatBox chatBox-left"
+                                         style="word-wrap: break-word;max-width: 375px;white-space: normal;"
+                                         v-text="item.hfxx"></div>
+                                    <div class="chatTime"><span
+                                      style="font-size: 14px;vertical-align: bottom;margin-left: 3px">{{
+                                        item.wtcjsj
+                                      }}</span></div>
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -634,7 +621,7 @@
               <el-card v-show="isShow" shadow="always" class="box-card cards"
                        style="width: 300px;height: 695px;border-radius: 20px">
                 <el-card v-show="isShow" shadow="always" class="box-card cards tablec"
-                         style="background: linear-gradient(to right, #2982C3, #93bec1);width: 300px;height: 345px;border-radius: 20px">
+                         style="background: linear-gradient(to bottom, rgba(7, 129, 230,1), rgba(7, 129, 230,0.52));width: 300px;height: 345px;border-radius: 20px">
                   <div style="margin-top: 16px">
                     <label style="margin-left: 100px;font-size: 18px;">问题附件预览</label>
                   </div>
@@ -666,7 +653,7 @@
                 </el-card>
 
                 <el-card v-show="isShow" shadow="always" class="box-card cards tablec"
-                         style="background: linear-gradient(to right, #2982C3, #93bec1);width: 300px;height: 345px;border-radius: 20px">
+                         style="background: linear-gradient(to bottom, rgba(7, 129, 230,1), rgba(7, 129, 230,0.52));width: 300px;height: 345px;border-radius: 20px">
                   <div style="margin-top: 10px">
                     <label style="margin-left: 100px;font-size: 18px;">回复附件预览</label>
                   </div>
@@ -700,43 +687,23 @@
             </div>
             <div v-show="isShowLdps" style="width: 300px;display: inline-block;float: right;">
               <el-card v-show="isShowLdps" shadow="always" class="box-card cards tablec"
-                       style="white-space:nowrap;overflow-x: scroll;height: 695px;border-radius: 20px">
-                <div style="margin-top: 16px;margin-bottom: 20px">
+                       style="white-space:nowrap;overflow-x: scroll;height: 695px;overflow-y: auto;background: linear-gradient(to bottom, #0781E6, #7ED4D9);width: 300px;border-radius: 20px">
+                <div style="margin-top: 20px;margin-bottom: 20px">
                   <label style="margin-left: 115px;font-size: 18px;">领导批示</label>
                 </div>
                 <div v-for="item in ldpiList">
                   <div class="chatName" v-text="item.hfr"></div>
-                  <div @contextmenu="showContextMenu($event,item)" @click="huifuyangshione(item.xh)"
-                       :class="{ 'clicked': currentDivIndex === item.xh }"
-                       class="chatBox chatBox-left"
-                       v-text="item.hfxx" style="word-wrap: break-word;max-width: 200px;white-space: normal"></div>
-                  <div class="chatTime"><span style="font-size: 14px">{{ item.wtcjsj }}</span></div>
+                  <div style="vertical-align: top;display: inline-block">
+                    <div @contextmenu="showContextMenu($event,item)"
+                         @click="huifuyangshione(item.xh)"
+                         :class="{ 'clicked': currentDivIndex === item.xh }"
+                         class="chatBox chatBox-left"
+                         v-text="item.hfxx"
+                         style="word-wrap: break-word;max-width: 200px;white-space: normal"></div>
+                    <div class="chatTime"><span
+                      style="font-size: 14px;vertical-align: bottom;margin-left: 3px">{{ item.wtcjsj }}</span></div>
+                  </div>
                 </div>
-                <!--                <el-table
-                                  class="tablec"
-                                  :data="ldpiList"
-                                  border
-                                  size="mini"
-                                  style="width: 100%;margin-top: 26px;">
-                                  <el-table-column
-                                    prop="hfr"
-                                    label="人员"
-                                    show-overflow-tooltip
-                                  >
-                                  </el-table-column>
-                                  <el-table-column
-                                    prop="hfxx"
-                                    label="回复信息"
-                                    show-overflow-tooltip
-                                  >
-                                  </el-table-column>
-                                  <el-table-column
-                                    prop="wtcjsj"
-                                    label="时间"
-                                    show-overflow-tooltip
-                                  >
-                                  </el-table-column>
-                                </el-table>-->
               </el-card>
             </div>
           </el-main>
@@ -747,6 +714,7 @@
     <el-dialog
       class="buttonDialog dialogRad"
       title="回复"
+      v-if="huifuDialog"
       :visible.sync="huifuDialog"
       width="30%"
       @open="dialogOpened"
@@ -761,13 +729,14 @@
       </el-input>
       <span slot="footer" class="dialog-footer">
         <el-button @click="huifuDialog=false">取 消</el-button>
-        <el-button type="primary" @click="huifuSubmit(ejhfppyj,huifuId,'回复',1)">确 定</el-button>
+        <el-button type="primary" @click.once="huifuSubmit(ejhfppyj,huifuId,'回复',1)">确 定</el-button>
       </span>
     </el-dialog>
     <!--  例行反馈的按钮的弹出框  -->
     <el-dialog
       class="buttonDialog dialogRad"
       title="例行反馈"
+      v-if="lixingfankuiDialog"
       :visible.sync="lixingfankuiDialog"
       @open="dialogLXFKOpened"
       width="30%">
@@ -781,13 +750,14 @@
       </el-input>
       <span slot="footer" class="dialog-footer">
         <el-button @click="lixingfankuiDialog = false">取 消</el-button>
-        <el-button type="primary" @click="huifuSubmit(ejhfppyj,huifuId,'例行反馈',1)">确 定</el-button>
+        <el-button type="primary" @click.once="huifuSubmit(ejhfppyj,huifuId,'例行反馈',1)">确 定</el-button>
       </span>
     </el-dialog>
     <el-dialog
       class="buttonDialog dialogRad"
       title="领导批示"
       @open="dialogLDPSOpened"
+      v-if="lingdaopishiDialog"
       :visible.sync="lingdaopishiDialog"
       width="30%">
       <el-input
@@ -800,7 +770,7 @@
       </el-input>
       <span slot="footer" class="dialog-footer">
         <el-button @click="lingdaopishiDialog = false">取 消</el-button>
-        <el-button type="primary" @click="huifuSubmit(ejhfppyj,huifuId,'领导批示',1)">确 定</el-button>
+        <el-button type="primary" @click.once="huifuSubmit(ejhfppyj,huifuId,'领导批示',1)">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -808,21 +778,18 @@
 
 <script>
 import {
-  deleteQuestions,
-  updateQuestions,
-  getMyProblemList,
-  deletegzwtList,
-  getJhjl,
-  saveJhjlList,
-  getzerData,
-  updateQuestionWdwt,
-  updateQuestionWTDBToZero,
-  deleteJhjlByXh, updateQuestionWDWTToZero, updateMyDoListStatus, getLDPS
+  deleteQuestions, updateQuestions, getMyProblemList,
+  deletegzwtList, getJhjl, getLDPS, saveJhjlList,
+  getzerData, updateQuestionWdwt, updateQuestionWTDBToZero,
+  deleteJhjlByXh, updateQuestionWDWTToZero, updateMyDoListStatus
 } from "@/api/question/question";
 
 export default {
   data() {
     return {
+      wwcts: '',//未完成天数
+      cqts: '',//超期天数
+      wcts: '',//完成天数
       itemJhjl:{},//单击回复数据的当前值
       isContextMenuVisible:false,//是否显示菜单
       contextMenuPosition: { x: 0, y: 0 },//实现右键菜单的
@@ -910,9 +877,48 @@ export default {
     }
   },
   methods: {
+    //给表格的表头设置颜色
+    styleFunc({row,column,rowIndex, columnIndex}) {
+      if (column.property === 'wtms' || column.property === 'wtmc') {
+        return "background:orange";
+      }
+    },
+    //计算完成天数，未完成天数等数据
+    computTime(data) {
+      //计算超期天数
+      var currentDate = new Date();
+      var xwjjsjDate = new Date(data.xwjjsj);
+      // 计算时间差（以毫秒为单位）
+      var xwjjsjms = xwjjsjDate.getTime() - currentDate.getTime();
+      // 将时间差转换为分钟
+      var xwjjsjmin = Math.floor(xwjjsjms / (1000 * 60 * 60 * 24));
+      this.cqts = xwjjsjmin.toString() + "天";
+
+      //计算完成天数
+      if (data.wtzt === '已关闭') {
+        var gbsjDate = new Date(data.gbsj);
+        // 计算时间差（以毫秒为单位）
+        var gbsjms = currentDate.getTime() - gbsjDate.getTime();
+        // 将时间差转换为分钟
+        var gbsjmin = Math.floor(gbsjms / (1000 * 60 * 60 * 24));
+        this.wcts = gbsjmin.toString() + "天";
+      }
+      //计算未完成天数
+      if (data.wtzt !== '已关闭') {
+        var cjsjDate = new Date(data.cjsj);
+        // 计算时间差（以毫秒为单位）
+        var cjsjms = currentDate.getTime() - cjsjDate.getTime();
+        // 将时间差转换为分钟
+        var cjsjmin = Math.floor(cjsjms / (1000 * 60 * 60 * 24));
+        this.wwcts = cjsjmin.toString() + "天";
+      } else {
+        this.wwcts = '已完成';
+      }
+    },
     //实现双击弹出回复预览弹出框
     openDialog(row) {
       if (this.editingProperty === 'wtmc'||this.editingProperty==='wtms') {
+        this.computTime(row);
         this.isShowLdps = false;
         this.isShow = false;
         this.withd = '1090px';
@@ -1023,7 +1029,6 @@ export default {
     },
     //判断这条数据是否可以看例行反馈数据
     switchMethod() {
-      console.log(this.closureID.gzxt)
       if (this.closureID.gzxt==='true') {
         if (this.islxfk) {
           this.islxfk = true;
@@ -1044,6 +1049,7 @@ export default {
     },
     //回复按钮的确定方法
     huifuSubmit(ejhfppyj, id, type, js) {
+      this.lixingfankuiDialog = false;
       let sjjh = {
         value: this.closureID.wtzt,
         hfxx: this.huifuTest,
@@ -1110,7 +1116,6 @@ export default {
       }
       updateQuestionWdwt(sjjh).then(res => {
         if (res.code === 200) {
-          console.log(res.msg);
         }
       });
     },
@@ -1223,7 +1228,6 @@ export default {
       this.handleSelect.forEach(Item=>{
         ids.push(Item.id);
       });
-      console.log(ids);
       deletegzwtList(ids).then(res=>{
         if (res.code === 200) {
           this.$message.success("取消关注成功");
@@ -1274,6 +1278,7 @@ export default {
       }
       this.islxfk = false;
       this.closureID = this.handleSelect[0];
+      this.computTime(this.closureID);
       this.wtms = this.handleSelect[0].wtms;
       if (this.closureID.lxfk === '例行反馈') {
         this.loadJhjlList('例行反馈');
@@ -1288,11 +1293,32 @@ export default {
       this.loadzerData();
       updateQuestionWDWTToZero({id:this.closureID.id}).then(res => {
         if (res.code === 200) {
-          console.log(res.msg);
           this.shuaxin();
         }
       });
 
+    },
+    //弹窗内刷新按钮
+    dialogReload() {
+      this.isLdps = false;
+      this.isShowLdps = false;
+      this.isShow = false;
+      this.currentDivIndex = '';
+      this.jhsjList = [];
+      this.wtms = '';
+      this.fujian = false;
+      this.islxfk = false;
+      if (this.closureID.lxfk === '例行反馈') {
+        this.loadJhjlList('例行反馈');
+        this.islxfk = true;
+      } else {
+        this.loadJhjlList('回复');
+        this.islxfk = false;
+      }
+      this.loadJhjlList('领导批示');
+      this.open = true;
+      this.title = "回复/预览";
+      this.loadzerData();
     },
     //删除问题的方法
     deleteData() {
@@ -1357,6 +1383,7 @@ export default {
     handleSelectionChange(val) {
       this.handleSelect = val
     },
+    //小气泡的触发事件
     handlePageClick(event) {
       // 检查点击事件是否发生在小气泡上
       const isBubbleClicked = event.target.closest('.chatBox');
@@ -1365,16 +1392,19 @@ export default {
         this.currentDivIndex = null; // 点击的是其他地方，将当前小气泡的索引设为 null，恢复原来的颜色
       }
     },
+    //打开弹出框的焦点事件
     dialogOpened() {
       this.$nextTick(() => {
         this.$refs.huifuInput.focus();
       });
     },
+    //打开弹出框的焦点事件
     dialogLDPSOpened() {
       this.$nextTick(() => {
         this.$refs.lingdaoInput.focus();
       });
     },
+    // 打开弹出框的焦点事件
     dialogLXFKOpened() {
       this.$nextTick(() => {
         this.$refs.lixingfankuiInput.focus();
@@ -1383,9 +1413,11 @@ export default {
   },
   mounted() {
     this.load();
+    // 打开弹窗清空右侧树形框
     document.addEventListener('click', this.handlePageClick);
   },
   beforeDestroy() {
+    //注销弹窗清空右侧树形框
     document.removeEventListener('click', this.handlePageClick);
   }
 };
@@ -1539,6 +1571,7 @@ export default {
   word-break: break-all;
   border: 1px solid #989898;
   cursor: default;
+  margin-bottom: 10px;
 }
 
 .chatBox-left::before {
@@ -1548,9 +1581,9 @@ export default {
   position: absolute;
   border: 5px solid;
   border-right-color: greenyellow;
-  border-left-color: #ffffff;
-  border-top-color: #ffffff;
-  border-bottom-color: #ffffff;
+  border-left-color: transparent;
+  border-top-color: transparent;
+  border-bottom-color: transparent;
 }
 
 .chatName {
@@ -1559,7 +1592,6 @@ export default {
   border-radius: 30px;
   padding: 5px;
   font-size: 16px;
-  margin-bottom: 10px;
 }
 
 .chatTime {

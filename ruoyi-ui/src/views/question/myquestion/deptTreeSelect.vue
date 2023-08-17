@@ -3,12 +3,17 @@
     <el-row>
       <el-col :span="4">
         <div style="height: 750px; overflow-y: auto">
-          <el-tree class="avue-tree" ref="deptTree" :data="deptTreeData" :props="deptTreeOption.props"
-                   :highlight-current="deptTreeOption.highlightCurrent"
-                   :default-expanded-keys="deptTreeOption.defaultExpandedKeys"
-                   :accordion="deptTreeOption.defaultExpandAdd" :size="deptTreeOption.size"
-                   @node-click="nodeClick">
-          </el-tree>
+          <el-tree
+            :data="deptOptions"
+            :props="defaultProps"
+            :expand-on-click-node="false"
+            :filter-node-method="filterNode"
+            ref="tree"
+            node-key="id"
+            default-expand-all
+            highlight-current
+            @node-click="handleNodeClick"
+          />
         </div>
       </el-col>
       <el-col :span="20">
@@ -16,7 +21,7 @@
         <div class="two-row">
           <el-table
             height="300px"
-            :data="userTableData"
+            :data="userList"
             v-loading="loading"
             @selection-change="handleSelectionChange"
             highlight-current-row
@@ -27,9 +32,9 @@
           >
             <el-table-column type="selection" width="50px" :reserve-selection="true"/>
             <el-table-column align="center" label="序号" type="index" width="50px"/>
-            <el-table-column prop="account" label="账号" show-overflow-tooltip/>
-            <el-table-column prop="name" label="姓名" show-overflow-tooltip/>
-            <el-table-column prop="deptName" label="所属部门" show-overflow-tooltip/>
+            <el-table-column prop="userName" label="账号" show-overflow-tooltip/>
+            <el-table-column prop="nickName" label="姓名" show-overflow-tooltip/>
+            <el-table-column prop="dept.deptName" label="所属部门" show-overflow-tooltip/>
           </el-table>
         </div>
         <div class="three-row" style="height: 48px;">
@@ -47,7 +52,7 @@
             :total="total"
             :page.sync="queryParams.current"
             :limit.sync="queryParams.size"
-            @pagination="load"/>
+            @pagination="getList"/>
         </div>
         <div class="four-row">
           <el-table
@@ -61,9 +66,9 @@
           >
             <el-table-column type="selection" width="50px" :reserve-selection="true"/>
             <el-table-column align="center" label="序号" type="index" width="50px"/>
-            <el-table-column prop="account" label="账号" show-overflow-tooltip/>
-            <el-table-column prop="name" label="姓名" show-overflow-tooltip/>
-            <el-table-column prop="deptName" label="所属部门" show-overflow-tooltip/>
+            <el-table-column prop="userName" label="账号" show-overflow-tooltip/>
+            <el-table-column prop="nickName" label="姓名" show-overflow-tooltip/>
+            <el-table-column prop="dept.deptName" label="所属部门" show-overflow-tooltip/>
           </el-table>
         </div>
       </el-col>
@@ -72,11 +77,20 @@
 </template>
 
 <script>
+import {deptTreeSelect, listUser} from "@/api/system/user";
+
 export default {
   name: "deptTreeSelect",
   props: ['selectZrrList', 'text'],
   data() {
     return {
+      // 部门树选项
+      deptOptions: undefined,
+      defaultProps: {
+        children: "children",
+        label: "label"
+      },
+      userList:[],
       single: true,
       singleTwo: true,
       multiple: true,
@@ -87,29 +101,19 @@ export default {
       loading: false,//正在加载样式
       handleChangeData: [],//下面表格选中数据
       total: 0,
+      // 查询参数
       queryParams: {
-        current: 1,
-        size: 10,
-        account: null,
-        name: null,
-        deptId: null
+        pageNum: 1,
+        pageSize: 10,
+        userName: undefined,
+        phonenumber: undefined,
+        status: undefined,
+        deptId: undefined
       },
+      // 日期范围
+      dateRange: [],
       defaultExpandedKeys: [],
       deptTreeData: [],
-      deptTreeOption: {
-        menu: false,
-        addBtn: false,
-        delBtn: false,
-        editBtn: false,
-        size: 'small',
-        highlightCurrent: true,
-        defaultExpandedKeys: [],
-        defaultExpandAdd: false,//手风琴模式
-        props: {
-          lable: 'title',
-          children: 'children'
-        }
-      }
     }
   },
   computed: {},
@@ -122,16 +126,47 @@ export default {
         }
       })
     }
-    this.initData();
-    this.load()
+    this.getList()
+    this.getDeptTree()
   },
   methods: {
+    /** 查询部门下拉树结构 */
+    getDeptTree() {
+      deptTreeSelect().then(response => {
+        this.deptOptions = response.data;
+      });
+    },
+    // 节点单击事件
+    handleNodeClick(data) {
+      this.queryParams.deptId = data.id;
+      this.handleQuery();
+    },
+    /** 搜索按钮操作 */
+    handleQuery() {
+      this.queryParams.pageNum = 1;
+      this.getList();
+    },
+    /** 查询用户列表 */
+    getList() {
+      this.loading = true;
+      listUser(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
+          this.userList = response.rows;
+          this.total = response.total;
+          this.loading = false;
+        }
+      );
+    },
+    // 筛选节点
+    filterNode(value, data) {
+      if (!value) return true;
+      return data.label.indexOf(value) !== -1;
+    },
     //选中责任人确定按钮
     submitButten() {
       if (this.text.indexOf('责任人') !== -1) {
         if (this.handleChangeData.length === 1) {
           this.userSelectTableData.forEach(item => {
-            if (item.id === this.handleChangeData[0].id) {
+            if (item.userId === this.handleChangeData[0].userId) {
               item.sfzzrr = 'true'
             } else {
               item.sfzzrr = ''
@@ -158,7 +193,7 @@ export default {
       var isSelect = false;
       if (this.userSelectTableData.length > 0) {
         this.userSelectTableData.forEach(item => {
-          if (item.id === row.id) {
+          if (item.userId === row.userId) {
             isSelect = true;
           }
         });
@@ -172,7 +207,7 @@ export default {
       const data = this.handleSelect;
       data.forEach(item => {
         this.userSelectTableData.forEach((user, i) => {
-          if (item.id === user.id) {
+          if (item.userId === user.userId) {
             this.userSelectTableData.splice(i, 1);
           }
         });
@@ -185,32 +220,13 @@ export default {
     deleteUserData() {
       this.handleChangeData.forEach(item => {
         this.userSelectTableData.forEach((user, index) => {
-          if (item.id === user.id) {
+          if (item.userId === user.userId) {
             this.userSelectTableData.splice(index, 1);
           }
         });
       });
       this.$refs.refUserTable.clearSelection();
       this.$refs.refUserTable1.clearSelection();
-    },
-    //初始化请求用户数据
-    load() {
-      /*this.queryParams.deptId = this.userInfo.deptId;
-      getUserPage(this.queryParams).then(res => {
-        if (res.data.code === 200) {
-          this.total = res.data.data.total;
-          this.userTableData = res.data.data.records;
-        }
-      });*/
-      this.total = 4
-      this.userTableData = [{id: '1', account: '1', name: '2', deptName: '3'}, {
-        id: '4',
-        account: '1',
-        name: '2',
-        deptName: '3'
-      }, {id: '3', account: '1', name: '2', deptName: '3'}, {id: '2', account: '1', name: '2', deptName: '3'}]
-
-
     },
     //上面的表格选中的责任人数据
     handleSelectionChange(val) {
@@ -224,70 +240,6 @@ export default {
       this.singleTwo = val.length !== 1;
       this.multipleTwo = !val.length;
     },
-    initData() {
-      /*this.getOrgTreeAll().then(res => {
-        this.initExpandFirstLevel(res.data.data);
-        this.deptTreeData = res.data.data;
-      });*/
-      const data = [{
-        id: "100",
-        key: "100",
-        parentId: "0",
-        title: "中国航发东安",
-        hasChildren: true,
-        value: "100",
-        $treeNodeId: 1,
-        children: [{
-          children: [],
-          hasChildren: true,
-          id: "201",
-          key: "201",
-          parentId: "100",
-          title: "信息档案中心",
-          value: "201",
-          $treeNodeId: 2
-        }
-        ]
-      }]
-      this.initExpandFirstLevel(data);
-      this.deptTreeData = data;
-
-
-    },
-    //初始化默认展开第一级
-    initExpandFirstLevel(data) {
-      for (let dept of data) {
-        this.defaultExpandedKeys.push(dept.id);
-      }
-      this.$set(this.deptTreeOption, 'defaultExpandedKeys', this.defaultExpandedKeys);
-    },
-    //获得组织树全部数据
-    getOrgTreeAll() {
-      return Request({
-        uri: baseUrl + '/digital-system/dept/tree',
-        method: 'get',
-      })
-    },
-    //点击事件
-    nodeClick(node) {
-      this.queryParams.deptId = node.id;
-      /*getUserPage(this.queryParams).then(res => {
-        if (res.data.code === 200) {
-          this.total = res.data.data.total;
-          this.userTableData = res.data.data.records;
-        }
-      });*/
-      this.$message.success("点击了")
-      this.total = 4
-      this.userTableData = [{id: '1', account: '1', name: '2', deptName: '3'}, {
-        id: '4',
-        account: '1',
-        name: '2',
-        deptName: '3'
-      }, {id: '3', account: '1', name: '2', deptName: '3'}, {id: '2', account: '1', name: '2', deptName: '3'}]
-
-
-    }
   }
 }
 </script>
@@ -296,23 +248,3 @@ export default {
   margin-top: 0;
 }
 </style>
-
-<!--<style scoped lang="less">
-.avue-tree-class {
-  .el-table-node__content {
-    display: inline !important;
-  }
-
-  .el-tree-node {
-    position: relative;
-  }
-
-  .el-tree-node__children {
-    overflow: visible !important;
-  }
-}
-
-.avue-tree {
-  height: calc(100% - 20px);
-}
-</style>-->

@@ -3,25 +3,26 @@
        :style="{backgroundImage: 'url(' + backgroundImageUrl + ')', backgroundSize: 'cover', backgroundPosition: 'center' }">
     <div class="outer">
       <div class="left-side">
-        <div style="width: 170px;position: relative;margin-left: 15px; display: inline-block" v-for="(value,index) in this.buttons">
+        <div style="width: 170px;position: relative;margin-left: 10px; display: inline-block"
+             v-for="(value,index) in this.buttons">
           <img
-            :src="isHoveredId === value+'-'+index ? require('@/assets/questionIcons/yesbutton.png') : require('@/assets/questionIcons/nobutton.png')"
+            :src="isHoveredId === value.butname+'-'+index ? require('@/assets/questionIcons/yesbutton.png') : require('@/assets/questionIcons/nobutton.png')"
             style="width: 160px;height: 193px"
             alt="按钮图像"
-            @mouseover="handleMouseOver(value+'-'+index)"
+            @mouseover="handleMouseOver(value.butname+'-'+index)"
             @mouseout="handleMouseOut"
-            @click="addNew(value)"
+            @click="addNew(value.butname)"
           />
           <img
             class="overlay-image"
-            :src="isHoveredId === value+'-'+index ? require('@/assets/questionIcons/'+value+'-2.png') : require('@/assets/questionIcons/'+value+'.png')"
-            :style="{ transform: isHoveredId ===value+'-'+index ? 'scale(1)' : 'scale(0.9)' }"
-            @mouseover="handleMouseOver(value+'-'+index)"
-            @click="addNew(value)"
+            :src="isHoveredId === value.butname+'-'+index ? require('@/assets/questionIcons/'+value.imgname+'(1).png') : require('@/assets/questionIcons/'+value.imgname+'.png')"
+            :style="{ transform: isHoveredId ===value.butname+'-'+index ? 'scale(1)' : 'scale(0.9)' }"
+            @mouseover="handleMouseOver(value.butname+'-'+index)"
+            @click="addNew(value.butname)"
           />
-          <span class="art-text" @click="addNew(value)"
-                :style="{ color: isHoveredId ===value+'-'+index ? 'rgb(255,195,99)': 'rgb(255,255,255)',fontSize: isHoveredId ===value+'-'+index ? '19px' : '17px'}"
-                @mouseover="handleMouseOver(value+'-'+index)">{{ value }} </span>
+          <span class="art-text" @click="addNew(value.butname)"
+                :style="{ color: isHoveredId ===value.butname+'-'+index ? 'rgb(255,195,99)': 'rgb(255,255,255)',fontSize: isHoveredId ===value.butname+'-'+index ? '19px' : '17px'}"
+                @mouseover="handleMouseOver(value.butname+'-'+index)">{{ value.butname }} </span>
         </div>
       </div>
       <div class="right-side">
@@ -41,7 +42,7 @@
             </el-button>
             <el-button
               type="danger"
-              :disabled="multiple"
+              :disabled="single"
               @click="closeit"
             >关闭
             </el-button>
@@ -52,6 +53,7 @@
               v-hasPermi="['myjob:cjls:remove']"
             >删除
             </el-button>
+            <el-button type="primary" @click="angl">按钮管理</el-button>
           </div>
           <b style="color: white;font-size: 28px;">现场配合问题</b>
         </div>
@@ -73,6 +75,7 @@
                   <th style="min-width: 120px">生产订单号</th>
                   <!--                  <th style="min-width: 100px">产品型号</th>-->
                   <th style="min-width: 100px">产品型号</th>
+                  <th style="min-width: 100px">件号</th>
                   <th style="min-width: 100px">班产日期</th>
                   <th style="min-width: 100px">批次</th>
                   <th style="min-width: 100px">工序号</th>
@@ -127,6 +130,10 @@
                                                 :disabled="v.cpxh == null">
                                       <td>{{ v.cpxh }}</td>
                                     </el-tooltip>-->
+                  <el-tooltip class="item" effect="dark" :content="v.cpxh" placement="top" :open-delay="500"
+                              :disabled="v.cpxh == null">
+                    <td>{{ v.cpxh }}</td>
+                  </el-tooltip>
                   <el-tooltip class="item" effect="dark" :content="v.jh" placement="top" :open-delay="500"
                               :disabled="v.jh == null">
                     <td>{{ v.jh }}</td>
@@ -220,99 +227,65 @@
       </div>
     </div>
     <!-- 添加提出问题对话框 -->
-    <el-dialog :visible.sync="open" width=60% class="addDialog" append-to-body>
+    <el-dialog :visible.sync="open" width="600px" class="addDialog" append-to-body>
       <div class="dia">
-        <el-row>
-          <el-col :span="10" style="padding: 20px">
-            <b
-              style="font-size: 23px;margin: 0;text-align: center;color: black;display: inline-block;width: 100%">创建问题</b>
-            <el-form ref="form" :model="form" :rules="rules" label-width="120px" class="underline-input">
-              <el-form-item style="font-size: 20px!important;" label="问题名称：" prop="wtmc">
-                <el-input style="font-size: 20px" v-model="form.wtmc" placeholder="请输入问题名称"/>
-              </el-form-item>
-              <!--              <el-form-item label="产品型号：" prop="cpxh">
-                              <el-input v-model="form.cpxh" placeholder="请输入产品型号"/>
-                            </el-form-item>-->
-              <el-form-item label="生产订单号：" prop="scddh">
-                <el-input v-model="form.scddh" placeholder="请输入生产订单号"/>
-              </el-form-item>
-              <el-form-item label="产品型号：" prop="jh">
-                <el-input v-model="form.jh" placeholder="请输入件号"/>
-              </el-form-item>
-              <el-form-item label="班产日期：" prop="bcrq">
-                <el-input v-model="form.bcrq" placeholder="请输入班产日期"/>
-              </el-form-item>
-              <el-form-item label="批次：" prop="pc">
-                <el-input v-model="form.pc" placeholder="请输入批次"/>
-              </el-form-item>
-              <el-form-item label="工序号：" prop="gxh">
-                <el-input v-model="form.gxh" placeholder="请输入工序号"/>
-              </el-form-item>
-              <el-form-item label="设备型号：" prop="sbxh">
-                <el-input v-model="form.sbxh" placeholder="请输入工序名称"/>
-              </el-form-item>
-              <el-form-item label="问题类别：" prop="wtlb">
-                <el-input style="font-size: 18px;color: black" v-model="form.wtlb" :disabled="true"/>
-              </el-form-item>
-              <el-form-item label="问题细类：" prop="wtxl">
-                <el-select style="width: 100%" v-model="form.wtxl" clearable placeholder="请选择问题细类">
-                  <el-option
-                    v-for="item in wtxlList"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="问题描述：" prop="wtms">
-                <el-input
-                  style="width: 90%; font-size: 18px"
-                  type="textarea"
-                  :autosize="{ minRows: 2, maxRows: 4}"
-                  placeholder="请输入问题描述"
-                  v-model="form.wtms">
-                </el-input>
+        <b style="font-size: 23px;margin: 0;text-align: center;color: black;display: inline-block;width: 100%">创建问题</b>
+        <el-form ref="form" :model="form" :rules="rules" label-width="120px" class="underline-input">
+          <el-form-item style="font-size: 20px!important;" label="问题名称：" prop="wtmc">
+            <el-input style="font-size: 20px" v-model="form.wtmc" placeholder="请输入问题名称"/>
+          </el-form-item>
+          <!--              <el-form-item label="产品型号：" prop="cpxh">
+                          <el-input v-model="form.cpxh" placeholder="请输入产品型号"/>
+                        </el-form-item>-->
+          <el-form-item label="生产订单号：" prop="scddh">
+            <el-input v-model="form.scddh" placeholder="请输入生产订单号"/>
+          </el-form-item>
+          <el-form-item label="产品型号：" prop="cpxh">
+            <el-input v-model="form.cpxh" placeholder="请输入产品型号"/>
+          </el-form-item>
+          <el-form-item label="件号：" prop="jh">
+            <el-input v-model="form.jh" placeholder="请输入件号"/>
+          </el-form-item>
+          <el-form-item label="班产日期：" prop="bcrq">
+            <el-input v-model="form.bcrq" placeholder="请输入班产日期"/>
+          </el-form-item>
+          <el-form-item label="批次：" prop="pc">
+            <el-input v-model="form.pc" placeholder="请输入批次"/>
+          </el-form-item>
+          <el-form-item label="工序号：" prop="gxh">
+            <el-input v-model="form.gxh" placeholder="请输入工序号"/>
+          </el-form-item>
+          <el-form-item label="设备型号：" prop="sbxh">
+            <el-input v-model="form.sbxh" placeholder="请输入工序名称"/>
+          </el-form-item>
+          <el-form-item label="问题类别：" prop="wtlb">
+            <el-input style="font-size: 18px;color: black" v-model="form.wtlb" :disabled="true"/>
+          </el-form-item>
+          <el-form-item label="问题细类：" prop="wtxl">
+            <el-select style="width: 100%" v-model="form.wtxl" clearable placeholder="请选择问题细类">
+              <el-option
+                v-for="item in wtxlList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="问题描述：" prop="wtms">
+            <el-input
+              style="width: 90%; font-size: 18px"
+              type="textarea"
+              :autosize="{ minRows: 2, maxRows: 4}"
+              placeholder="请输入问题描述"
+              v-model="form.wtms">
+            </el-input>
 
-              </el-form-item>
-            </el-form>
-          </el-col>
-          <el-col :span="14" style="padding: 20px">
-            <b style="font-size: 23px;margin: 0;text-align: center;color: black;display: inline-block;width: 100%">历史答案查询数据</b>
-            <el-card class="box-card" style="margin: 10px 10px 0 0;height: 570px">
-              <table border="1"
-                     style="table-layout: fixed; border-collapse: collapse;width: 100%;font-size: 18px">
-                <tr>
-                  <th style="width: 60px; height: 45px">序号</th>
-                  <th style="width: 30%">问题描述</th>
-                  <th>问题详情</th>
-                  <th style="width: 150px">操作</th>
-                </tr>
-                <tr style="text-align: center">
-                  <el-tooltip class="item" effect="dark" content="序号" placement="top" :open-delay="500"
-                              :disabled="'序号' != null">
-                    <td>序号</td>
-                  </el-tooltip>
-                  <el-tooltip class="item" effect="dark" content="" placement="top"
-                              :open-delay="500" :disabled="'' != null">
-                    <td></td>
-                  </el-tooltip>
-                  <el-tooltip class="item" effect="dark" content="" placement="top"
-                              :open-delay="500" :disabled="'问题详情' != null">
-                    <td></td>
-                  </el-tooltip>
-                  <el-tooltip class="item" effect="dark" content="" placement="top"
-                              :open-delay="500" :disabled="'回复预览页面' != null">
-                    <td></td>
-                  </el-tooltip>
-                </tr>
-              </table>
-            </el-card>
-          </el-col>
-        </el-row>
+          </el-form-item>
+        </el-form>
         <div slot="footer" class="dialog-footer" style="height: 50px;margin-top: 20px">
           <el-button type="success" style="float: right;margin-right: 20px" @click="submitForm">确 定</el-button>
           <el-button type="primary" style="float: right;margin-right: 20px" @click="cancel">取 消</el-button>
-          <el-button type="warning" style="float: right;margin-right: 20px" @click="selectHistory">历史答案查询</el-button>
+          <el-button type="danger" style="float: right;margin-right: 20px" @click="selectHistory">历史答案查询</el-button>
         </div>
       </div>
     </el-dialog>
@@ -344,6 +317,21 @@
         <el-button @click="closeitDialog = false" style="margin-left: 20px">取 消</el-button>
       </span>
     </el-dialog>
+
+    <!--关闭按钮弹窗-->
+    <el-dialog
+      class="butDialog"
+      title
+      center
+      v-if="closeJSDialog"
+      :visible.sync="closeJSDialog" width="500px">
+      <span slot="title" style="font-size: 30px;">系统提示</span>
+      <div style="font-size: 20px;text-align: center;width: 100%">问题解决方案未填写，是否确认关闭问题?</div>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="closeitOK('已完成')" style="margin-left: 20px">确 定</el-button>
+        <el-button @click="closeJSDialog = false" style="margin-left: 60px">取 消</el-button>
+      </span>
+    </el-dialog>
     <!--删除按钮弹窗-->
     <el-dialog
       class="butDialog"
@@ -357,17 +345,205 @@
         <el-button @click="handleDeleteDialog = false" style="margin-left: 30px">取 消</el-button>
       </span>
     </el-dialog>
+    <el-dialog class="dialogRad" :close-on-click-modal="false" title="历史答案查询" width="1200px"
+               :visible.sync="lishidaanDialog">
+      <zdhf @xiangxixinxi="xiangxixinxi" v-if="lishidaanDialog" :form="form"></zdhf>
+    </el-dialog>
+    <!--详细信息弹窗-->
+    <el-dialog class="zdhfDialog" :close-on-click-modal="false" @close="shifoumanyi" title="详细信息"
+               :visible.sync="xiangxiDialog">
+      <xiangxixinxi v-if="xiangxiDialog" :jhsj-list="jhsjList" :form="form"></xiangxixinxi>
+    </el-dialog>
+    <!--是否满意-->
+    <el-dialog
+      :close-on-click-modal="false"
+      class="zdhfButDialog"
+      title
+      center
+      :visible.sync="shifoumanyiDialog" width="500px">
+      <span slot="title" style="font-size: 30px;">系统提示</span>
+      <div style="font-size: 20px;text-align: center;width: 100%">问题解决方案是否满意?</div>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="closeitOK1">满 意</el-button>
+        <el-button type="primary" @click="shifoumanyiDialog=false" style="margin-left: 20px">不满意</el-button>
+        <el-button @click="shifoumanyiDialog=false" style="margin-left: 20px">取消</el-button>
+      </span>
+    </el-dialog>
+    <!--按钮管理弹窗-->
+    <el-dialog class="anglDialog" width="800px" :close-on-click-modal="false" @close="getUpButtons" title="按钮管理"
+               :visible.sync="anglDialog">
+      <el-row :gutter="10" class="mb8">
+        <el-col :span="1.5">
+          <el-button
+            type="primary"
+            plain
+            icon="el-icon-plus"
+            size="mini"
+            @click="anglAdd"
+          >新增
+          </el-button>
+        </el-col>
+        <el-col :span="1.5">
+          <el-button
+            type="danger"
+            plain
+            icon="el-icon-delete"
+            size="mini"
+            :disabled="anglmultiple"
+            @click="anglDelete"
+          >删除
+          </el-button>
+        </el-col>
+        <el-col :span="1.5">
+          <el-button
+            type="success"
+            plain
+            icon="el-icon-edit"
+            size="mini"
+            :disabled="anglsingle"
+            @click="anglUpdate"
+          >修改
+          </el-button>
+        </el-col>
+        <el-col :span="1.5">
+          <el-button
+            type="primary"
+            plain
+            icon="el-icon-refresh-right"
+            size="mini"
+            @click="getUpButtons"
+          >刷新
+          </el-button>
+        </el-col>
+      </el-row>
+      <el-table height="500px" border v-loading="anglLoading" :data="buttons" @selection-change="anglSelectionChange">
+        <el-table-column type="selection" width="55" align="center"/>
+        <el-table-column label="序号" align="center" type="index" width="50"/>
+        <el-table-column show-overflow-tooltip label="按钮名" align="center" prop="butname"/>
+        <el-table-column show-overflow-tooltip label="图片名" align="center" prop="imgname"/>
+        <el-table-column show-overflow-tooltip width="50px" label="排序" align="center" prop="px"/>
+        <el-table-column show-overflow-tooltip label="操作" width="150px" align="center">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-edit"
+              @click="anglUpdate(scope.row)"
+            >修改
+            </el-button>
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-delete"
+              @click="anglDelete(scope.row)"
+            >删除
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-dialog>
+    <!--按钮管理添加/修改弹窗-->
+    <el-dialog class="butDialog" :title="anglTitle" :visible.sync="anglOpen" width="500px" append-to-body>
+      <el-form ref="anglForm" :model="anglForm" :rules="anglRules" label-width="100px">
+        <el-form-item label="按钮名" prop="butname">
+          <el-input v-model="anglForm.butname" placeholder="请输入按钮名" />
+        </el-form-item>        <el-form-item label="图片名" prop="imgname">
+        <el-input v-model="anglForm.imgname" placeholder="请输入图片名" />
+      </el-form-item>
+
+
+        <!--        <el-form-item label="菜单图标" prop="icon">
+                  <el-popover
+                    placement="bottom-start"
+                    width="460"
+                    trigger="click"
+                  >
+                    <div>
+                      <div v-for="(item, index) in buttonAll" :key="index" @click="selectedIcon(item)">
+                        <svg-icon :icon-class="item" style="height: 30px;width: 16px;" />
+                        <span>{{ item }}</span>
+                      </div>
+                    </div>
+                    <el-input slot="reference" v-model="anglForm.imgname" placeholder="点击选择图标" readonly></el-input>
+                  </el-popover>
+                </el-form-item>-->
+
+
+
+        <el-form-item label="排序" prop="px">
+          <el-input v-model.number="anglForm.px" placeholder="请输入排序" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="anglSubmitForm">确 定</el-button>
+        <el-button @click="anglCancel">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import {listCjls, addCjls, delCjls, changewtzt} from "@/api/question/upQuestion";
-import {getwtxlMethod} from "@/api/question/question";
+import {
+  getUpButtons,
+  getUpButton,
+  delangl,
+  updateUpButton,
+  addUpButton,
+  listCjls,
+  addCjls,
+  delCjls,
+  changewtzt,
+  updateDaccToRd
+} from "@/api/question/upQuestion.js";
+import {getJhjlByWtid, getwtxlMethod} from "@/api/question/question";
+import zdhf from "@/views/question/WTGL_ZDHF/index"
+import treeTransfer from 'el-tree-transfer'; // 引入
+import xiangxixinxi from "@/views/question/myquestion/xiangxixinxi";
 
 export default {
   name: "Cjls",
+  components: {
+    treeTransfer, zdhf, xiangxixinxi
+  },
   data() {
     return {
+      //按钮
+      buttons: [],
+      //按钮管理弹窗
+      anglDialog: false,
+      //按钮管理选中数据的序号
+      anglSelectXhs: [],
+      anglLoading: false,
+      // 按钮管理非多个禁用
+      anglmultiple: true,
+      // 按钮管理非单个禁用
+      anglsingle: true,
+      // 按钮管理新增修改弹窗
+      anglOpen: false,
+      // 按钮管理新增修改弹窗表头
+      anglTitle: '',
+      // 按钮管理form
+      anglForm: {},
+      //按钮管理表单验证
+      anglRules: {
+        px: [
+          { required: true, message: '排序不能为空'},
+          { type: 'number', message: '排序必须为数字值'}
+        ],
+        butname: [
+          { required: true, message: '按钮名不能为空'}
+        ],
+        imgname: [
+          { required: true, message: '图片名不能为空'}
+        ],
+      },
+
+
+
+      shifoumanyiDialog: false,//是否满意的弹出框
+      xiangxiDialog: false,//详细信息是否弹出框
+      jhsjList: [],//交互数据的数据集合
+      lishidaanDialog: false,
       backgroundImageUrl: require('@/assets/questionIcons/背景.png'),
       // 选中数组
       ids: [],
@@ -377,6 +553,8 @@ export default {
       selectAll: false,
       // 非多个禁用
       multiple: true,
+      // 非单个禁用
+      single: true,
       // 总条数
       total: 0,
       // 提出问题表格数据
@@ -409,108 +587,137 @@ export default {
       },
       //鼠标是否在按钮内
       isHoveredId: "0",
-      //按钮数据
-      buttons: ['工艺问题', '调度问题', '设备问题','生产问题', '待确认', '待确认'],
       // 取消按钮弹窗
       cancelWtztDialog: false,
       // 关闭按钮弹窗
       closeitDialog: false,
+      // 关闭按钮弹窗
+      closeJSDialog: false,
       // 删除按钮弹窗
       handleDeleteDialog: false,
     };
   },
   created() {
     this.getList();
+    this.getUpButtons();
   },
 
   methods: {
 
-    handleChange(checkedNodes) {
-      console.log(checkedNodes);
-      if (checkedNodes.children && checkedNodes.children.length > 0) {
-        // 提示用户重新选择
-        this.$message.error(`请重新选择用户`);
-      }
-
-
-      this.traverseData(this.toData);
-    },
-    traverseData(toData) {
-      const selectedIds = [];
-      const stack = [...toData];
-
-      while (stack.length > 0) {
-        const node = stack.pop();
-
-        if (!node.children || node.children.length === 0) {
-          selectedIds.push(node.id);
-        } else {
-          for (const child of node.children) {
-            stack.push(child);
-          }
-        }
-      }
-      console.log(selectedIds);
-    },
-    /** 方法 start */
-    // 获取树形数据
-    getPermissionTree() {
-      let param = {
-        roleId: '',
-        sysId: ''
-      }
-      permissionTree(param).then(res => {
-        if (res.code === 0) {
-          console.log(res.data)
-          this.fromData = res.data.children
-        } else {
-          this.$message({
-            message: res.msg,
-            type: 'warning'
-          })
-        }
+    //获取按钮列表
+    getUpButtons() {
+      this.anglLoading = true
+      getUpButtons().then(response => {
+        this.buttons = response.rows
+        this.anglLoading = false
       })
     },
-    // 切换模式 现有树形穿梭框模式transfer 和通讯录模式addressList
-    changeMode() {
-      if (this.mode === 'transfer') {
-        this.mode = 'addressList'
-      } else {
-        this.mode = 'transfer'
+    //按钮管理按钮
+    angl() {
+      this.anglDialog = true
+    },
+    //按钮管理新增按钮
+    anglAdd() {
+      this.anglreset();
+      this.anglOpen = true;
+      this.anglTitle = "添加字典";
+    },
+    //按钮管理删除按钮
+    anglDelete(row) {
+      const xh = row.xh || this.anglSelectXhs;
+      this.$confirm('是否确认删除数据项?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        delangl(xh).then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+          this.getUpButtons()
+        })
+      }).catch(() => {
+      });
+    },
+    //按钮管理修改按钮
+    anglUpdate(row) {
+      this.anglreset();
+      const xh = row.xh || this.anglSelectXhs
+      getUpButton(xh).then(response => {
+        this.anglForm = response.data;
+        this.anglOpen = true;
+        this.anglTitle = "修改按钮";
+      });
+    },
+    // 按钮管理多选框选中数据
+    anglSelectionChange(selection) {
+      this.anglSelectXhs = selection.map(item => item.xh)
+      this.anglmultiple = selection.length === 0
+      this.anglsingle = selection.length !== 1
+    },
+    //按钮管理重置表单
+    anglreset() {
+      this.anglForm = {
+        XH: null,
+        PX: 1,
+        butname: null,
+        imgname: null,
+        cjsj: null
       }
     },
-    // 监听穿梭框组件添加
-    add(fromData, toData, obj) {
-      // 树形穿梭框模式transfer时，返回参数为左侧树移动后数据、右侧树移动后数据、移动的{keys,nodes,halfKeys,halfNodes}对象
-      // 通讯录模式addressList时，返回参数为右侧收件人列表、右侧抄送人列表、右侧密送人列表
-      console.log('fromData:', fromData)
-      console.log('toData:', toData)
-      console.log('obj:', obj)
-
-      // 递归遍历树形结构
-      function getRoleId(obj) {
-        for (var i in obj) {
-          // 输出每个节点id
-          console.log(obj[i].id)
-          if (obj[i].children) {
-            // 如果存在子树,递归调用函数
-            getRoleId(obj[i].children)
+    //按钮管理提交按钮
+    anglSubmitForm() {
+      this.$refs["anglForm"].validate(valid => {
+        if (valid) {
+          if (this.anglForm.xh != null) {
+            updateUpButton(this.anglForm).then(() => {
+              this.$message.success("修改成功");
+              this.anglOpen = false;
+              this.getUpButtons();
+            });
+          } else {
+            addUpButton(this.anglForm).then(() => {
+              this.$message.success("新增成功");
+              this.anglOpen = false;
+              this.getUpButtons();
+            });
           }
         }
-      }
-
-      getRoleId(toData)
+      });
     },
-    // 监听穿梭框组件移除
-    remove(fromData, toData, obj) {
-      // 树形穿梭框模式transfer时，返回参数为左侧树移动后数据、右侧树移动后数据、移动的{keys,nodes,halfKeys,halfNodes}对象
-      // 通讯录模式addressList时，返回参数为右侧收件人列表、右侧抄送人列表、右侧密送人列表
-      console.log('fromData:', fromData)
-      console.log('toData:', toData)
-      console.log('obj:', obj)
+    //按钮管理取消按钮
+    anglCancel() {
+      this.anglOpen = false
+      this.anglreset()
     },
 
-
+    //详细信息的方法
+    xiangxixinxi(row) {
+      this.daccid = row.daxxid;
+      this.jhsjList = [];
+      getJhjlByWtid({WTID: row.wtid}).then(res => {
+        if (res.code === 200) {
+          this.jhsjList = res.rows;
+        }
+      });
+      this.xiangxiDialog = true
+    },
+    //满意的按钮执行方法
+    closeitOK1() {
+      updateDaccToRd({daxxid: this.daccid}).then(res => {
+        if (res.code === 200) {
+          this.$message.success("已满意！");
+        } else {
+          this.$message.error("操作失败");
+        }
+      });
+      this.shifoumanyiDialog = false;
+    },
+    //关闭详细信息执行的方法
+    shifoumanyi() {
+      this.shifoumanyiDialog = true;
+    },
     // 查询提出问题列表
     getList() {
       listCjls(this.queryParams).then(response => {
@@ -542,34 +749,59 @@ export default {
     },
     // 取消按钮
     cancelWtzt() {
+      for (let item of this.selectedRows) {
+        if (item.wtzt !== '提交') {
+          this.$message.error("问题状态只有为“提交”才可以取消")
+          return
+        }
+      }
       this.cancelWtztDialog = true
     },
     // 取消弹窗内确定按钮
     cancelWtztOK() {
-      const LSIDs = this.ids
-      changewtzt(LSIDs, '取消').then(() => {
+      const data = this.selectedRows
+      changewtzt(data, '取消').then(() => {
         this.getList();
-        this.$modal.msgSuccess("取消成功");
+        this.$message.success("取消成功");
         this.selectedRows = []
         this.ids = this.selectedRows.map(item => item.lsid)
         this.multiple = this.selectedRows.length === 0
+        this.single = this.selectedRows.length !== 1
         this.cancelWtztDialog = false
       })
     },
     // 关闭按钮
     closeit() {
-      this.closeitDialog = true
+      if (this.selectedRows[0].wtzt === '取消') {
+        this.$message.error('问题状态为取消状态不能关闭')
+        return
+      }
+      if (this.selectedRows[0].wtzt === '提交') {
+        this.$message.error('问题状态为提交状态不能关闭')
+        return
+      }
+      if (this.selectedRows[0].wtzt === '已完成' || this.selectedRows[0].wtzt === '确认已完成') {
+        this.$message.error('该问题已关闭')
+        return
+      }
+      if (this.selectedRows[0].wtzt === '接收') {
+        this.closeJSDialog = true
+      }else {
+        this.closeitDialog = true;
+      }
     },
     // 关闭确认按钮
     closeitOK(str) {
-      const LSIDs = this.ids
-      changewtzt(LSIDs, str).then(response => {
-        this.$modal.msgSuccess(str + "!");
+      const data = this.selectedRows
+      changewtzt(data, str).then(response => {
+        this.$message.success(str + "!");
         this.getList();
         this.selectedRows = []
         this.ids = this.selectedRows.map(item => item.lsid)
         this.multiple = this.selectedRows.length === 0
+        this.single = this.selectedRows.length !== 1
         this.closeitDialog = false
+        this.closeJSDialog = false
       })
     },
     // 表单重置
@@ -612,6 +844,7 @@ export default {
       this.ids = selection.map(item => item.lsid)
       this.selectedRows = selection.map(item => item)
       this.multiple = selection.length === 0
+      this.single = selection.length !== 1
     },
     //全选
     selectAllRows() {
@@ -620,11 +853,13 @@ export default {
         this.selectedRows = this.cjlsList.map(v => v);
         this.ids = this.cjlsList.map(item => item.lsid)
         this.multiple = this.selectedRows.length === 0
+        this.single = this.selectedRows.length !== 1
       } else {
         // 取消全选
         this.selectedRows = [];
         this.ids = [];
         this.multiple = this.selectedRows.length === 0
+        this.single = this.selectedRows.length !== 1
       }
     },
     // 新增按钮操作
@@ -654,7 +889,7 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           addCjls(this.form).then(response => {
-            this.$modal.msgSuccess("新增成功");
+            this.$message.success("新增成功");
             this.open = false;
             this.getList();
           });
@@ -670,16 +905,17 @@ export default {
       const LSIDs = this.ids
       delCjls(LSIDs).then(() => {
         this.getList();
-        this.$modal.msgSuccess("删除成功");
+        this.$message.success("删除成功");
         this.selectedRows = []
         this.ids = this.selectedRows.map(item => item.lsid)
         this.multiple = this.selectedRows.length === 0
+        this.single = this.selectedRows.length !== 1
         this.handleDeleteDialog = false
       })
     },
     // 查询历史答案按钮
     selectHistory() {
-
+      this.lishidaanDialog = true;
     },
     //鼠标移入
     handleMouseOver(str) {
@@ -693,6 +929,55 @@ export default {
 };
 </script>
 <style>
+.anglDialog .el-dialog:not(.is-fullscreen) {
+  margin-top: 10% !important;
+}
+.anglDialog .el-dialog {
+  border-radius: 10px;
+}
+.anglDialog .el-dialog__close {
+  font-size: 30px;
+}
+.anglDialog .el-dialog__headerbtn .el-dialog__close {
+  color: red;
+}
+
+.zdhfButDialog .el-dialog {
+  border-radius: 10px;
+}
+
+.zdhfButDialog .el-dialog__close {
+  font-size: 30px;
+}
+
+.zdhfButDialog .el-dialog__headerbtn .el-dialog__close {
+  color: red;
+}
+
+.zdhfButDialog .el-dialog:not(.is-fullscreen) {
+  margin-top: 15% !important;
+}
+
+.zdhfDialog .el-dialog:not(.is-fullscreen) {
+  margin-top: 10% !important;
+}
+
+.zdhfDialog .el-dialog__body {
+  padding: 0 10px;
+}
+
+.zdhfDialog .el-dialog {
+  border-radius: 10px;
+}
+
+.zdhfDialog .el-dialog__close {
+  font-size: 30px;
+}
+
+.zdhfDialog .el-dialog__headerbtn {
+  color: red;
+}
+
 /*主*/
 .upcontainer {
   position: absolute;
@@ -781,16 +1066,16 @@ export default {
   height: 8px;
 }
 
-.upcontainer ::-webkit-scrollbar-track {
+.outer ::-webkit-scrollbar-track {
   background-color: transparent; /* 设置滚动条轨道的背景色为透明 */
 }
 
-.upcontainer ::-webkit-scrollbar-thumb {
+.outer ::-webkit-scrollbar-thumb {
   background-color: rgba(255, 255, 255, 0.3); /* 设置滚动条的颜色和透明度 */
   border-radius: 4px; /* 设置滚动条的边框半径 */
 }
 
-.upcontainer ::-webkit-scrollbar-thumb:hover {
+.outer ::-webkit-scrollbar-thumb:hover {
   background-color: rgba(255, 255, 255, 0.5); /* 设置鼠标悬停时滚动条的颜色和透明度 */
 }
 
@@ -807,11 +1092,11 @@ export default {
 }
 
 .addDialog .el-dialog__body {
-  padding: 0;
+  padding: 0 20px;
 }
 
 .addDialog .el-dialog__header {
-  padding-bottom: 20px;
+  padding-bottom: 10px;
 }
 
 .addDialog .el-col {
@@ -847,11 +1132,16 @@ export default {
   color: black;
 }
 
+.selectDialog .el-dialog {
+  border-radius: 30px;
+}
+
 .butDialog .el-dialog {
   border-radius: 30px;
 }
 
 .butDialog .el-dialog__close {
+
   font-size: 30px; /* 调整按钮大小 */
 }
 
@@ -860,11 +1150,24 @@ export default {
 }
 
 .butDialog .el-dialog:not(.is-fullscreen) {
-  margin-top: 20% !important;
+  margin-top: 15% !important;
+}
+
+.selectDialog .el-dialog__close {
+  font-size: 30px; /* 调整按钮大小 */
+}
+
+
+.selectDialog .el-dialog__headerbtn .el-dialog__close {
+  color: red;
+}
+
+.selectDialog .el-dialog__body {
+  padding: 0 20px;
 }
 
 .upcontainer .el-pagination__total, .el-pagination__jump {
-  color: white;
+  color: #a9a9a9;
 }
 
 </style>

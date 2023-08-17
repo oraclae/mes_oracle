@@ -48,6 +48,7 @@
             <if test="wtxxDTO.YZR != null">YZR,</if>
             <if test="wtxxDTO.YZRID != null">YZRID,</if>
             <if test="wtxxDTO.YZRBMID != null">YZRBMID,</if>
+            <if test="wtxxDTO.JH != null">JH,</if>
         </trim>
         <trim prefix="values(" suffix=")" suffixOverrides=",">
             <if test="wtxxDTO.WTMC != null">#{wtxxDTO.WTMC},</if>
@@ -92,6 +93,7 @@
             <if test="wtxxDTO.YZR != null">#{wtxxDTO.YZR},</if>
             <if test="wtxxDTO.YZRID != null">#{wtxxDTO.YZRID},</if>
             <if test="wtxxDTO.YZRBMID != null">#{wtxxDTO.YZRBMID},</if>
+            <if test="wtxxDTO.JH != null">#{wtxxDTO.JH},</if>
         </trim>
     </insert>
     <insert id="saveJhjlList" parameterType="com.ruoyi.project.question.domain.vo.Sjjh">
@@ -159,9 +161,10 @@
         WTLB,
         WTXL,
         DAXXID,
+        CPXH,
+        JH,
         RD)
         VALUES
-        <foreach collection="daccVOS" item="dacc" separator=",">
             <trim prefix="(" suffix=")" suffixOverrides=",">
                 <if test="dacc.WTID != null">#{dacc.WTID},</if>
                 <if test="dacc.WTID == null">null,</if>
@@ -193,9 +196,28 @@
                 <if test="dacc.WTXL == null">null,</if>
                 <if test="dacc.DAXXID != null">#{dacc.DAXXID},</if>
                 <if test="dacc.DAXXID == null">null,</if>
+                <if test="dacc.CPXH != null">#{dacc.CPXH},</if>
+                <if test="dacc.CPXH == null">null,</if>
+                <if test="dacc.JH != null">#{dacc.JH},</if>
+                <if test="dacc.JH == null">null,</if>
                 <if test="dacc.RD != null">#{dacc.RD},</if>
                 <if test="dacc.RD == null">null,</if>
             </trim>
+    </insert>
+    <insert id="createZRDB">
+        insert into WTGL_ZRDB
+        (XH, ZRRID, WTID, ZRRZT, ZRBM, ZRR, ZRBMID, SFZZRR)
+        <foreach collection="list" separator=" UNION ALL" item="zrr">
+            SELECT
+            #{zrr.XH},
+            #{zrr.ZRRID},
+            #{zrr.WTID},
+            #{zrr.ZRRZT},
+            #{zrr.ZRBM},
+            #{zrr.ZRR},
+            #{zrr.ZRBMID},
+            #{zrr.SFZZRR}
+            FROM DUAL
         </foreach>
     </insert>
     <update id="updateQuestionsStatus">
@@ -228,7 +250,7 @@
                 <if test="item.XWJJSJ  != null">XWJJSJ= #{item.XWJJSJ},</if>
                 <if test="item.WTXL != null">WTXL=#{item.WTXL},</if>
                 <if test="item.ZYCD != null">ZYCD=#{item.ZYCD},</if>
-                <if test="item.YRZBM != null">YRZBM=#{item.YRZBM},</if>
+                <if test="item.YZRBM != null">YZRBM=#{YZRBM},</if>
                 <if test="item.WTLB != null">WTLB=#{item.WTLB},</if>
                 <if test="item.WTMS != null">WTMS=#{item.WTMS},</if>
                 <if test="item.WTZT != null">WTZT=#{item.WTZT},</if>
@@ -350,6 +372,11 @@
         set WTZT = #{status}
         where ID = #{wtid}
     </update>
+    <update id="updateQuestionStatusSJ">
+        update WTGL_YWCJ
+        set WTZT = #{status},GBSJ=to_date(#{format}, 'YYYY-MM-DD HH24:MI:SS')
+        where ID = #{wtid}
+    </update>
     <update id="updateQuestionSFDZFK">
         update WTGL_YWCJ
         set SFDZFK=0
@@ -428,8 +455,14 @@
         <if test="wtxxDTO.LDPS!=null">
             and LDPS=#{wtxxDTO.LDPS}
         </if>
+        <if test="wtxxDTO.YZRID !=null">
+            and YZRID like '%' || #{wtxxDTO.YZRID} || '%'
+        </if>
         <if test="wtxxDTO.YZR !=null">
             and YZR like '%' || #{wtxxDTO.YZR} || '%'
+        </if>
+        <if test="wtxxDTO.YZRBMID !=null">
+            and YZRBMID like '%' || #{wtxxDTO.YZRBMID} || '%'
         </if>
         <if test="wtxxDTO.userName!=null">
             <if test="wtxxDTO.type=='wtms'">
@@ -499,6 +532,7 @@
         wy.QWFKSJ,
         wy.BHSJ,
         wy.JHSJ,
+        wy.JH,
         wz.WTID,
         wz.ZRRID,
         wz.ZRBM,
@@ -587,6 +621,7 @@
         wy.QWFKSJ,
         wy.BHSJ,
         wy.JHSJ,
+        wy.JH,
         wz.WTID,
         wz.ZRRID,
         wz.ZRBM,
@@ -731,27 +766,16 @@
         where XH = #{xh}
     </select>
 
-    <!--
-    SELECT wy.*,
-       LISTAGG(wz.ZRR, ',') WITHIN GROUP (ORDER BY wz.ZRR) AS ZRR,
-       LISTAGG(wz.ZRBM, ',') WITHIN GROUP (ORDER BY wz.ZRBM) AS ZRBM,
-       LISTAGG(wz.ZRKS, ',') WITHIN GROUP (ORDER BY wz.ZRKS) AS ZRKS,
-       wz.ZRRZT AS ZRRZT
-            FROM WTGL_YWCJ wy
-            RIGHT JOIN wtgl_zrdb wz ON wy.ID = wz.WTID
-            WHERE wy.WTZT = :WTZT
-              OR wy.WTZT = :WTZT1
-              OR wy.WTZT = :WTZT2
-              OR wy.WTZT = :WTZT3
-              AND wz.ZRRID = :ZRRID
-              AND (
-                (:type = 'wtms' AND wy.WTMS LIKE '%' || :userName || '%') OR
-                (:type = 'scddh' AND wy.SCDDH LIKE '%' || :userName || '%') OR
-                (:type = 'cpxh' AND wy.CPXH LIKE '%' || :userName || '%') OR
-                (:type = 'wtmc' AND wy.WTMC LIKE '%' || :userName || '%') OR
-                (:type = 'wtly' AND wy.WTLY LIKE '%' || :userName || '%')
-              )
-            GROUP BY wz.WTID, wy.column1, wy.column2, ...
-            ORDER BY wy.CJSJ DESC
-    -->
+    <select id="selectZrrByWtidAndZhu" resultType="com.ruoyi.project.question.domain.vo.ZrrVO">
+        select *
+        from WTGL_ZRDB
+        where WTID = #{wtid}
+          and SFZZRR = 'true'
+    </select>
+    <select id="getJhjlByWtid" resultType="com.ruoyi.project.question.domain.vo.Sjjh">
+        select *
+        from WTGL_JHJL
+        where WTID = #{wtid}
+          and JHZT &lt;&gt; '领导批示'
+    </select>
 </mapper>

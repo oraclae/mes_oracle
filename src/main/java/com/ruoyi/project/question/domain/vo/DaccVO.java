@@ -26,4 +26,6 @@ public class DaccVO {
     private String WTMS;             //问题描述
     private String GXH;             //工序号
     private String GXMC;             //工序名称
+    private String JH;             //件号
+    private String CPXH;             //产品型号
 }

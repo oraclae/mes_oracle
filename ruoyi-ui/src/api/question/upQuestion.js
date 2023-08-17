@@ -70,11 +70,11 @@ export function delCjls(LSID) {
 }
 
 // 改变问题状态
-export function changewtzt(ids, str) {
+export function changewtzt(data, str) {
   return request({
     url: '/myjob/cjls/' + str + '/changewtzt',
     method: 'post',
-    data: ids
+    data: data
   })
 }
 
@@ -146,6 +146,16 @@ export function listDacc(query) {
   })
 }
 
+
+// 查询答案信息列表
+export function listDaccToZN(query) {
+  return request({
+    url: '/myjob/cjls/listDaccToZN',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询答案信息详细
 export function getDacc(DaxxID) {
   return request({
@@ -167,6 +177,16 @@ export function addDacc(data) {
 export function updateDacc(data) {
   return request({
     url: '/myjob/cjls/updateDacc',
+    method: 'put',
+    data: data
+  })
+}
+
+
+//查询的答案热度加1
+export function updateDaccToRd(data) {
+  return request({
+    url: '/myjob/cjls/updateDaccToRd',
     method: 'put',
     data: data
   })
@@ -226,5 +246,46 @@ export function delYwzd(xhs) {
   })
 }
 
+// 查询提出问题按钮列表
+export function getUpButtons() {
+  return request({
+    url: '/myjob/cjls/getUpButtons',
+    method: 'get'
+  })
+}
+
+// 查询提出问题按钮详情
+export function getUpButton(xh) {
+  return request({
+    url: '/myjob/cjls/getUpButton/' + xh,
+    method: 'get'
+  })
+}
+
+// 修改提出问题按钮
+export function updateUpButton(data) {
+  return request({
+    url: '/myjob/cjls/updateUpButton',
+    method: 'put',
+    data: data
+  })
+}
+
+// 新增业务字典
+export function addUpButton(data) {
+  return request({
+    url: '/myjob/cjls/addUpButton',
+    method: 'post',
+    data: data
+  })
+}
+
+// 删除业务字典
+export function delangl(xhs) {
+  return request({
+    url: '/myjob/cjls/delangl/' + xhs,
+    method: 'delete'
+  })
+}
 
 

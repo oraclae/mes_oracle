@@ -37,7 +37,7 @@ public class WtxxVo {
     private Date XWJJSJ;    //希望解决时间
     private String WTXL;    //问题细类
     private String ZYCD;    //紧急程度
-    private String YRZBM;   //阅知人部门
+    private String YZRBM;   //阅知人部门
     private String WTLB;    //问题类别
     private String WTMS;    //问题描述
     private String WTZT;    //问题状态
@@ -85,4 +85,6 @@ public class WtxxVo {
     private String JHSJ;  //激活时间
     private String BHSJ;  //闭环时间
     private Integer SFDZFK;  //是否当周反馈
+    private String DQZRR;  //主责任人
+    private String JH;  //件号
 }

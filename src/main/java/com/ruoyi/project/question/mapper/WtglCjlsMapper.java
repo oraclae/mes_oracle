@@ -1,9 +1,6 @@
 package com.ruoyi.project.question.mapper;
 
-import com.ruoyi.project.question.domain.WtglCjls;
-import com.ruoyi.project.question.domain.WtglCjlsDTO;
-import com.ruoyi.project.question.domain.WtglDacc;
-import com.ruoyi.project.question.domain.Ywzd;
+import com.ruoyi.project.question.domain.*;
 import com.ruoyi.project.question.domain.vo.NumberVO;
 import com.ruoyi.project.question.domain.vo.WtxxVo;
 import org.apache.ibatis.annotations.Param;
@@ -87,7 +84,7 @@ public interface WtglCjlsMapper
      * @param wtzt 问题状态
      * @return 结果
      */
-    int changewtzt(@Param("ids") String[] ids,@Param("wtzt") String wtzt);
+    int changewtzt(@Param("ids") List<String> ids,@Param("wtzt") String wtzt);
 
     /**
      * 修改解决方案
@@ -107,7 +104,7 @@ public interface WtglCjlsMapper
      * 获取问题状态数量
      * @return 问题状态数量
      */
-    List<NumberVO> getwtztNumber();
+    List<NumberVO> getwtztNumber(String deptName);
 
     /**
      * 获取部门科室数量
@@ -187,4 +184,38 @@ public interface WtglCjlsMapper
      * 删除业务字典
      */
     int delYwzd(String[] xhs);
+
+    int updateDaccToRd(@Param("daxxid") String daxxid);
+
+    /**
+     * 查询提出问题按钮列表
+     */
+    List<UpButton> getUpButtons();
+
+    /**
+     * 查询提出问题按钮
+     */
+    UpButton getUpButton(String xh);
+
+    /**
+     * 新增提出问题按钮
+     */
+    int addUpButton(UpButton upButton);
+
+    /**
+     * 修改提出问题按钮
+     */
+    int updateUpButton(UpButton upButton);
+
+    /**
+     * 删除提出问题按钮
+     */
+    int delangl(String[] xhs);
+
+    /**
+     * 智能回复查询
+     * @param wtglDacc
+     * @return
+     */
+    List<WtglDacc> listDaccToZN(@Param("wtglDacc") WtglDacc wtglDacc);
 }

@@ -2,7 +2,7 @@
   <div class="app-container home">
     <el-row :gutter="24">
       <el-col :span="18" :xs="24">
-<!--        <el-button type="primary" size="small" @click="saveData">保存</el-button>-->
+        <!--        <el-button type="primary" size="small" @click="saveData">保存</el-button>-->
         <el-button type="primary" size="small" :disabled="single" @click="handleUpdate">修改</el-button>
         <el-button type="primary" size="small" @click="deleteData">删除</el-button>
         <el-button type="warning" size="small" @click="shuaxin">刷新</el-button>
@@ -22,19 +22,18 @@
           @keyup.enter.native="handleQuery"
         />
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-col>
     </el-row>
     <el-row :gutter="24">
       <el-col :span="24" :xs="24">
         <div class="InteractiveRecordingTable">
           <el-table
+            height="calc(100vh - 220px)"
             :data="tableData"
             v-loading="loading"
             :show-overflow-tooltip="true"
             :cell-class-name=tableRowClassName
             size="medium"
-            @cell-dblclick="cellClick"
             @selection-change="handleSelectionChange"
             :highlight-current-row="highLight"
             row-key="xh"
@@ -120,17 +119,6 @@
               </template>
             </el-table-column>
             <el-table-column
-              prop="wtcjks"
-              label="问题创建科室"
-              show-overflow-tooltip
-            >
-              <template slot-scope="scope">
-                <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'wtcjks'"
-                          v-model="scope.row.wtcjks" @blur="inputBlur(scope)"></el-input>
-                <span v-else>{{ scope.row.wtcjks }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
               prop="wtcjsj"
               label="问题创建时间"
               show-overflow-tooltip
@@ -139,17 +127,6 @@
                 <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'wtcjsj'"
                           v-model="scope.row.wtcjsj" @blur="inputBlur(scope)"></el-input>
                 <span v-else>{{ scope.row.wtcjsj }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="wtzrrbm"
-              label="问题责任人部门"
-              show-overflow-tooltip
-            >
-              <template slot-scope="scope">
-                <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'wtzrrbm'"
-                          v-model="scope.row.wtzrrbm" @blur="inputBlur(scope)"></el-input>
-                <span v-else>{{ scope.row.wtzrrbm }}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -218,10 +195,8 @@
 <script>
 
 import {
-  getProblemInteractionList,
-  updateProblemInteraction,
-  deleteProblemInteraction,
-  getJHJL,updateJHJL
+  getProblemInteractionList, updateProblemInteraction,
+  deleteProblemInteraction, getJHJL,updateJHJL,
 } from "@/api/question/question";
 export default {
   data() {
@@ -277,6 +252,7 @@ export default {
         this.openUpdate = true;
       });
     },
+    //重置
     reset() {
       this.formUpdate = {
         xh: null,
@@ -314,8 +290,8 @@ export default {
       this.reset();
       this.openUpdate = false;
     },
+    //把每一行的索引放进row,和index
     tableRowClassName ({row, column, rowIndex, columnIndex}) {
-      //把每一行的索引放进row,和index
       row.index = rowIndex;
       column.index=columnIndex;
     },
@@ -328,15 +304,7 @@ export default {
     },
     //按照条件查询数据
     handleQuery() {
-      this.queryParams.pageNum = 1;
       this.load();
-    },
-    /** 重置按钮操作 */
-    resetQuery() {
-      this.queryParams.userName = null
-      this.queryParams.type = '';
-      this.resetForm("queryForm");
-      this.handleQuery();
     },
     // 失去焦点初始化
     inputBlur(object) {
@@ -414,10 +382,6 @@ export default {
 };
 </script>
 <style>
-.home ::-webkit-scrollbar {
-  width: 8px; /* 设置滚动条的宽度 */
-  height: 8px;
-}
 .fj .el-checkbox__label {
   font-size: 16px;
 }

@@ -219,4 +219,9 @@ public interface QuestionService {
      * 根据id更新交互数据
      */
     void updateJHJL(SjjhDTO sjjhDTO);
+
+    /**
+     * 根据问题id查询所有交互数据
+     */
+    List<Sjjh> getJhjlByWtid(String wtid);
 }

@@ -74,6 +74,7 @@
     <select id="selectWtglCjlsList" parameterType="WtglCjlsDTO" resultMap="WtglCjlsResult">
         <include refid="selectWtglCjlsVo"/>
         <where>
+            CJBMKS = #{CJBMKS}
             <if test="selectType != null  and selectType != '' and selectData != null and selectData != ''">and
                 ${selectType} like '%' || #{selectData} || '%'
             </if>
@@ -83,7 +84,7 @@
 
     <select id="selectWtglDownCjlsList" parameterType="WtglCjls" resultMap="WtglCjlsResult">
         <include refid="selectWtglCjlsVo"/>
-        where WTZT &lt;&gt; '取消' order by CJSJ desc
+        where CJBMKS = #{CJBMKS} and WTZT &lt;&gt; '取消' order by CJSJ desc
     </select>
 
     <select id="selectWtglCjlsByLSID" parameterType="String" resultMap="WtglCjlsResult">
@@ -92,7 +93,8 @@
     </select>
     <select id="selectywcjList" resultType="com.ruoyi.project.question.domain.vo.WtxxVo">
         select *
-        from wtgl_ywcj
+        from WTGL_YWCJ
+        where CJBM = #{CJBMKS}
         order by CJSJ desc
     </select>
     <select id="selectWtglCjlsSpeechList" resultMap="WtglCjlsResult">
@@ -133,7 +135,7 @@
     <select id="getwtztNumber" resultType="com.ruoyi.project.question.domain.vo.NumberVO">
         select COUNT(*) as num, WTZT as str
         from WTGL_CJLS
-        where WTZT &lt;&gt; '取消'
+        where WTZT &lt;&gt; '取消' and CJBMKS = #{deptName}
         group by WTZT
     </select>
     <select id="getcjksbmNumber" resultType="com.ruoyi.project.question.domain.vo.NumberVO">
@@ -174,6 +176,33 @@
         select *
         from WTGL_DACC
         where DAXXID = #{daxxID}
+    </select>
+
+    <select id="getUpButtons" resultType="com.ruoyi.project.question.domain.UpButton">
+        select *
+        from WTGL_UPBUTTON
+        order by PX
+    </select>
+    <select id="getUpButton" resultType="com.ruoyi.project.question.domain.UpButton">
+        select *
+        from WTGL_UPBUTTON
+        where XH = #{xh}
+    </select>
+    <select id="listDaccToZN" resultType="com.ruoyi.project.question.domain.WtglDacc">
+        select *
+        from WTGL_DACC
+        <where>
+            <if test="wtglDacc.WTMC != null  and wtglDacc.WTMC != ''">and WTMC like '%' || #{wtglDacc.WTMC} || '%'
+            </if>
+            <if test="wtglDacc.WTLB != null  and wtglDacc.WTLB != ''">and WTLB = #{wtglDacc.WTLB}</if>
+            <if test="wtglDacc.WTXL != null  and wtglDacc.WTXL != ''">and WTXL = #{wtglDacc.WTXL}</if>
+            <if test="wtglDacc.WTMS != null  and wtglDacc.WTMS != ''">and WTMS like '%' || #{wtglDacc.WTMS} || '%'
+            </if>
+            <if test="wtglDacc.GXH != null  and wtglDacc.GXH != ''">and GXH = #{wtglDacc.GXH}</if>
+            <if test="wtglDacc.CPXH != null  and wtglDacc.CPXH != ''">and CPXH = #{wtglDacc.CPXH}</if>
+            <if test="wtglDacc.JH != null  and wtglDacc.JH != ''">and JH = #{wtglDacc.JH}</if>
+        </where>
+        order by RD desc
     </select>
     <insert id="insertWtglCjls" parameterType="WtglCjls">
         insert into WTGL_CJLS
@@ -255,6 +284,21 @@
             <if test="BZ != null">#{BZ},</if>
         </trim>
     </insert>
+    <insert id="addUpButton">
+        insert into WTGL_UPBUTTON
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="XH != null">XH,</if>
+            <if test="PX != null">PX,</if>
+            <if test="BUTNAME != null">BUTNAME,</if>
+            <if test="IMGNAME != null">IMGNAME,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="XH != null">#{XH},</if>
+            <if test="PX != null">#{PX},</if>
+            <if test="BUTNAME != null">#{BUTNAME},</if>
+            <if test="IMGNAME != null">#{IMGNAME},</if>
+        </trim>
+    </insert>
 
     <update id="updateWtglCjls" parameterType="WtglCjls">
         update WTGL_CJLS
@@ -326,6 +370,7 @@
             <if test="WTXL != null">WTXL = #{WTXL},</if>
             <if test="RD != null">RD = #{RD},</if>
             <if test="WTMS != null">WTMS = #{WTMS},</if>
+            <if test="KEYWORDS != null">KEYWORDS = #{KEYWORDS},</if>
         </trim>
         where DAXXID = #{DAXXID}
     </update>
@@ -336,6 +381,19 @@
             <if test="CJD != null">CJD = #{CJD},</if>
             <if test="BZ != null">BZ = #{BZ},</if>
         </trim>
+        where XH = #{XH}
+    </update>
+
+    <update id="updateDaccToRd">
+        update WTGL_DACC
+        set RD=RD + 1
+        where DAXXID = #{daxxid}
+    </update>
+    <update id="updateUpButton">
+        update WTGL_UPBUTTON
+        set PX      = #{PX},
+            BUTNAME = #{BUTNAME},
+            IMGNAME = #{IMGNAME}
         where XH = #{XH}
     </update>
 
@@ -359,6 +417,12 @@
     </delete>
     <delete id="delYwzd">
         delete from WTGL_YWZD where XH in
+        <foreach item="XH" collection="array" open="(" separator="," close=")">
+            #{XH}
+        </foreach>
+    </delete>
+    <delete id="delangl">
+        delete from wtgl_upbutton where XH in
         <foreach item="XH" collection="array" open="(" separator="," close=")">
             #{XH}
         </foreach>
