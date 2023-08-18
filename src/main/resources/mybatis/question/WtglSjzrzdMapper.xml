@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.question.mapper.WtglSjzrzdMapper">
+    
+    <resultMap type="WtglSjzrzd" id="WtglSjzrzdResult">
+        <result property="xh"    column="xh"    />
+        <result property="zrbm"    column="zrbm"    />
+        <result property="zrks"    column="zrks"    />
+        <result property="yjzrr"    column="yjzrr"    />
+        <result property="ejzrr"    column="ejzrr"    />
+        <result property="sjzrr"    column="sjzrr"    />
+        <result property="yjzrrid"    column="yjzrrid"    />
+        <result property="ejzrrid"    column="ejzrrid"    />
+        <result property="sjzrrid"    column="sjzrrid"    />
+        <result property="dqzer"    column="dqzer"    />
+        <result property="dqzerid"    column="dqzerid"    />
+    </resultMap>
+
+    <sql id="selectWtglSjzrzdVo">
+        select xh, zrbm, zrks, yjzrr, ejzrr, sjzrr, yjzrrid, ejzrrid, sjzrrid, dqzer, dqzerid from wtgl_sjzrzd
+    </sql>
+
+    <select id="selectWtglSjzrzdList" parameterType="WtglSjzrzd" resultMap="WtglSjzrzdResult">
+        <include refid="selectWtglSjzrzdVo"/>
+        <where>  
+            <if test="zrbm != null  and zrbm != ''"> and zrbm = #{zrbm}</if>
+            <if test="zrks != null  and zrks != ''"> and zrks = #{zrks}</if>
+            <if test="yjzrr != null  and yjzrr != ''"> and yjzrr = #{yjzrr}</if>
+            <if test="ejzrr != null  and ejzrr != ''"> and ejzrr = #{ejzrr}</if>
+            <if test="sjzrr != null  and sjzrr != ''"> and sjzrr = #{sjzrr}</if>
+            <if test="yjzrrid != null  and yjzrrid != ''"> and yjzrrid = #{yjzrrid}</if>
+            <if test="ejzrrid != null  and ejzrrid != ''"> and ejzrrid = #{ejzrrid}</if>
+            <if test="sjzrrid != null  and sjzrrid != ''"> and sjzrrid = #{sjzrrid}</if>
+            <if test="dqzer != null  and dqzer != ''"> and dqzer = #{dqzer}</if>
+            <if test="dqzerid != null  and dqzerid != ''"> and dqzerid = #{dqzerid}</if>
+        </where>
+    </select>
+    
+    <select id="selectWtglSjzrzdByXh" parameterType="String" resultMap="WtglSjzrzdResult">
+        <include refid="selectWtglSjzrzdVo"/>
+        where xh = #{xh}
+    </select>
+        
+    <insert id="insertWtglSjzrzd" parameterType="WtglSjzrzd">
+        insert into wtgl_sjzrzd
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="xh != null">xh,</if>
+            <if test="zrbm != null">zrbm,</if>
+            <if test="zrks != null">zrks,</if>
+            <if test="yjzrr != null">yjzrr,</if>
+            <if test="ejzrr != null">ejzrr,</if>
+            <if test="sjzrr != null">sjzrr,</if>
+            <if test="yjzrrid != null">yjzrrid,</if>
+            <if test="ejzrrid != null">ejzrrid,</if>
+            <if test="sjzrrid != null">sjzrrid,</if>
+            <if test="dqzer != null">dqzer,</if>
+            <if test="dqzerid != null">dqzerid,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="xh != null">#{xh},</if>
+            <if test="zrbm != null">#{zrbm},</if>
+            <if test="zrks != null">#{zrks},</if>
+            <if test="yjzrr != null">#{yjzrr},</if>
+            <if test="ejzrr != null">#{ejzrr},</if>
+            <if test="sjzrr != null">#{sjzrr},</if>
+            <if test="yjzrrid != null">#{yjzrrid},</if>
+            <if test="ejzrrid != null">#{ejzrrid},</if>
+            <if test="sjzrrid != null">#{sjzrrid},</if>
+            <if test="dqzer != null">#{dqzer},</if>
+            <if test="dqzerid != null">#{dqzerid},</if>
+         </trim>
+    </insert>
+
+    <update id="updateWtglSjzrzd" parameterType="WtglSjzrzd">
+        update wtgl_sjzrzd
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="zrbm != null">zrbm = #{zrbm},</if>
+            <if test="zrks != null">zrks = #{zrks},</if>
+            <if test="yjzrr != null">yjzrr = #{yjzrr},</if>
+            <if test="ejzrr != null">ejzrr = #{ejzrr},</if>
+            <if test="sjzrr != null">sjzrr = #{sjzrr},</if>
+            <if test="yjzrrid != null">yjzrrid = #{yjzrrid},</if>
+            <if test="ejzrrid != null">ejzrrid = #{ejzrrid},</if>
+            <if test="sjzrrid != null">sjzrrid = #{sjzrrid},</if>
+            <if test="dqzer != null">dqzer = #{dqzer},</if>
+            <if test="dqzerid != null">dqzerid = #{dqzerid},</if>
+        </trim>
+        where xh = #{xh}
+    </update>
+
+    <delete id="deleteWtglSjzrzdByXh" parameterType="String">
+        delete from wtgl_sjzrzd where xh = #{xh}
+    </delete>
+
+    <delete id="deleteWtglSjzrzdByXhs" parameterType="String">
+        delete from wtgl_sjzrzd where xh in 
+        <foreach item="xh" collection="array" open="(" separator="," close=")">
+            #{xh}
+        </foreach>
+    </delete>
+</mapper>

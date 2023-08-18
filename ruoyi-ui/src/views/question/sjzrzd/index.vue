@@ -56,20 +56,18 @@
     <el-table border v-loading="loading" :data="sjzrzdList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="序号" type="index" width="50"/>
-      <el-table-column label="责任部门ID" align="center" prop="zrbmid" />
-      <el-table-column label="责任部门" align="center" prop="zrbm" />
-      <el-table-column label="责任科室ID" align="center" prop="zrksid" />
-      <el-table-column label="责任科室" align="center" prop="zrks" />
+<!--      <el-table-column label="责任部门ID" align="center" prop="zrbmid" />
+      <el-table-column label="责任部门" align="center" prop="zrbm" />-->
       <el-table-column label="当前责任人ID" align="center" prop="dqzerid" />
       <el-table-column label="当前责任人" align="center" prop="dqzer" />
       <el-table-column label="一级责任人ID" align="center" prop="yjzrrid" />
       <el-table-column label="一级责任人" align="center" prop="yjzrr" />
-      <el-table-column label="二级责任人ID" align="center" prop="ejzrrid" />
+<!--      <el-table-column label="二级责任人ID" align="center" prop="ejzrrid" />
       <el-table-column label="二级责任人" align="center" prop="ejzrr" />
       <el-table-column label="三级责任人ID" align="center" prop="sjzrrid" />
       <el-table-column label="三级责任人" align="center" prop="sjzrr" />
       <el-table-column label="四级责任人ID" align="center" prop="sijzrrid" />
-      <el-table-column label="四级责任人" align="center" prop="sijzrr" />
+      <el-table-column label="四级责任人" align="center" prop="sijzrr" />-->
       <el-table-column label="操作" width="150px" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -98,20 +96,14 @@
 
     <!-- 添加或修改sjzrzd对话框 -->
     <el-dialog :close-on-click-modal="false" :title="title" :visible.sync="open" width="500px" append-to-body>
-      <div style="height: 600px;overflow-y: auto">
+      <div style="height: 300px;overflow-y: auto">
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="责任部门ID" prop="zrbmid">
+<!--        <el-form-item label="责任部门ID" prop="zrbmid">
           <el-input v-model="form.zrbmid" placeholder="请输入责任部门ID" />
         </el-form-item>
         <el-form-item label="责任部门" prop="zrbm">
           <el-input v-model="form.zrbm" placeholder="请输入责任部门" />
-        </el-form-item>
-        <el-form-item label="责任科室ID" prop="zrksid">
-          <el-input v-model="form.zrksid" placeholder="请输入责任科室ID" />
-        </el-form-item>
-        <el-form-item label="责任科室" prop="zrks">
-          <el-input v-model="form.zrks" placeholder="请输入责任科室" />
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item label="当前责任人ID" prop="dqzerid">
           <el-input v-model="form.dqzerid" placeholder="请输入当前责任人ID" />
         </el-form-item>
@@ -124,7 +116,7 @@
         <el-form-item label="一级责任人" prop="yjzrr">
           <el-input v-model="form.yjzrr" placeholder="请输入一级责任人" />
         </el-form-item>
-        <el-form-item label="二级责任人ID" prop="ejzrrid">
+<!--        <el-form-item label="二级责任人ID" prop="ejzrrid">
           <el-input v-model="form.ejzrrid" placeholder="请输入二级责任人ID" />
         </el-form-item>
         <el-form-item label="二级责任人" prop="ejzrr">
@@ -141,7 +133,7 @@
         </el-form-item>
         <el-form-item label="四级责任人" prop="sijzrr">
           <el-input v-model="form.sijzrr" placeholder="请输入四级责任人" />
-        </el-form-item>
+        </el-form-item>-->
       </el-form>
       </div>
       <div slot="footer" class="dialog-footer">

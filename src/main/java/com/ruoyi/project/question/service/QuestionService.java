@@ -16,7 +16,7 @@ import java.util.List;
  * Description:
  * Version:
  */
-
+@Transactional
 public interface QuestionService {
 
     /**
@@ -142,15 +142,6 @@ public interface QuestionService {
      */
     void updateWtztEnd(WtxxDTO wtxxDTO);
 
-
-
-
-
-    /**
-     * 升级责任人的定时任务
-     */
-    void shengjizrr();
-
     /**
      * 计算问题天数
      */
@@ -224,4 +215,9 @@ public interface QuestionService {
      * 根据问题id查询所有交互数据
      */
     List<Sjjh> getJhjlByWtid(String wtid);
+
+    /**
+     * 升级责任人的定时任务
+     */
+    void shengjizrr();
 }
