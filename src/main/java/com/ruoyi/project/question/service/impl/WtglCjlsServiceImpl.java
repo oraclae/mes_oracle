@@ -347,6 +347,7 @@ public class WtglCjlsServiceImpl implements IWtglCjlsService {
      */
     @Override
     public int addYwzd(Ywzd ywzd) {
+        ywzd.setXH(UUID.randomUUID().toString());
         return wtglCjlsMapper.addYwzd(ywzd);
     }
 
@@ -438,7 +439,7 @@ public class WtglCjlsServiceImpl implements IWtglCjlsService {
      * @return 结果
      */
     public int test(WtglCjls wtglCjls) {
-//        questionMapper.selectWTByisWtsj
+//        questionMapper.selectWTByisWtsj();
 
 
 

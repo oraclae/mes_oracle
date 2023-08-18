@@ -339,11 +339,13 @@
     <insert id="addYwzd">
         insert into WTGL_YWZD
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="XH != null">XH,</if>
             <if test="ZJD != null">ZJD,</if>
             <if test="CJD != null">CJD,</if>
             <if test="BZ != null">BZ,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="XH != null">#{XH},</if>
             <if test="ZJD != null">#{ZJD},</if>
             <if test="CJD != null">#{CJD},</if>
             <if test="BZ != null">#{BZ},</if>
