@@ -79,7 +79,7 @@
                   <th style="min-width: 100px">班产日期</th>
                   <th style="min-width: 100px">批次</th>
                   <th style="min-width: 100px">工序号</th>
-                  <th style="min-width: 100px">工序名称</th>
+<!--                  <th style="min-width: 100px">工序名称</th>-->
                   <th style="min-width: 100px">问题描述</th>
                   <th style="min-width: 100px">设备型号</th>
                   <th style="min-width: 100px">是否满意</th>
@@ -150,10 +150,10 @@
                               :disabled="v.gxh == null">
                     <td>{{ v.gxh }}</td>
                   </el-tooltip>
-                  <el-tooltip class="item" effect="dark" :content="v.gxmc" placement="top" :open-delay="500"
+<!--                  <el-tooltip class="item" effect="dark" :content="v.gxmc" placement="top" :open-delay="500"
                               :disabled="v.gxmc == null">
                     <td>{{ v.gxmc }}</td>
-                  </el-tooltip>
+                  </el-tooltip>-->
                   <el-tooltip class="item" effect="dark" :content="v.wtms" placement="top" :open-delay="500"
                               :disabled="v.wtms == null">
                     <td>{{ v.wtms }}</td>
@@ -256,7 +256,7 @@
             <el-input v-model="form.gxh" placeholder="请输入工序号"/>
           </el-form-item>
           <el-form-item label="设备型号：" prop="sbxh">
-            <el-input v-model="form.sbxh" placeholder="请输入工序名称"/>
+            <el-input v-model="form.sbxh" placeholder="请输入设备型号"/>
           </el-form-item>
           <el-form-item label="问题类别：" prop="wtlb">
             <el-input style="font-size: 18px;color: black" v-model="form.wtlb" :disabled="true"/>
@@ -285,7 +285,7 @@
         <div slot="footer" class="dialog-footer" style="height: 50px;margin-top: 20px">
           <el-button type="success" style="float: right;margin-right: 20px" @click="submitForm">确 定</el-button>
           <el-button type="primary" style="float: right;margin-right: 20px" @click="cancel">取 消</el-button>
-          <el-button type="danger" style="float: right;margin-right: 20px" @click="selectHistory">历史答案查询</el-button>
+          <el-button type="danger" style="float: right;margin-right: 20px" @click="selectHistory">启用问题处理库</el-button>
         </div>
       </div>
     </el-dialog>
@@ -345,7 +345,7 @@
         <el-button @click="handleDeleteDialog = false" style="margin-left: 30px">取 消</el-button>
       </span>
     </el-dialog>
-    <el-dialog class="dialogRad" :close-on-click-modal="false" title="历史答案查询" width="1200px"
+    <el-dialog class="dialogRad" :close-on-click-modal="false" title="启用问题处理库" width="1200px"
                :visible.sync="lishidaanDialog">
       <zdhf @xiangxixinxi="xiangxixinxi" v-if="lishidaanDialog" :form="form"></zdhf>
     </el-dialog>
@@ -507,6 +507,7 @@ export default {
   },
   data() {
     return {
+      isone: true,
       //按钮
       buttons: [],
       //按钮管理弹窗
@@ -886,12 +887,17 @@ export default {
     },
     // 提交按钮
     submitForm() {
+      if (!this.isone) {
+        return;
+      }
       this.$refs["form"].validate(valid => {
         if (valid) {
+          this.isone = false
           addCjls(this.form).then(response => {
             this.$message.success("新增成功");
             this.open = false;
             this.getList();
+            this.isone = true
           });
         }
       });

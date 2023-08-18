@@ -43,7 +43,8 @@
       </el-col>
     </el-row>
 
-    <el-table border height="calc(100vh - 220px)" v-loading="loading" :data="daccList" @selection-change="handleSelectionChange">
+    <el-table
+      :header-cell-style="styleFunc" border height="calc(100vh - 220px)" v-loading="loading" :data="daccList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="序号" type="index" width="50"/>
       <el-table-column show-overflow-tooltip label="问题名称" align="center" prop="wtmc" />
@@ -153,6 +154,15 @@ export default {
     this.getList();
   },
   methods: {
+    //给表格的表头设置颜色
+    styleFunc({row,column,rowIndex, columnIndex}) {
+      if (column.property === 'wtms' || column.property === 'wtmc') {
+        return "background:orange";
+      }
+      if (column.property === 'daxx') {
+        return "background:#22f64a";
+      }
+    },
     /** 查询答案信息列表 */
     getList() {
       this.loading = true;

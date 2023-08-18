@@ -3,6 +3,7 @@ package com.ruoyi.project.question.service;
 import com.ruoyi.project.question.domain.*;
 import com.ruoyi.project.question.domain.vo.NumberVO;
 import com.ruoyi.project.question.domain.vo.WtxxVo;
+import com.ruoyi.project.system.domain.SysUser;
 
 import java.util.List;
 
@@ -123,7 +124,7 @@ public interface IWtglCjlsService
      * @param wtlb 问题类别
      * @return 接收人列表
      */
-    List<String> getjsrBywtlb(String wtlb);
+    List<SysUser> getjsrBywtlb(String wtlb);
 
     /**
      * 查询答案信息列表

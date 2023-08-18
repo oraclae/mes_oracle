@@ -10,7 +10,9 @@ import com.ruoyi.project.question.mapper.WtglCjlsMapper;
 import com.ruoyi.project.question.service.IWtglCjlsService;
 import com.ruoyi.project.question.service.QuestionService;
 import com.ruoyi.project.system.domain.SysDept;
+import com.ruoyi.project.system.domain.SysUser;
 import com.ruoyi.project.system.mapper.SysDeptMapper;
+import com.ruoyi.project.system.mapper.SysUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -42,6 +44,9 @@ public class WtglCjlsServiceImpl implements IWtglCjlsService {
     @Autowired
     private SysDeptMapper sysDeptMapper;
 
+    @Autowired
+    private SysUserMapper sysUserMapper;
+
     /**
      * 查询提出问题
      *
@@ -61,8 +66,10 @@ public class WtglCjlsServiceImpl implements IWtglCjlsService {
      */
     @Override
     public List<WtglCjls> selectWtglCjlsList(WtglCjlsDTO wtglCjls) {
-        SysDept sysDept = sysDeptMapper.selectDeptById(SecurityUtils.getDeptId());
-        wtglCjls.setCJBMKS(sysDept.getDeptName());
+        if (SecurityUtils.getUserId() != 1) {
+            SysDept sysDept = sysDeptMapper.selectDeptById(SecurityUtils.getDeptId());
+            wtglCjls.setCJBMKS(sysDept.getDeptName());
+        }
         return wtglCjlsMapper.selectWtglCjlsList(wtglCjls);
     }
 
@@ -89,14 +96,21 @@ public class WtglCjlsServiceImpl implements IWtglCjlsService {
     public int insertWtglCjls(WtglCjls wtglCjls) {
         wtglCjls.setLSID(UUID.randomUUID().toString());
         wtglCjls.setWTZT("提交");
-        wtglCjls.setBJZRR("被叫责任人");//被叫责任人赋值
-        // 提报人赋值
-        String nickName = SecurityUtils.getUsername();
-        wtglCjls.setTBR(nickName);
+        //获取登录用户
+        SysUser sysUser = sysUserMapper.selectUserById(SecurityUtils.getUserId());
+        wtglCjls.setTBR(sysUser.getNickName());//提报人赋值
+        wtglCjls.setTBRID(sysUser.getUserId().toString());//提报人ID赋值
+        //获取本部门的部门领导
+        List<SysUser> ldUsers = wtglCjlsMapper.selectUserByPostAndDept("部门领导",sysUser.getDeptId());
+        if (ldUsers.size() == 0) {
+            ldUsers.add(SecurityUtils.getLoginUser().getUser());
+        }
+        wtglCjls.setBJZRR(ldUsers.get(0).getNickName());//被叫责任人赋值为部门领导
+        wtglCjls.setBJRID(ldUsers.get(0).getUserId().toString());//被叫人ID赋值为部门领导ID
+        //获取登录用户的部门
         SysDept sysDept = sysDeptMapper.selectDeptById(SecurityUtils.getDeptId());
-        wtglCjls.setBJZRKS(sysDept.getDeptName());
-        /*查询部门科室，并给创建部门科室赋值*/
-        wtglCjls.setCJBMKS(sysDept.getDeptName());
+        wtglCjls.setBJZRKS(sysDept.getDeptName());//被叫责任科室设为本部门
+        wtglCjls.setCJBMKS(sysDept.getDeptName());//创建部门科室赋值
         return wtglCjlsMapper.insertWtglCjls(wtglCjls);
     }
 
@@ -133,6 +147,11 @@ public class WtglCjlsServiceImpl implements IWtglCjlsService {
         return wtglCjlsMapper.deleteWtglCjlsByLSID(LSID);
     }
 
+    /**
+     * 查询问题列表
+     * @param wtglCjls 参数
+     * @return 列表
+     */
     @Override
     public List<WtxxVo> selectywcjList(WtglCjls wtglCjls) {
         SysDept sysDept = sysDeptMapper.selectDeptById(SecurityUtils.getDeptId());
@@ -207,6 +226,7 @@ public class WtglCjlsServiceImpl implements IWtglCjlsService {
     @Override
     public int wtjsIt(List<WtglCjls> selectedRows, String whether) {
         int i = 0;
+        //设置时间
         Date date = new Date();
         for (WtglCjls selectedRow : selectedRows) {
             Date cjsj = selectedRow.getCJSJ();
@@ -215,9 +235,11 @@ public class WtglCjlsServiceImpl implements IWtglCjlsService {
             long minutesDifference = ChronoUnit.MINUTES.between(date2, date1);
             selectedRow.setTBJSSJ(String.valueOf(minutesDifference) + "分");
         }
+        //是责任人接收
         if ("是".equals(whether)) {
             i = wtglCjlsMapper.wtjsYesIt(selectedRows);
         } else {
+            //不是责任人接收
             i = wtglCjlsMapper.wtjsNoIt(selectedRows);
         }
         return i;
@@ -263,7 +285,8 @@ public class WtglCjlsServiceImpl implements IWtglCjlsService {
      */
     @Override
     public List<WtglCjls> selectWtglCjlsSpeechList() {
-        return wtglCjlsMapper.selectWtglCjlsSpeechList();
+        SysDept sysDept = sysDeptMapper.selectDeptById(SecurityUtils.getDeptId());
+        return wtglCjlsMapper.selectWtglCjlsSpeechList(sysDept.getDeptName());
     }
 
     /**
@@ -273,14 +296,9 @@ public class WtglCjlsServiceImpl implements IWtglCjlsService {
      * @return 接收人列表
      */
     @Override
-    public List<String> getjsrBywtlb(String wtlb) {
-//        List<String> jsrList = wtglCjlsMapper.getjsrBywtlb();
-        List<String> jsrList = new ArrayList<>();
-        jsrList.add("接收人1");
-        jsrList.add("接收人2");
-        jsrList.add("接收人3");
-        jsrList.add("接收人4");
-        return jsrList;
+    public List<SysUser> getjsrBywtlb(String wtlb) {
+        List<SysUser> sysUser = wtglCjlsMapper.selectUserByDeptId(SecurityUtils.getDeptId());
+        return sysUser;
     }
 
     /**
@@ -411,5 +429,37 @@ public class WtglCjlsServiceImpl implements IWtglCjlsService {
     @Override
     public int delangl(String[] xhs) {
         return wtglCjlsMapper.delangl(xhs);
+    }
+
+    /**
+     * 新增提出问题
+     *
+     * @param wtglCjls 提出问题
+     * @return 结果
+     */
+    public int test(WtglCjls wtglCjls) {
+//        questionMapper.selectWTByisWtsj
+
+
+
+
+        wtglCjls.setLSID(UUID.randomUUID().toString());
+        wtglCjls.setWTZT("提交");
+        //获取登录用户
+        SysUser sysUser = sysUserMapper.selectUserById(SecurityUtils.getUserId());
+        wtglCjls.setTBR(sysUser.getNickName());//提报人赋值
+        wtglCjls.setTBRID(sysUser.getUserId().toString());//提报人ID赋值
+        //获取本部门的部门领导
+        List<SysUser> ldUsers = wtglCjlsMapper.selectUserByPostAndDept("部门领导",sysUser.getDeptId());
+        if (ldUsers.size() == 0) {
+            ldUsers.add(SecurityUtils.getLoginUser().getUser());
+        }
+        wtglCjls.setBJZRR(ldUsers.get(0).getNickName());//被叫责任人赋值为部门领导
+        wtglCjls.setBJRID(ldUsers.get(0).getUserId().toString());//被叫人ID赋值为部门领导ID
+        //获取登录用户的部门
+        SysDept sysDept = sysDeptMapper.selectDeptById(SecurityUtils.getDeptId());
+        wtglCjls.setBJZRKS(sysDept.getDeptName());//被叫责任科室设为本部门
+        wtglCjls.setCJBMKS(sysDept.getDeptName());//创建部门科室赋值
+        return wtglCjlsMapper.insertWtglCjls(wtglCjls);
     }
 }

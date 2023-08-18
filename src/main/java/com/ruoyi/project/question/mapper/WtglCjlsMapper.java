@@ -3,6 +3,7 @@ package com.ruoyi.project.question.mapper;
 import com.ruoyi.project.question.domain.*;
 import com.ruoyi.project.question.domain.vo.NumberVO;
 import com.ruoyi.project.question.domain.vo.WtxxVo;
+import com.ruoyi.project.system.domain.SysUser;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -98,7 +99,7 @@ public interface WtglCjlsMapper
      * 查询问题喊话的列表
      * @return 列表
      */
-    List<WtglCjls> selectWtglCjlsSpeechList();
+    List<WtglCjls> selectWtglCjlsSpeechList(String deptName);
 
     /**
      * 获取问题状态数量
@@ -111,13 +112,6 @@ public interface WtglCjlsMapper
      * @return 问题状态数量
      */
     List<NumberVO> getcjksbmNumber();
-
-    /**
-     * 获取用户名
-     * @param username 账号
-     * @return 用户名
-     */
-    String getNickName(String username);
 
     /**
      * 问题接收是责任人
@@ -214,8 +208,16 @@ public interface WtglCjlsMapper
 
     /**
      * 智能回复查询
-     * @param wtglDacc
-     * @return
      */
     List<WtglDacc> listDaccToZN(@Param("wtglDacc") WtglDacc wtglDacc);
+
+    /**
+     * 根据岗位与部门查询用户
+     */
+    List<SysUser> selectUserByPostAndDept(@Param("postName") String postName,@Param("deptId") Long deptId);
+
+    /**
+     * 根据部门id查询用户
+     */
+    List<SysUser> selectUserByDeptId(Long deptId);
 }

@@ -74,7 +74,9 @@
     <select id="selectWtglCjlsList" parameterType="WtglCjlsDTO" resultMap="WtglCjlsResult">
         <include refid="selectWtglCjlsVo"/>
         <where>
-            CJBMKS = #{CJBMKS}
+            <if test="CJBMKS != null  and CJBMKS != ''">
+                and CJBMKS = #{CJBMKS}
+            </if>
             <if test="selectType != null  and selectType != '' and selectData != null and selectData != ''">and
                 ${selectType} like '%' || #{selectData} || '%'
             </if>
@@ -129,13 +131,14 @@
                WTLB,
                WTXL
         from WTGL_CJLS
-        where WTZT = '提交'
+        where WTZT = '提交' and CJBMKS = #{deptName}
         order by CJSJ desc
     </select>
     <select id="getwtztNumber" resultType="com.ruoyi.project.question.domain.vo.NumberVO">
         select COUNT(*) as num, WTZT as str
         from WTGL_CJLS
-        where WTZT &lt;&gt; '取消' and CJBMKS = #{deptName}
+        where WTZT &lt;&gt; '取消'
+          and CJBMKS = #{deptName}
         group by WTZT
     </select>
     <select id="getcjksbmNumber" resultType="com.ruoyi.project.question.domain.vo.NumberVO">
@@ -203,6 +206,68 @@
             <if test="wtglDacc.JH != null  and wtglDacc.JH != ''">and JH = #{wtglDacc.JH}</if>
         </where>
         order by RD desc
+    </select>
+    <resultMap type="SysUser" id="SysUserResult">
+        <id     property="userId"       column="user_id"      />
+        <result property="deptId"       column="dept_id"      />
+        <result property="userName"     column="user_name"    />
+        <result property="nickName"     column="nick_name"    />
+        <result property="email"        column="email"        />
+        <result property="phonenumber"  column="phonenumber"  />
+        <result property="sex"          column="sex"          />
+        <result property="avatar"       column="avatar"       />
+        <result property="password"     column="password"     />
+        <result property="status"       column="status"       />
+        <result property="delFlag"      column="del_flag"     />
+        <result property="loginIp"      column="login_ip"     />
+        <result property="loginDate"    column="login_date"   />
+        <result property="createBy"     column="create_by"    />
+        <result property="createTime"   column="create_time"  />
+        <result property="updateBy"     column="update_by"    />
+        <result property="updateTime"   column="update_time"  />
+        <result property="remark"       column="remark"       />
+        <association property="dept"    column="dept_id" javaType="SysDept" resultMap="deptResult" />
+        <collection  property="roles"   javaType="java.util.List"           resultMap="RoleResult" />
+    </resultMap>
+    <resultMap id="deptResult" type="SysDept">
+        <id     property="deptId"    column="dept_id"     />
+        <result property="parentId"  column="parent_id"   />
+        <result property="deptName"  column="dept_name"   />
+        <result property="ancestors" column="ancestors"   />
+        <result property="orderNum"  column="order_num"   />
+        <result property="leader"    column="leader"      />
+        <result property="status"    column="dept_status" />
+    </resultMap>
+
+    <resultMap id="RoleResult" type="SysRole">
+        <id     property="roleId"       column="role_id"        />
+        <result property="roleName"     column="role_name"      />
+        <result property="roleKey"      column="role_key"       />
+        <result property="roleSort"     column="role_sort"      />
+        <result property="dataScope"     column="data_scope"    />
+        <result property="status"       column="role_status"    />
+    </resultMap>
+    <select id="selectUserByPostAndDept" resultMap="SysUserResult">
+        select u.user_id, u.dept_id, u.user_name, u.nick_name, u.email, u.avatar, u.phonenumber, u.password, u.sex, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark,
+               d.dept_id, d.parent_id, d.ancestors, d.dept_name, d.order_num, d.leader, d.status as dept_status,
+               r.role_id, r.role_name, r.role_key, r.role_sort, r.data_scope, r.status as role_status
+        from SYS_USER u
+                 left join SYS_DEPT d on u.DEPT_ID = d.DEPT_ID
+                 left join SYS_USER_ROLE ur on u.USER_ID = ur.USER_ID
+                 left join SYS_ROLE r on r.ROLE_ID = ur.ROLE_ID
+                 left join SYS_USER_POST up on up.USER_ID = u.USER_ID
+                 left join SYS_POST p on p.POST_ID = up.POST_ID
+            where p.POST_NAME = #{postName} and u.DEPT_ID = #{deptId}
+    </select>
+    <select id="selectUserByDeptId" resultMap="SysUserResult">
+        select u.user_id, u.dept_id, u.user_name, u.nick_name, u.email, u.avatar, u.phonenumber, u.password, u.sex, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark,
+               d.dept_id, d.parent_id, d.ancestors, d.dept_name, d.order_num, d.leader, d.status as dept_status,
+               r.role_id, r.role_name, r.role_key, r.role_sort, r.data_scope, r.status as role_status
+        from sys_user u
+                 left join sys_dept d on u.dept_id = d.dept_id
+                 left join sys_user_role ur on u.user_id = ur.user_id
+                 left join sys_role r on r.role_id = ur.role_id
+        where u.dept_id = #{deptId}
     </select>
     <insert id="insertWtglCjls" parameterType="WtglCjls">
         insert into WTGL_CJLS
@@ -350,12 +415,12 @@
     </update>
     <update id="wtjsYesIt">
         <foreach collection="list" separator=";" item="item">
-            update WTGL_CJLS set WTZT = '接收', JSR = #{item.BJZRR}, TBJSSJ = #{item.TBJSSJ} where LSID = #{item.LSID}
+            update WTGL_CJLS set WTZT = '接收', JSR = #{item.BJZRR}, JSRID = #{item.BJRID}, TBJSSJ = #{item.TBJSSJ} where LSID = #{item.LSID}
         </foreach>
     </update>
     <update id="wtjsNoIt">
-        <foreach collection="list" item="item" open="BEGIN" separator=";" close="END">
-            update WTGL_CJLS set WTZT = '接收', JSR = #{item.JSR}, TBJSSJ = #{item.TBJSSJ} where LSID = #{item.LSID}
+        <foreach collection="list" item="item" separator=";">
+            update WTGL_CJLS set WTZT = '接收', JSR = #{item.JSR}, JSRID = #{item.JSRID}, TBJSSJ = #{item.TBJSSJ} where LSID = #{item.LSID}
         </foreach>
     </update>
     <update id="updateDacc">

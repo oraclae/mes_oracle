@@ -118,7 +118,8 @@ export default {
   },
   computed: {},
   mounted() {
-    if (this.selectZrrList.lenght > 0) {
+    console.log(this.selectZrrList)
+    if (this.selectZrrList != null) {
       this.userSelectTableData = this.selectZrrList
       this.userSelectTableData.forEach(item => {
         if (item.sfzzrr === 'true') {

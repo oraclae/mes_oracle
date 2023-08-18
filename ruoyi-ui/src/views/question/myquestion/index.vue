@@ -11,7 +11,7 @@
         </el-radio-group>
         <el-button type="success" size="small" @click="createQuestion">创建问题</el-button>
         <el-button type="success" size="small" :disabled="single" @click="handleAdd">回复/预览</el-button>
-        <el-button type="primary" style="background-color: red"
+        <el-button type="primary" style="background-color: red" :disabled="single"
                    v-if="queryParams.radios!=='已关闭'&&queryParams.radios!=='待关闭'" size="small" @click="closeQuestion">关闭
         </el-button>
         <el-button type="primary" size="small" :disabled="multiple" @click="deleteData">删除</el-button>
@@ -598,7 +598,7 @@
       </div>
       <div style="height: 10px;margin-top: 15px;margin-bottom: 5px">
         <div style="float: right">
-          <el-button type="danger" size="mini" @click="lishidaanchaxun">历史答案查询</el-button>
+          <el-button type="danger" size="mini" @click="lishidaanchaxun">启用问题处理库</el-button>
           <el-button type="primary" size="mini" @click="createQuestionCloseButten">取 消</el-button>
           <el-button size="mini" style="background-color: #a8ff00" @click="saveDataDialog">确定并提交</el-button>
         </div>
@@ -777,6 +777,9 @@
               <el-card shadow="always" class="box-card"
                        style="width: 750px;height:400px;overflow-y: auto;white-space:normal;overflow-x: scroll; border-radius: 20px">
                 <div style="width: 1000px" v-for="item in jhsjList" :key="item.xh">
+                  <div style="display: inline-block" v-if="item.hffj">
+                    <i class="el-icon-upload"></i>
+                  </div>
                   <div class="chatName" v-text="item.hfr"></div>
                   <div style="vertical-align: top;display: inline-block">
                     <div @contextmenu="showContextMenu($event,item)" @click="huifuyangshione(item.xh)"
@@ -789,6 +792,9 @@
                   </div>
                   <div v-if="item.sjjhs.length>0">
                     <div style="margin-left: 60px" v-for="item in item.sjjhs" :key="item.xh">
+                      <div style="display: inline-block" v-if="item.hffj">
+                        <i class="el-icon-upload"></i>
+                      </div>
                       <div class="chatName" v-text="item.hfr"></div>
                       <div style="vertical-align: top;display: inline-block">
                         <div @contextmenu="showContextMenu($event,item)" @click="huifuyangshione(item.xh)"
@@ -801,6 +807,9 @@
                       </div>
                       <div v-if="item.sjjhs.length>0">
                         <div style="margin-left: 60px" v-for="item in item.sjjhs" :key="item.xh">
+                          <div style="display: inline-block" v-if="item.hffj">
+                            <i class="el-icon-upload"></i>
+                          </div>
                           <div class="chatName" v-text="item.hfr"></div>
                           <div style="vertical-align: top;display: inline-block">
                             <div @contextmenu="showContextMenu($event,item)" @click="huifuyangshione(item.xh)"
@@ -814,6 +823,9 @@
                           </div>
                           <div v-if="item.sjjhs.length>0">
                             <div style="margin-left: 60px" v-for="item in item.sjjhs" :key="item.xh">
+                              <div style="display: inline-block" v-if="item.hffj">
+                                <i class="el-icon-upload"></i>
+                              </div>
                               <div class="chatName" v-text="item.hfr"></div>
                               <div style="vertical-align: top;display: inline-block">
                                 <div @contextmenu="showContextMenu($event,item)" @click="huifuyangshione(item.xh)"
@@ -828,6 +840,9 @@
                               </div>
                               <div v-if="item.sjjhs.length>0">
                                 <div style="margin-left: 60px" v-for="item in item.sjjhs" :key="item.xh">
+                                  <div style="display: inline-block" v-if="item.hffj">
+                                    <i class="el-icon-upload"></i>
+                                  </div>
                                   <div class="chatName" v-text="item.hfr"></div>
                                   <div style="vertical-align: top;display: inline-block">
                                     <div @contextmenu="showContextMenu($event,item)" @click="huifuyangshione(item.xh)"
@@ -936,7 +951,7 @@
                 <div v-for="item in ldpiList">
                   <div class="chatName" v-text="item.hfr"></div>
                   <div style="vertical-align: top;display: inline-block">
-                    <div @contextmenu="showContextMenu($event,item)"
+                    <div
                          @click="huifuyangshione(item.xh)"
                          :class="{ 'clicked': currentDivIndex === item.xh }"
                          class="chatBox chatBox-left"
@@ -959,6 +974,7 @@
       @open="dialogOpened"
       v-if="huifuDialog"
       :visible.sync="huifuDialog"
+      @close="huifuId = ''"
       width="30%"
     >
       <el-input
@@ -970,7 +986,7 @@
         v-model="huifuTest">
       </el-input>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="huifuDialog=false">取 消</el-button>
+        <el-button @click="huifuDialog=false,huifuId = ''">取 消</el-button>
         <el-button type="primary" @click.once="huifuSubmit(ejhfppyj,huifuId,'回复','1')">确 定</el-button>
       </span>
     </el-dialog>
@@ -982,6 +998,7 @@
       title="例行反馈"
       v-if="lixingfankuiDialog"
       :visible.sync="lixingfankuiDialog"
+      @close="huifuId = ''"
       width="30%">
       <el-input
         ref="lixingfankuiInput"
@@ -991,7 +1008,7 @@
         v-model="huifuTest">
       </el-input>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="lixingfankuiDialog = false">取 消</el-button>
+        <el-button @click="lixingfankuiDialog = false,huifuId = ''">取 消</el-button>
         <el-button type="primary" @click.once="huifuSubmit(ejhfppyj,huifuId,'例行反馈','1')">确 定</el-button>
       </span>
     </el-dialog>
@@ -1001,6 +1018,7 @@
       title="领导批示"
       v-if="lingdaopishiDialog"
       :visible.sync="lingdaopishiDialog"
+      @close="huifuId = ''"
       width="30%">
       <el-input
         ref="lingdaoInput"
@@ -1011,7 +1029,7 @@
         v-model="huifuTest">
       </el-input>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="lingdaopishiDialog = false">取 消</el-button>
+        <el-button @click="lingdaopishiDialog = false,huifuId = ''">取 消</el-button>
         <el-button type="primary" @click.once="huifuSubmit(ejhfppyj,huifuId,'领导批示','1')">确 定</el-button>
       </span>
     </el-dialog>
@@ -1044,7 +1062,7 @@
 
       </deptTreeSelect>
     </el-dialog>
-    <el-dialog class="dialogRad" :close-on-click-modal="false" title="历史答案查询" width="1200px"
+    <el-dialog class="dialogRad" :close-on-click-modal="false" title="启用问题处理库" width="1200px"
                :visible.sync="lishidaanDialog">
       <zdhf ref="cxda" @xiangxixinxi="xiangxixinxi" v-if="lishidaanDialog" :form="form"></zdhf>
     </el-dialog>
@@ -1143,7 +1161,7 @@ export default {
       wwcts: '',//未完成天数
       cqts: '',//超期天数
       wcts: '',//完成天数
-      lishidaanDialog: false,//历史答案查询的是否弹出框
+      lishidaanDialog: false,//启用问题处理库的是否弹出框
       selectYzrList: [],//选中的阅知人集合
       selectZrrList: [],//选中的责任人集合
       zrrstr: '',//创建任务弹窗的责任人
@@ -1499,6 +1517,10 @@ export default {
     deleteJhjl() {
       // 处理菜单项点击事件
       let ejhfppyj = this.itemJhjl.ejhfppyj;
+      if (this.itemJhjl.hffj) {
+        this.$message.error("该回复下面有附件不能删除");
+        return
+      }
       //先判断当前登录的用户是否管理员，如果是那么可以删除，如果不是下级有数据不能删除
       if (ejhfppyj !== null && ejhfppyj.length > 0) {
         this.$message.error("该回复下面有回复不能删除");
@@ -1587,19 +1609,57 @@ export default {
           if (res.code === 200) {
             this.jhsjList = res.rows;
             let xhs = [{id: this.closureID.id}]
-            for (let jhsjListElement of this.jhsjList) {
-              xhs.push({id: jhsjListElement.xh})
+            for (let j1 of this.jhsjList) {
+              xhs.push({id: j1.xh})
+              for (let j2 of j1.sjjhs) {
+                xhs.push({id: j2.xh})
+                for (let j3 of j2.sjjhs) {
+                  xhs.push({id: j3.xh})
+                  for (let j4 of j3.sjjhs) {
+                    xhs.push({id: j4.xh})
+                    for (let j5 of j4.sjjhs) {
+                      xhs.push({id: j5.xh})
+                    }
+                  }
+                }
+              }
             }
             getFjByIds(xhs).then(res => {
               let fjs = []
               fjs = res.rows
               this.fileList = []
               this.jhjlFileList = []
+              console.log(this.jhsjList)
               for (let fjsdata of fjs) {
                 if (fjsdata.id === this.closureID.id) {
                   this.fileList.push(fjsdata)
                 } else {
                   this.jhjlFileList.push(fjsdata)
+                  for (let j1 of this.jhsjList) {
+                    if (fjsdata.id === j1.xh) {
+                      j1.hffj = true
+                    }
+                    for (let j2 of j1.sjjhs) {
+                      if (fjsdata.id === j2.xh) {
+                        j2.hffj = true
+                      }
+                      for (let j3 of j2.sjjhs) {
+                        if (fjsdata.id === j3.xh) {
+                          j3.hffj = true
+                        }
+                        for (let j4 of j3.sjjhs) {
+                          if (fjsdata.id === j4.xh) {
+                            j4.hffj = true
+                          }
+                          for (let j5 of j4.sjjhs) {
+                            if (fjsdata.id === j5.xh) {
+                              j5.hffj = true
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
                 }
               }
             })
@@ -2102,8 +2162,9 @@ export default {
       });
       this.selectZrrList = []
       this.selectYzrList = []
-
-
+      this.zrrstr = ''
+      this.zrbmstr = ''
+      this.yzrstr = ''
     },
     //刷新创建问题的数据情况
     createQuestionShuaxin() {

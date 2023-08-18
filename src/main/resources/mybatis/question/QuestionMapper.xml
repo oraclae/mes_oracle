@@ -456,13 +456,7 @@
             and LDPS=#{wtxxDTO.LDPS}
         </if>
         <if test="wtxxDTO.YZRID !=null">
-            and YZRID like '%' || #{wtxxDTO.YZRID} || '%'
-        </if>
-        <if test="wtxxDTO.YZR !=null">
-            and YZR like '%' || #{wtxxDTO.YZR} || '%'
-        </if>
-        <if test="wtxxDTO.YZRBMID !=null">
-            and YZRBMID like '%' || #{wtxxDTO.YZRBMID} || '%'
+            and ',' || YZRID || ',' like '%,' || #{wtxxDTO.YZRID} || ',%'
         </if>
         <if test="wtxxDTO.userName!=null">
             <if test="wtxxDTO.type=='wtms'">

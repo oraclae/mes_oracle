@@ -8,6 +8,7 @@ import com.ruoyi.project.question.domain.*;
 import com.ruoyi.project.question.domain.vo.NumberVO;
 import com.ruoyi.project.question.domain.vo.WtxxVo;
 import com.ruoyi.project.question.service.IWtglCjlsService;
+import com.ruoyi.project.system.domain.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -167,15 +168,9 @@ public class WtglCjlsController extends BaseController
     @GetMapping("/{wtlb}/getjsrBywtlb")
     public TableDataInfo getjsrBywtlb(@PathVariable String wtlb)
     {
-        List<String> list = wtglCjlsService.getjsrBywtlb(wtlb);
+        List<SysUser> list = wtglCjlsService.getjsrBywtlb(wtlb);
         return getDataTable(list);
     }
-
-
-
-
-
-
     /**
      * 查询答案信息列表
      */
@@ -184,7 +179,6 @@ public class WtglCjlsController extends BaseController
     {
         startPage();
         List<WtglDacc> list = wtglCjlsService.listDacc(wtglDacc);
-        System.out.println(list);
         return getDataTable(list);
     }
 
