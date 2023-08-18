@@ -6,7 +6,7 @@
         <div class="robot-bubble" style="float: left" v-if="value.user === '机器人'">
           <img :src="require('@/assets/questionIcons/机器人.gif')" width="40px"
                style="border-radius: 80px;margin-right: 20px">
-          <div class="bubble-content" style="vertical-align: top"><span>{{ value.text }}</span></div>
+          <div class="bubble-content" style="vertical-align: top"><span v-html="value.text"></span></div>
         </div>
         <div class="user-bubble" style="float: right" v-if="value.user === '用户'">
           <div>
@@ -23,13 +23,14 @@
 
 <script>
 
-import {getwtlbMethod} from "@/api/question/question";
+import {getwtlbMethod, getwtxlMethod} from "@/api/question/question";
 import {selectDataByNotId} from "@/api/question/zhiNengWenDa";
 
 export default {
   data() {
     return {
       wtlbList: [],
+      wtxlList: [],
       inputValue: '',
       queryParams: {
         wtms: null,
@@ -106,7 +107,7 @@ export default {
         if (this.jb !== '提出问题') {
           this.manyiTime = setTimeout(() => {
             this.out('长时间未操作，已自动退出当前问题，可输入 “提出问题” 开始提问。')
-          }, 30 * 1000);
+          }, 2 * 60 * 1000);
         }
 
       }, 1.5 * 1000);
@@ -143,7 +144,15 @@ export default {
       if (this.jb === '提出问题' && (this.inputValue.includes('提出问题') || this.inputValue.includes("问问题"))) {
         this.texts.push({user: '用户', text: this.inputValue})
         this.jb = "类别"
-        this.robotInputXiaoXi('请问您要提出的问题的类别是什么')
+        let wtlbBrAll = ''
+        for (let wtlb of this.wtlbList) {
+          const wtlbBr = wtlb + '<br/>'
+          wtlbBrAll = wtlbBrAll + wtlbBr
+        }
+        this.robotInputXiaoXi('查询到的问题类型如下，请选择')
+        setTimeout(() => {
+          this.robotInputXiaoXi(wtlbBrAll)
+        }, 500);
       }
       //输入完类别
       else if (this.jb === '类别') {
@@ -161,6 +170,47 @@ export default {
           }
         }
         if (i === 1) {
+          this.jb = '细类'
+          this.$refs.input_ref.blur()
+          getwtxlMethod({wtlb: this.queryParams.wtlb}).then(res => {
+            if (res.code === 200) {
+              this.wtxlList = res.rows;
+              let wtxlBrAll = ''
+              for (let i = 0; i < this.wtxlList.length; i++) {
+                const wtxlBr = this.wtxlList[i] + '<br/>'
+                wtxlBrAll = wtxlBrAll + wtxlBr
+              }
+              this.robotInputXiaoXi('查询到的问题细类如下，请选择')
+              setTimeout(() => {
+                this.robotInputXiaoXi(wtxlBrAll)
+              }, 500);
+            }
+          })
+        } else {
+          let wtlbBrAll = ''
+          for (let wtlb of this.wtlbList) {
+            const wtlbBr = wtlb + '<br/>&nbsp;&nbsp;'
+            wtlbBrAll = wtlbBrAll + wtlbBr
+          }
+          this.robotInputXiaoXi('没有您要找的类别，请从下列类别中选择：<br/>&nbsp;&nbsp;' + wtlbBrAll)
+        }
+      }
+      //输入完细类
+      else if (this.jb === '细类') {
+        this.texts.push({user: '用户', text: this.inputValue});
+        if (this.inputValue.includes('退出')) {
+          this.out()
+          return
+        }
+        let i = 0;
+        for (let wtxl of this.wtxlList) {
+          if (this.inputValue.includes(wtxl) || this.inputValue.includes('新建质量问题')) {
+            i = 1
+            this.queryParams.wtxl = wtxl
+            break
+          }
+        }
+        if (i === 1) {
           this.jb = '满意'
           this.$refs.input_ref.blur()
           setTimeout(() => {
@@ -168,11 +218,17 @@ export default {
             this.getAnswer()
           }, 500);
         } else {
-          this.robotInputXiaoXi('没有您要查找的类别，请重新输入。')
+          let wtxlBrAll = ''
+          for (let i = 0; i < this.wtxlList.length; i++) {
+            const wtxlBr = this.wtxlList[i] + '<br/>&nbsp;&nbsp;'
+            wtxlBrAll = wtxlBrAll + wtxlBr
+          }
+          this.robotInputXiaoXi('没有您要找的细类，请从下列细类中选择：<br/>&nbsp;&nbsp;' + wtxlBrAll)
         }
       }
       //查询完答案
       else if (this.jb === '满意') {
+        this.texts.push({user: '用户', text: this.inputValue});
         if (this.inputValue.includes('退出')) {
           this.out()
           return
@@ -189,7 +245,6 @@ export default {
           }
         }
         if (i === 1 || (this.inputValue.includes('不是') && this.inputValue.includes('要'))) {
-          this.texts.push({user: '用户', text: this.inputValue});
           this.$refs.input_ref.blur()
           setTimeout(() => {
             this.texts.push({user: '机器人', text: '不满意当前答案，正在搜索其他答案。。。'})
@@ -197,8 +252,9 @@ export default {
           }, 500);
         } else if (this.inputValue.includes('满意')) {
           this.jb = '提出问题'
-          this.texts.push({user: '用户', text: this.inputValue});
           this.out('满意当前答案，已退出当前问题，您可以输入 “提出问题” 重新提问。')
+        } else {
+          this.robotInputXiaoXi('无法识别您输入的文字，请问您对上条答案是否满意？')
         }
       }
       //未识别到指令不执行操作清空输入框
@@ -214,8 +270,17 @@ export default {
             this.texts.push({user: '机器人', text: '请问答案是否满意'})
             this.queryParams.ids.push(response.data.daxxid)
           } else {
-            this.jb = '提出问题'
-            this.out('已经查不到其他答案了，很抱歉没有给您满意的答复。您可以输入 “提出问题” 重新提问。')
+            let wtxlBrAll = ''
+            this.jb = '细类'
+            for (let i = 0; i < this.wtxlList.length; i++) {
+              const wtxlBr = this.wtxlList[i] + '<br/>'
+              wtxlBrAll = wtxlBrAll + wtxlBr
+            }
+            this.robotInputXiaoXi('很抱歉没有查询到您想要的答案，您可以输入“退出”来退出当前提问或在以下细类中重新选择提问：')
+            setTimeout(() => {
+              this.robotInputXiaoXi(wtxlBrAll)
+            }, 500);
+            wtxlBrAll
           }
           setTimeout(() => {
             this.$refs.input_ref.focus()
