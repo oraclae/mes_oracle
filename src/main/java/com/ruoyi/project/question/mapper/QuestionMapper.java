@@ -251,4 +251,9 @@ public interface QuestionMapper {
      * 创建责任代办
      */
     void createZRDB(List<ZrrVO> zrrVOList);
+
+    //获得问题升级等于true的数据
+    List<WtxxVo> selectWtxxByWtsj();
+
+    void updateZrdb(@Param("wtxxVos") List<WtxxVo> wtxxVos);
 }

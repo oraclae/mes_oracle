@@ -87,4 +87,6 @@ public class WtxxVo {
     private Integer SFDZFK;  //是否当周反馈
     private String DQZRR;  //主责任人
     private String JH;  //件号
+    private String YZRID;
+    private String YZRBMID;
 }

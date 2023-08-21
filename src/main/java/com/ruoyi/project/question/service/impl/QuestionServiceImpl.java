@@ -3,6 +3,7 @@ package com.ruoyi.project.question.service.impl;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.project.question.domain.DaccDTO;
 import com.ruoyi.project.question.domain.SjjhDTO;
+import com.ruoyi.project.question.domain.WtglSjzrzd;
 import com.ruoyi.project.question.domain.WtxxDTO;
 import com.ruoyi.project.question.domain.vo.*;
 import com.ruoyi.project.question.mapper.QuestionMapper;
@@ -450,39 +451,6 @@ public class QuestionServiceImpl implements QuestionService {
         }
     }
 
-
-    /**
-     * 升级责任人的定时任务的执行方法
-     */
-    @Override
-    public void shengjizrr() {
-        List<WtxxVo> wtxxVos = questionMapper.selectywcj();
-        for (WtxxVo wtxxVo : wtxxVos) {
-            String userId = null;
-            ZrrVO zrrVO = questionMapper.selectzrr(wtxxVo.getID());
-            if (wtxxVo.getSJRJS() == null || wtxxVo.getSJRJS().isEmpty()) {
-                userId = questionMapper.selectBysjzrzdone(zrrVO.getZRBM(), zrrVO.getZRRID());
-            } else if ("1".equals(wtxxVo.getSJRJS())) {
-                userId = questionMapper.selectBysjzrzdtwo(zrrVO.getZRBM(), zrrVO.getZRRID());
-            }
-            if (userId == null || userId.isEmpty()) {
-                System.out.println("用户数据错误或者，该责任人没有下一级责任人");
-            } else {
-                //插入一条责任人数据
-
-                questionMapper.updatezrr(zrrVO.getXH(),wtxxVo.getID());
-                //修改我的问题表中的责任人的级数
-                if (wtxxVo.getSJRJS() == null || wtxxVo.getSJRJS().isEmpty()) {
-                    questionMapper.updateQuestionSJRJS(wtxxVo.getID(), 1);
-                } else {
-                    questionMapper.updateQuestionSJRJS(wtxxVo.getID(), 2);
-                }
-            }
-        }
-    }
-
-
-
     /**
      * 计算问题天数
      */
@@ -771,6 +739,51 @@ public class QuestionServiceImpl implements QuestionService {
         {
             System.out.println("判断day2 - day1 : " + (day2-day1));
             return day2-day1;
+        }
+    }
+
+    @Autowired
+    private WtglSjzrzdServiceImpl wtglSjzrzdService;
+    /**
+     * 升级责任人的定时任务的执行方法
+     */
+    @Override
+    public void shengjizrr() {
+        //先获得我的问题表数据（数据中问题升级为true的数据选中出来）
+        List<WtxxVo> wtxxVos = questionMapper.selectWtxxByWtsj();
+        //获得该wtid的责任人变成没有主责任人
+        questionMapper.updateZrdb(wtxxVos);
+        for (WtxxVo wtxxVo : wtxxVos) {
+            //查询升级人字典表数据
+            WtglSjzrzd wtglSjzrzd = new WtglSjzrzd();
+            wtglSjzrzd.setDqzer(wtxxVo.getDQZRR());
+            List<WtglSjzrzd> wtglSjzrzds = wtglSjzrzdService.selectWtglSjzrzdList(wtglSjzrzd);
+            if (wtglSjzrzds.size() != 1) {
+                System.out.println("升级责任人数据出现错误，请联系责任人");
+                return;
+            }
+            WtglSjzrzd wtglSjzrzdToOne = wtglSjzrzds.get(0);
+            //获取升级责任人的用户数据
+            SysUser sysUser = sysUserMapper.selectUserById(Long.parseLong(wtglSjzrzdToOne.getYjzrrid()));
+            SysDept sysDept = sysDeptMapper.selectDeptById(sysUser.getDeptId());
+            //插入新的责任人数据
+            List<ZrrVO> list = new ArrayList<>();
+            ZrrVO zrrVO = new ZrrVO();
+            zrrVO.setWTID(wtxxVo.getID());
+            zrrVO.setSFZZRR("true");
+            zrrVO.setXH(UUID.randomUUID().toString());
+            zrrVO.setZRR(sysUser.getNickName());
+            zrrVO.setZRRID(sysUser.getUserId() + "");
+            zrrVO.setZRBM(sysDept.getDeptName());
+            zrrVO.setZRBMID(sysUser.getDeptId() + "");
+            zrrVO.setZRRZT("未处理");
+            list.add(zrrVO);
+            questionMapper.createZRDB(list);
+            //修改我的问题的主责任人的名称变成升级责任人数据
+            WtxxDTO wtxxDTO = new WtxxDTO();
+            wtxxDTO.setID(wtxxVo.getID());
+            wtxxDTO.setDQZRR(sysUser.getNickName());
+            questionMapper.updateQuestion(wtxxDTO);
         }
     }
 }

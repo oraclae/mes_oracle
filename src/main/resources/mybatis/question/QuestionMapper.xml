@@ -391,6 +391,7 @@
             <if test="WTMS != null">WTMS = #{WTMS},</if>
             <if test="LDPS != null">LDPS = #{LDPS},</if>
             <if test="YXCD != null">YXCD = #{YXCD},</if>
+            <if test="DQZRR != null">DQZRR = #{DQZRR},</if>
         </trim>
         where ID = #{ID}
     </update>
@@ -402,6 +403,17 @@
             <if test="EJHFPPYJ != null">EJHFPPYJ = #{EJHFPPYJ},</if>
         </trim>
         where XH = #{XH}
+    </update>
+    <update id="updateZrdb">
+        update WTGL_ZRDB
+        set SFZZRR=null where SFZZRR='true'
+        <if test="wtxxVos.size>0">
+            and WTID in (
+            <foreach collection="wtxxVos" item="wtxx" separator=",">
+                #{wtxx.ID}
+            </foreach>
+            )
+        </if>
     </update>
     <delete id="deleteQuestions">
         delete from WTGL_YWCJ where ID in (
@@ -772,4 +784,10 @@
         where WTID = #{wtid}
           and JHZT &lt;&gt; '领导批示'
     </select>
+    <select id="selectWtxxByWtsj" resultType="com.ruoyi.project.question.domain.vo.WtxxVo">
+        select *
+        from WTGL_YWCJ
+        where WTSJ = 'true'
+    </select>
+
 </mapper>

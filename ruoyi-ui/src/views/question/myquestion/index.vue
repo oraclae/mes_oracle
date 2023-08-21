@@ -1258,7 +1258,7 @@ export default {
         wtms: '',   //问题描述
         zre: '',    //主责任人
         zrbm: '',   //责任部门
-        wtsj: '',   //问题升级
+        wtsj: false,   //问题升级
         yzr: '',    //阅知人
         xcphwt: false, //现场配合问题
         gzxt: false,   //跟踪协同

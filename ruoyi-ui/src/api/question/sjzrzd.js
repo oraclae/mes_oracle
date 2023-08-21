@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// 查询升级责任字典列表
+// 查询升级责任人列表
 export function listSjzrzd(query) {
   return request({
     url: '/system/sjzrzd/list',
@@ -9,15 +9,15 @@ export function listSjzrzd(query) {
   })
 }
 
-// 查询升级责任字典详细
-export function getSjzrzd(XH) {
+// 查询升级责任人详细
+export function getSjzrzd(xh) {
   return request({
-    url: '/system/sjzrzd/' + XH,
+    url: '/system/sjzrzd/' + xh,
     method: 'get'
   })
 }
 
-// 新增升级责任字典
+// 新增升级责任人
 export function addSjzrzd(data) {
   return request({
     url: '/system/sjzrzd',
@@ -26,7 +26,7 @@ export function addSjzrzd(data) {
   })
 }
 
-// 修改升级责任字典
+// 修改升级责任人
 export function updateSjzrzd(data) {
   return request({
     url: '/system/sjzrzd',
@@ -35,10 +35,10 @@ export function updateSjzrzd(data) {
   })
 }
 
-// 删除升级责任字典
-export function delSjzrzd(XH) {
+// 删除升级责任人
+export function delSjzrzd(xh) {
   return request({
-    url: '/system/sjzrzd/' + XH,
+    url: '/system/sjzrzd/' + xh,
     method: 'delete'
   })
 }
