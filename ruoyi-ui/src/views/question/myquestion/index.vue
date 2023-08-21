@@ -1223,7 +1223,7 @@ export default {
 
       isQwfksj: true,//期望解决时间的是否可以写数据
       canceTime: false,//希望解决时间是否可以写数据
-      isXcphwt: false,//判断现场配合是否可以写数据
+      isXcphwt: true,//判断现场配合是否可以写数据
       isLdps: true,//判断领导批示能否写如数据
       isWtsj: true,//判断问题升级能否写数据
       isLxfk: true,//判断是否问题反馈
@@ -1630,7 +1630,6 @@ export default {
               fjs = res.rows
               this.fileList = []
               this.jhjlFileList = []
-              console.log(this.jhsjList)
               for (let fjsdata of fjs) {
                 if (fjsdata.id === this.closureID.id) {
                   this.fileList.push(fjsdata)
@@ -1827,9 +1826,11 @@ export default {
       this.form.wtxl = '';
       this.wtxlMethod();
       this.isXcphwt = true;
-      for (let string of this.xcphwtList) {
-        if (this.form.wtlb.indexOf(string) !== -1) {
-          this.isXcphwt = false;
+      if (this.form.wtlb != null && this.form.wtlb !== '') {
+        for (let string of this.xcphwtList) {
+          if (this.form.wtlb.indexOf(string) !== -1) {
+            this.isXcphwt = false;
+          }
         }
       }
     },
@@ -2271,11 +2272,6 @@ export default {
         this.isLxfk = false;
         this.isWtsj = false;
         this.isXcphwt = true;
-        for (let string of this.xcphwtList) {
-          if (this.form.wtlb.indexOf(string) !== -1) {
-            this.isXcphwt = false;
-          }
-        }
         this.form.xcphwt = false
       } else {
         this.form.ldps = false;
@@ -2287,10 +2283,11 @@ export default {
         this.isLxfk = true;
         this.isWtsj = true;
         this.isXcphwt = true;
-        console.log(this.xcphwtList)
-        for (let string of this.xcphwtList) {
-          if (this.form.wtlb.indexOf(string) !== -1) {
-            this.isXcphwt = false;
+        if (this.form.wtlb != null && this.form.wtlb !== '') {
+          for (let string of this.xcphwtList) {
+            if (this.form.wtlb.indexOf(string) !== -1) {
+              this.isXcphwt = false;
+            }
           }
         }
       }
