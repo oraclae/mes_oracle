@@ -1105,7 +1105,7 @@ import {
   getzerData, saveJhjlList, closedLoop, activate,
   deleteJhjlByXh, updateQuestionWTDBToZero, updateQuestionWddb, getJhjlByWtid,
 } from "@/api/question/question";
-import {addCjls, updateDaccToRd} from "@/api/question/upQuestion";
+import {addCjls, getUpButtons, updateDaccToRd} from "@/api/question/upQuestion";
 import deptTreeSelect from "@/views/question/myquestion/deptTreeSelect"
 import zdhf from "@/views/question/WTGL_ZDHF/index";
 import xiangxixinxi from "@/views/question/myquestion/xiangxixinxi";
@@ -1170,6 +1170,7 @@ export default {
       selectTitle: '',//选择责任人或阅知人弹出框的标题
       treeVisual: false,//弹出选择责任人和阅知人的弹窗
 
+      xcphwtList:[],//现场配合问题
       isone: true,
       updateIds: [],//存储需要修改的id值
       openUpdate: false,//修改的弹出框
@@ -1825,9 +1826,8 @@ export default {
     wtlbChange() {
       this.form.wtxl = '';
       this.wtxlMethod();
-      let nameList = ['工艺', '调度', '生产', '设备'];
       this.isXcphwt = true;
-      for (let string of nameList) {
+      for (let string of this.xcphwtList) {
         if (this.form.wtlb.indexOf(string) !== -1) {
           this.isXcphwt = false;
         }
@@ -2270,7 +2270,12 @@ export default {
         this.isLdps = false;
         this.isLxfk = false;
         this.isWtsj = false;
-        this.isXcphwt = true
+        this.isXcphwt = true;
+        for (let string of this.xcphwtList) {
+          if (this.form.wtlb.indexOf(string) !== -1) {
+            this.isXcphwt = false;
+          }
+        }
         this.form.xcphwt = false
       } else {
         this.form.ldps = false;
@@ -2281,7 +2286,13 @@ export default {
         this.isLdps = true;
         this.isLxfk = true;
         this.isWtsj = true;
-        this.isXcphwt = false
+        this.isXcphwt = true;
+        console.log(this.xcphwtList)
+        for (let string of this.xcphwtList) {
+          if (this.form.wtlb.indexOf(string) !== -1) {
+            this.isXcphwt = false;
+          }
+        }
       }
     },
     //小气泡的触发事件
@@ -2310,10 +2321,20 @@ export default {
       this.$nextTick(() => {
         this.$refs.lixingfankuiInput.focus();
       });
+    },
+    getxcphwtList(){
+      this.xcphwtList = [];
+      getUpButtons().then(response => {
+        const list = response.rows
+        for (let item of list) {
+          this.xcphwtList.push(item.butname)
+        }
+      })
     }
   },
   mounted() {
     this.load();
+    this.getxcphwtList()
     // 打开弹窗清空右侧树形框
     document.addEventListener('click', this.handlePageClick);
   },
