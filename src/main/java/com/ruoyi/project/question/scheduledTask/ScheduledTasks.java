@@ -24,7 +24,7 @@ public class ScheduledTasks extends BaseController {
     @Autowired
     private QuestionService questionService;
 
-    //@Scheduled(cron = "0 0 1 * * ?") //每天凌晨一点开始执行
+    @Scheduled(cron = "0 0 8,10,12,14,16 * * ?") //每天8 10 12 14 16
     @PostConstruct
     private void shengjizrr() throws Exception {
         log.debug("升级责任人开始");
@@ -32,7 +32,7 @@ public class ScheduledTasks extends BaseController {
         log.debug("升级责任人结束");
     }
 
-    //@Scheduled(cron = "0 0 23 * * ?") //每天凌晨12点开始执行
+    //@Scheduled(cron = "0 0 23 * * ?") //每天凌晨12点开始执行o
     //@PostConstruct
     private void problemDays() throws Exception {
         log.debug("计算问题天数开始");
