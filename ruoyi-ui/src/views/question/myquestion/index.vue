@@ -434,7 +434,7 @@
             <div style="display: inline-block" @click="treeVisual = true, selectTitle = '选择责任人'">
               <el-tooltip effect="dark" :content="zrrstr" placement="top" :open-delay="500"
                           :disabled="zrrstr == null || zrrstr === ''">
-                <el-input placeholder="请选择责任人" :disabled="true" style="width: 200px; margin-left: 27px"
+                <el-input placeholder="请选择责任人" style="width: 200px; margin-left: 27px;pointer-events: none"
                           :value="zrrstr"/>
               </el-tooltip>
             </div>
@@ -450,7 +450,7 @@
             <label>责任部门:</label>
             <el-tooltip effect="dark" :content="zrbmstr" placement="top" :open-delay="500"
                         :disabled="zrbmstr == null || zrbmstr === ''">
-              <el-input placeholder="请输入责任部门" :disabled="true" style="width: 200px; margin-left: 27px"
+              <el-input placeholder="请输入责任部门" style="width: 200px; margin-left: 27px;pointer-events: none"
                         :value="zrbmstr"/>
             </el-tooltip>
           </div>
@@ -465,7 +465,7 @@
             <div style="display: inline-block" @click="treeVisual = true, selectTitle = '选择阅知人'">
               <el-tooltip effect="dark" :content="yzrstr" placement="top" :open-delay="500"
                           :disabled="yzrstr == null || yzrstr === ''">
-                <el-input placeholder="请选择阅知人" :disabled="true" style="width: 200px; margin-left: 27px"
+                <el-input placeholder="请选择阅知人" style="width: 200px; margin-left: 27px;pointer-events: none"
                           :value="yzrstr"/>
               </el-tooltip>
             </div>
@@ -2243,6 +2243,7 @@ export default {
     //现场配合问题的多选框的改变触发的方法
     xcphwtMethod() {
       if (this.form.xcphwt === true) {
+        this.form.gzxt = false
         this.isLdps = true;
         this.isWtsj = true;
         this.isLxfk = true;
@@ -2269,14 +2270,18 @@ export default {
         this.isLdps = false;
         this.isLxfk = false;
         this.isWtsj = false;
+        this.isXcphwt = true
+        this.form.xcphwt = false
       } else {
         this.form.ldps = false;
+        this.form.xcphwt = false;
         this.form.lxfk = false;
         this.form.wtsj = false;
         this.isQwfksj = true;
         this.isLdps = true;
         this.isLxfk = true;
         this.isWtsj = true;
+        this.isXcphwt = false
       }
     },
     //小气泡的触发事件

@@ -56,7 +56,7 @@
     </el-form>
     <!--  底部  -->
     <div class="el-login-footer">
-      <span>Copyright © 2018-2023 ruoyi.vip All Rights Reserved.</span>
+      <span>辽宁智慧科技系统</span>
     </div>
   </div>
 </template>
@@ -158,7 +158,7 @@ export default {
 <style rel="stylesheet/scss" lang="scss">
 .login {
   display: flex;
-  justify-content: center;
+  justify-content: right;
   align-items: center;
   height: 100%;
   background-image: url("../assets/images/login-background.jpg");
@@ -167,12 +167,13 @@ export default {
 .title {
   margin: 0px auto 30px auto;
   text-align: center;
-  color: #707070;
+  color: #0003ff;
 }
 
 .login-form {
-  border-radius: 6px;
-  background: #ffffff;
+  margin-right: 100px;
+  border-radius: 20px;
+  background: #d9d6d67d;
   width: 400px;
   padding: 25px 25px 5px 25px;
   .el-input {
