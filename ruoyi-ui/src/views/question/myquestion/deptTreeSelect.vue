@@ -118,7 +118,6 @@ export default {
   },
   computed: {},
   mounted() {
-    console.log(this.selectZrrList)
     if (this.selectZrrList != null) {
       this.userSelectTableData = this.selectZrrList
       this.userSelectTableData.forEach(item => {

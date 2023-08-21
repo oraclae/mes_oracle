@@ -71,6 +71,7 @@ public class SysUserServiceImpl implements ISysUserService
     @DataScope(deptAlias = "d", userAlias = "u")
     public List<SysUser> selectUserList(SysUser user)
     {
+        user.setParams(null);
         return userMapper.selectUserList(user);
     }
 
