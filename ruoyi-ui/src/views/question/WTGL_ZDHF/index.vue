@@ -123,8 +123,7 @@
       <div style="font-size: 20px;text-align: center;width: 100%">问题解决方案是否满意?</div>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="closeitOK">满 意</el-button>
-        <el-button type="primary" @click="shifoumanyiDialog=false" style="margin-left: 20px">不满意</el-button>
-        <el-button @click="shifoumanyiDialog=false" style="margin-left: 20px">取 消</el-button>
+        <el-button type="primary" @click="shifoumanyiDialog=false" style="margin-left: 40px">不满意</el-button>
       </span>
     </el-dialog>
   </div>
