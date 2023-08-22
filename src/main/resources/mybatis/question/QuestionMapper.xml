@@ -137,9 +137,11 @@
     </insert>
     <insert id="savegzwtList" parameterType="com.ruoyi.project.question.domain.vo.WtgzVo">
         insert into WTGL_WTGZ(wtid, cjrid)
-        VALUES
-        <foreach collection="wtgzVo" separator="," item="wt">
-            (#{wt.WTID},#{wt.CJRID})
+        <foreach collection="wtgzVo" separator=" UNION ALL" item="wt">
+            SELECT
+            #{wt.WTID},
+            #{wt.CJRID}
+            FROM DUAL
         </foreach>
     </insert>
     <insert id="saveDaccList">
@@ -165,44 +167,44 @@
         JH,
         RD)
         VALUES
-            <trim prefix="(" suffix=")" suffixOverrides=",">
-                <if test="dacc.WTID != null">#{dacc.WTID},</if>
-                <if test="dacc.WTID == null">null,</if>
-                <if test="dacc.WTMC != null">#{dacc.WTMC},</if>
-                <if test="dacc.WTMC == null">null,</if>
-                <if test="dacc.ZRRID != null">#{dacc.ZRRID},</if>
-                <if test="dacc.ZRRID == null">null,</if>
-                <if test="dacc.ZRR != null">#{dacc.ZRR},</if>
-                <if test="dacc.ZRR == null">null,</if>
-                <if test="dacc.GBSJ != null">#{dacc.GBSJ},</if>
-                <if test="dacc.GBSJ == null">null,</if>
-                <if test="dacc.DAXX != null">#{dacc.DAXX},</if>
-                <if test="dacc.DAXX == null">null,</if>
-                <if test="dacc.CJR != null">#{dacc.CJR},</if>
-                <if test="dacc.CJR == null">null,</if>
-                <if test="dacc.WTMS != null">#{dacc.WTMS},</if>
-                <if test="dacc.WTMS == null">null,</if>
-                <if test="dacc.GXH != null">#{dacc.GXH},</if>
-                <if test="dacc.GXH == null">null,</if>
-                <if test="dacc.GXMC != null">#{dacc.GXMC},</if>
-                <if test="dacc.GXMC == null">null,</if>
-                <if test="dacc.CJRID != null">#{dacc.CJRID},</if>
-                <if test="dacc.CJRID == null">null,</if>
-                <if test="dacc.GJC != null">#{dacc.GJC},</if>
-                <if test="dacc.GJC == null">null,</if>
-                <if test="dacc.WTLB != null">#{dacc.WTLB},</if>
-                <if test="dacc.WTLB == null">null,</if>
-                <if test="dacc.WTXL != null">#{dacc.WTXL},</if>
-                <if test="dacc.WTXL == null">null,</if>
-                <if test="dacc.DAXXID != null">#{dacc.DAXXID},</if>
-                <if test="dacc.DAXXID == null">null,</if>
-                <if test="dacc.CPXH != null">#{dacc.CPXH},</if>
-                <if test="dacc.CPXH == null">null,</if>
-                <if test="dacc.JH != null">#{dacc.JH},</if>
-                <if test="dacc.JH == null">null,</if>
-                <if test="dacc.RD != null">#{dacc.RD},</if>
-                <if test="dacc.RD == null">null,</if>
-            </trim>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="dacc.WTID != null">#{dacc.WTID},</if>
+            <if test="dacc.WTID == null">null,</if>
+            <if test="dacc.WTMC != null">#{dacc.WTMC},</if>
+            <if test="dacc.WTMC == null">null,</if>
+            <if test="dacc.ZRRID != null">#{dacc.ZRRID},</if>
+            <if test="dacc.ZRRID == null">null,</if>
+            <if test="dacc.ZRR != null">#{dacc.ZRR},</if>
+            <if test="dacc.ZRR == null">null,</if>
+            <if test="dacc.GBSJ != null">#{dacc.GBSJ},</if>
+            <if test="dacc.GBSJ == null">null,</if>
+            <if test="dacc.DAXX != null">#{dacc.DAXX},</if>
+            <if test="dacc.DAXX == null">null,</if>
+            <if test="dacc.CJR != null">#{dacc.CJR},</if>
+            <if test="dacc.CJR == null">null,</if>
+            <if test="dacc.WTMS != null">#{dacc.WTMS},</if>
+            <if test="dacc.WTMS == null">null,</if>
+            <if test="dacc.GXH != null">#{dacc.GXH},</if>
+            <if test="dacc.GXH == null">null,</if>
+            <if test="dacc.GXMC != null">#{dacc.GXMC},</if>
+            <if test="dacc.GXMC == null">null,</if>
+            <if test="dacc.CJRID != null">#{dacc.CJRID},</if>
+            <if test="dacc.CJRID == null">null,</if>
+            <if test="dacc.GJC != null">#{dacc.GJC},</if>
+            <if test="dacc.GJC == null">null,</if>
+            <if test="dacc.WTLB != null">#{dacc.WTLB},</if>
+            <if test="dacc.WTLB == null">null,</if>
+            <if test="dacc.WTXL != null">#{dacc.WTXL},</if>
+            <if test="dacc.WTXL == null">null,</if>
+            <if test="dacc.DAXXID != null">#{dacc.DAXXID},</if>
+            <if test="dacc.DAXXID == null">null,</if>
+            <if test="dacc.CPXH != null">#{dacc.CPXH},</if>
+            <if test="dacc.CPXH == null">null,</if>
+            <if test="dacc.JH != null">#{dacc.JH},</if>
+            <if test="dacc.JH == null">null,</if>
+            <if test="dacc.RD != null">#{dacc.RD},</if>
+            <if test="dacc.RD == null">null,</if>
+        </trim>
     </insert>
     <insert id="createZRDB">
         insert into WTGL_ZRDB
@@ -374,7 +376,8 @@
     </update>
     <update id="updateQuestionStatusSJ">
         update WTGL_YWCJ
-        set WTZT = #{status},GBSJ=to_date(#{format}, 'YYYY-MM-DD HH24:MI:SS')
+        set WTZT = #{status},
+            GBSJ=to_date(#{format}, 'YYYY-MM-DD HH24:MI:SS')
         where ID = #{wtid}
     </update>
     <update id="updateQuestionSFDZFK">
@@ -787,7 +790,8 @@
     <select id="selectWtxxByWtsj" resultType="com.ruoyi.project.question.domain.vo.WtxxVo">
         select *
         from WTGL_YWCJ
-        where WTSJ = 'true' and TO_DATE(TO_CHAR(SYSDATE-1/12,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS') > CJSJ
+        where WTSJ = 'true'
+          and TO_DATE(TO_CHAR(SYSDATE - 1 / 12, 'YYYY-MM-DD HH24:MI:SS'), 'YYYY-MM-DD HH24:MI:SS') > CJSJ
     </select>
 
 </mapper>
