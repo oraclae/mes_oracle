@@ -176,12 +176,12 @@ export default {
 }
 
 .login-form {
-  margin-bottom: 80px;
+  margin-top: 121px;
   padding: 40px 100px 5px 100px;
   border-radius: 20px;
   background-image: url("../assets/images/formback.png");
   background-repeat: no-repeat;
-  width: 550px;
+  width: 500px;
 
   .el-input {
     height: 38px;
