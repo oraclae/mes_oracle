@@ -256,6 +256,7 @@ export default {
         type: 'warning'
       }).then(() => {
         delDacc(daccids).then(response=>{
+          this.getList()
           this.$message({
             type: 'success',
             message: '删除成功!'
