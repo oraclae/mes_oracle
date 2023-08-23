@@ -759,8 +759,11 @@ public class QuestionServiceImpl implements QuestionService {
             wtglSjzrzd.setDqzer(wtxxVo.getDQZRR());
             List<WtglSjzrzd> wtglSjzrzds = wtglSjzrzdService.selectWtglSjzrzdList(wtglSjzrzd);
             if (wtglSjzrzds.size() != 1) {
-                System.out.println("升级责任人数据出现错误，请联系责任人");
-                return;
+                System.out.println("当前问题名称"+wtxxVo.getWTMC()+"的升级人数据为空或者出现多个升级人");
+                if (wtglSjzrzds.size() > 1) {
+                    System.out.println("请联系管理员，查看字典数据，是否一个升级人的二级升级人为多个升级人");
+                }
+                continue;
             }
             WtglSjzrzd wtglSjzrzdToOne = wtglSjzrzds.get(0);
             //获取升级责任人的用户数据

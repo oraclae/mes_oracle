@@ -301,7 +301,6 @@
                 <th style="min-width: 100px">问题编号</th>
                 <th style="min-width: 100px">人员</th>
                 <th style="min-width: 100px">部门</th>
-                <th style="min-width: 100px">科室</th>
                 <th style="min-width: 100px">问题名称</th>
                 <th style="min-width: 100px">工序号</th>
                 <th style="min-width: 110px">问题创建时间</th>
@@ -312,13 +311,11 @@
                 <th style="min-width: 100px">问题细类</th>
                 <th style="min-width: 100px">问题描述</th>
                 <th style="min-width: 100px">责任部门</th>
-                <th style="min-width: 100px">责任科室</th>
                 <th style="min-width: 100px">责任人</th>
                 <th style="min-width: 100px">重要程度</th>
                 <th style="min-width: 110px">希望解决时间</th>
                 <th style="min-width: 100px">升级责任人</th>
                 <th style="min-width: 100px">问题状态</th>
-                <th style="min-width: 100px">提交时间</th>
                 <th style="min-width: 100px">接收时间</th>
                 <th style="min-width: 100px">解决时间/时</th>
                 <th style="min-width: 110px">是否例行反馈</th>
@@ -352,10 +349,6 @@
                 <el-tooltip class="item" effect="dark" :content="v.cjbm" placement="top" :open-delay="500"
                             :disabled="v.cjbm == null">
                   <td>{{ v.cjbm }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.cjks" placement="top" :open-delay="500"
-                            :disabled="v.cjks == null">
-                  <td>{{ v.cjks }}</td>
                 </el-tooltip>
                 <el-tooltip class="item" effect="dark" :content="v.wtmc" placement="top" :open-delay="500"
                             :disabled="v.wtmc == null">
@@ -397,10 +390,6 @@
                             :disabled="v.zrbm == null">
                   <td>{{ v.zrbm }}</td>
                 </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.zrks" placement="top" :open-delay="500"
-                            :disabled="v.zrks == null">
-                  <td>{{ v.zrks }}</td>
-                </el-tooltip>
                 <el-tooltip class="item" effect="dark" :content="v.zrr" placement="top" :open-delay="500"
                             :disabled="v.zrr == null">
                   <td>{{ v.zrr }}</td>
@@ -420,10 +409,6 @@
                 <el-tooltip class="item" effect="dark" :content="v.wtzt" placement="top" :open-delay="500"
                             :disabled="v.wtzt == null">
                   <td>{{ v.wtzt }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.tjsj" placement="top" :open-delay="500"
-                            :disabled="v.tjsj == null">
-                  <td>{{ v.tjsj }}</td>
                 </el-tooltip>
                 <el-tooltip class="item" effect="dark" :content="v.jssj" placement="top" :open-delay="500"
                             :disabled="v.jssj == null">
