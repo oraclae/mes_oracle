@@ -1,11 +1,11 @@
 <template>
   <div class="login">
-    <video autoplay muted loop id="video-background">
-      <source src="../assets/images/001.mp4" type="video/mp4" />
-      Your browser does not support the video tag.
-    </video>
+<!--    <div
+      style="display: flex;position: absolute;width: 100%;height: 100%; overflow: hidden; justify-content: center; align-items: center;">
+      <img src="../assets/images/rr.png" class="rotating-image"/>
+    </div>-->
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
-      <h3 class="title">智慧科技_Oracle</h3>
+      <h2 class="title">智慧科技_Oracle</h2>
       <el-form-item prop="username">
         <el-input
           v-model="loginForm.username"
@@ -65,6 +65,10 @@
         </div>
       </el-form-item>
     </el-form>
+    <!--  底部  -->
+    <div class="el-login-footer">
+      <span></span>
+    </div>
   </div>
 </template>
 
@@ -113,6 +117,8 @@ export default {
   created() {
     this.getCode();
     this.getCookie();
+  },
+  mounted() {
   },
   methods: {
     getCode() {
@@ -165,10 +171,12 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss">
 .login {
+  overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
+  background-image: url("../assets/images/login-background.jpg");
   background-size: cover;
 }
 
@@ -180,13 +188,12 @@ export default {
 
 .login-form {
   transform: scale(0.8);
-  margin-bottom: 120px;
-  z-index: 2;
+  margin-bottom: 5px;
   padding: 40px 100px 5px 100px;
   border-radius: 20px;
   background-image: url("../assets/images/formback.png");
   background-repeat: no-repeat;
-  width: 500px;
+  width: 550px;
 
   .el-input {
     height: 38px;
@@ -257,21 +264,22 @@ export default {
   background-color: transparent;
   padding-left: 38px;
 }
+
 .login-form .el-checkbox {
   color: white;
 }
 
-
-
-
-#video-background {
+.rotating-image {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: 1;
+  animation: rotateAnimation 5s linear infinite; /* 应用无限旋转动画 */
 }
 
+@keyframes rotateAnimation {
+  0% {
+    transform: rotate(0deg); /* 起始角度 */
+  }
+  100% {
+    transform: rotate(360deg); /* 结束角度 */
+  }
+}
 </style>
