@@ -1,5 +1,9 @@
 <template>
   <div class="login">
+    <video autoplay muted loop id="video-background">
+      <source src="../assets/images/001.mp4" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
       <h3 class="title">智慧科技_Oracle</h3>
       <el-form-item prop="username">
@@ -165,7 +169,6 @@ export default {
   justify-content: center;
   align-items: center;
   height: 100%;
-  background-image: url("../assets/images/login-background.png");
   background-size: cover;
 }
 
@@ -176,7 +179,9 @@ export default {
 }
 
 .login-form {
-  margin-top: 121px;
+  transform: scale(0.8);
+  margin-bottom: 120px;
+  z-index: 2;
   padding: 40px 100px 5px 100px;
   border-radius: 20px;
   background-image: url("../assets/images/formback.png");
@@ -255,4 +260,18 @@ export default {
 .login-form .el-checkbox {
   color: white;
 }
+
+
+
+
+#video-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
 </style>
