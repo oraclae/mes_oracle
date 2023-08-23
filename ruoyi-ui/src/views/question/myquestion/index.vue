@@ -153,6 +153,7 @@
             <el-table-column
               prop="cjsj"
               label="问题创建时间"
+              width="140"
               show-overflow-tooltip
             >
               <template slot-scope="scope">
@@ -164,6 +165,7 @@
             <el-table-column
               prop="scddh"
               label="生产订单号"
+              width="130"
               show-overflow-tooltip
             >
               <template slot-scope="scope">
@@ -241,6 +243,7 @@
             <el-table-column
               prop="yzrbm"
               label="阅知人部门"
+              width="130"
               show-overflow-tooltip
             >
               <template slot-scope="scope">
@@ -274,6 +277,7 @@
             <el-table-column
               prop="xwjjsj"
               label="希望解决时间"
+              width="140"
               show-overflow-tooltip
             >
               <template slot-scope="scope">

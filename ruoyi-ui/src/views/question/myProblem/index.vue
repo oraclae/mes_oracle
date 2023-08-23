@@ -1304,14 +1304,14 @@ export default {
       const id = {id: closureID.id, value: '待关闭'};
       ids.push(id);
       this.open = false;
-      this.$confirm('是否确认关闭数据项?', '提示', {
+      this.$confirm('是否确认申请关闭数据项?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
         updateMyDoListStatus(ids).then(res=>{
           if (res.code === 200) {
-            this.$message.success("关闭成功");
+            this.$message.success("申请关闭成功");
             this.load();
           }
         })
@@ -1483,8 +1483,8 @@ export default {
     },
     // 控制input显示 row 当前行 column 当前列
     cellClick(row, column) {
-      this.editing = true
-      this.editingIndex = row.index
+      //this.editing = true
+      //this.editingIndex = row.index
       this.editingProperty = column.property
       this.highLight = true
     },
