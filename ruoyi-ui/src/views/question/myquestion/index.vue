@@ -494,7 +494,8 @@
         </div>
         <div style="margin-bottom: 225px">
           <div style="float: left">
-            <label style="margin-left: 10px">问题类别:</label>
+            <label style="color: red;margin-right: 5px;">*</label>
+            <label>问题类别:</label>
             <el-select style="width: 200px;margin-left: 24px" v-model="form.wtlb" @change="wtlbChange" clearable
                        placeholder="请选择问题类别">
               <el-option
@@ -519,7 +520,8 @@
         </div>
         <div style="margin-bottom: 270px">
           <div style="float: left">
-            <label style="margin-left: 10px">问题细类:</label>
+            <label style="color: red;margin-right: 5px;">*</label>
+            <label>问题细类:</label>
             <el-select style="width: 200px;margin-left: 24px" v-model="form.wtxl" clearable placeholder="请选择问题细类">
               <el-option
                 v-for="item in wtxlList"
@@ -1068,7 +1070,7 @@
     </el-dialog>
     <el-dialog class="dialogRad" :close-on-click-modal="false" title="启用问题处理库" width="1200px"
                :visible.sync="lishidaanDialog">
-      <zdhf ref="cxda" @xiangxixinxi="xiangxixinxi" v-if="lishidaanDialog" :form="form"></zdhf>
+      <zdhf ref="cxda" @xiangxixinxi="xiangxixinxi" @dialogCreatedQuestion="dialogCreatedQuestion" v-if="lishidaanDialog" :form="form"></zdhf>
     </el-dialog>
     <!--详细信息弹窗-->
     <el-dialog class="zdhfDialog" :close-on-click-modal="false" @close="shifoumanyi" title="详细信息"
@@ -1111,7 +1113,7 @@ import {
 } from "@/api/question/question";
 import {addCjls, getUpButtons, updateDaccToRd} from "@/api/question/upQuestion";
 import deptTreeSelect from "@/views/question/myquestion/deptTreeSelect"
-import zdhf from "@/views/question/WTGL_ZDHF/index";
+import zdhf from "@/views/question/myquestion/znwdDialog";
 import xiangxixinxi from "@/views/question/myquestion/xiangxixinxi";
 import {listById, getFjByIds} from "@/api/fj/fj";
 import fj from "@/views/fj/fj";
@@ -1343,6 +1345,11 @@ export default {
         }
       });
       this.xiangxiDialog = true
+    },
+    //创建问题按钮
+    dialogCreatedQuestion() {
+      this.saveDataDialog()
+      this.lishidaanDialog =false
     },
     //满意的按钮执行方法
     closeitOK() {
@@ -1832,7 +1839,7 @@ export default {
       this.isXcphwt = true;
       if (this.form.wtlb != null && this.form.wtlb !== '') {
         for (let string of this.xcphwtList) {
-          if (this.form.wtlb.indexOf(string) !== -1) {
+          if (this.form.wtlb.indexOf(string) !== -1 && !this.form.gzxt) {
             this.isXcphwt = false;
           }
         }
@@ -2066,6 +2073,14 @@ export default {
       if (!this.isone) {
         return;
       }
+      if (this.form.wtlb === '') {
+        this.$message.error("请输入问题类别的数据");
+        return;
+      }
+      if (this.form.wtxl === '') {
+        this.$message.error("请输入问题细类的数据");
+        return;
+      }
       if (this.form.wtms === '') {
         this.$message.error("请输入问题描述的数据");
         return;
@@ -2100,11 +2115,11 @@ export default {
         });
         return;
       }
-      if (this.form.lxfk === true) {
-        this.form.lxfk = '例行反馈';
-      } else {
-        this.form.lxfk = '业务交互';
+      if (this.zrrstr === '') {
+        this.$message.error("请选择责任人");
+        return;
       }
+
       if (!this.form.wtsj) {
         if (this.form.xwjjsj === null || this.form.xwjjsj === '') {
           this.$message.error("没有选择期望解决时间");
@@ -2119,6 +2134,11 @@ export default {
           const seconds = String(date.getSeconds()).padStart(2, '0');
           this.form.xwjjsj = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
         }
+      }
+      if (this.form.lxfk === true) {
+        this.form.lxfk = '例行反馈';
+      } else {
+        this.form.lxfk = '业务交互';
       }
       let selectZrrArray = []
       let yzridList = []

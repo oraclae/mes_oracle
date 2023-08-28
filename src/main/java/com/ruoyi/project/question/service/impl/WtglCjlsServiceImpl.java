@@ -7,6 +7,7 @@ import com.ruoyi.project.question.domain.vo.NumberVO;
 import com.ruoyi.project.question.domain.vo.WtxxVo;
 import com.ruoyi.project.question.mapper.QuestionMapper;
 import com.ruoyi.project.question.mapper.WtglCjlsMapper;
+import com.ruoyi.project.question.mapper.WtlbRyMapper;
 import com.ruoyi.project.question.service.IWtglCjlsService;
 import com.ruoyi.project.question.service.QuestionService;
 import com.ruoyi.project.system.domain.SysDept;
@@ -46,6 +47,9 @@ public class WtglCjlsServiceImpl implements IWtglCjlsService {
 
     @Autowired
     private SysUserMapper sysUserMapper;
+
+    @Autowired
+    private WtlbRyMapper wtlbRyMapper;
 
     /**
      * 查询提出问题
@@ -96,17 +100,18 @@ public class WtglCjlsServiceImpl implements IWtglCjlsService {
     public int insertWtglCjls(WtglCjls wtglCjls) {
         wtglCjls.setLSID(UUID.randomUUID().toString());
         wtglCjls.setWTZT("提交");
+        WtlbRy bjr = wtglCjlsMapper.selectBjrByWtlbAndDeptId(wtglCjls,SecurityUtils.getDeptId().toString());
+        //如果没有被叫人
+        if (bjr == null) {
+            return 0;
+        }
+        wtglCjls.setBJZRR(bjr.getBJRXM());
+        wtglCjls.setBJRID(bjr.getBJRID());
         //获取登录用户
         SysUser sysUser = sysUserMapper.selectUserById(SecurityUtils.getUserId());
         wtglCjls.setTBR(sysUser.getNickName());//提报人赋值
         wtglCjls.setTBRID(sysUser.getUserId().toString());//提报人ID赋值
-        //获取本部门的部门领导
-        List<SysUser> ldUsers = wtglCjlsMapper.selectUserByPostAndDept("部门领导",sysUser.getDeptId());
-        if (ldUsers.size() == 0) {
-            ldUsers.add(SecurityUtils.getLoginUser().getUser());
-        }
-        wtglCjls.setBJZRR(ldUsers.get(0).getNickName());//被叫责任人赋值为部门领导
-        wtglCjls.setBJRID(ldUsers.get(0).getUserId().toString());//被叫人ID赋值为部门领导ID
+
         //获取登录用户的部门
         SysDept sysDept = sysDeptMapper.selectDeptById(SecurityUtils.getDeptId());
         wtglCjls.setBJZRKS(sysDept.getDeptName());//被叫责任科室设为本部门
@@ -292,13 +297,25 @@ public class WtglCjlsServiceImpl implements IWtglCjlsService {
     /**
      * 获取接收人列表
      *
-     * @param wtlb 问题类别
+     * @param wtlbRy 问题类别
      * @return 接收人列表
      */
     @Override
-    public List<SysUser> getjsrBywtlb(String wtlb) {
-        List<SysUser> sysUser = wtglCjlsMapper.selectUserByDeptId(SecurityUtils.getDeptId());
-        return sysUser;
+    public List<SysUser> getjsrBywtlb(WtlbRy wtlbRy) {
+        wtlbRy.setDEPTID(SecurityUtils.getDeptId().toString());
+        List<WtlbRy> wtlbRyList = wtlbRyMapper.selectWtlbRyList(wtlbRy);//获取问题类别人员对照数据
+        String[] jsrIds = wtlbRyList.get(0).getJSRID().split(",");//获取接收人id列表
+        List<SysUser> sysUser = wtglCjlsMapper.selectUserByDeptId(SecurityUtils.getDeptId());//获取当前部门下所有人员
+        //返回接收人列表
+        List<SysUser> list = new ArrayList<>();
+        for (SysUser user : sysUser) {
+            for (String jsrId : jsrIds) {
+                if (jsrId.equals(user.getUserId().toString())) {
+                    list.add(user);
+                }
+            }
+        }
+        return list;
     }
 
     /**

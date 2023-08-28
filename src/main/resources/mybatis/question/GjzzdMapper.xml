@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.question.mapper.GjzzdMapper">
+    
+    <resultMap type="Gjzzd" id="GjzzdResult">
+        <result property="xh"    column="xh"    />
+        <result property="gjz"    column="gjz"    />
+    </resultMap>
+
+    <sql id="selectGjzzdVo">
+        select xh, gjz from wtgl_gjzzd
+    </sql>
+
+    <select id="selectGjzzdList" parameterType="Gjzzd" resultMap="GjzzdResult">
+        <include refid="selectGjzzdVo"/>
+        <where>  
+            <if test="gjz != null  and gjz != ''"> and gjz = #{gjz}</if>
+        </where>
+    </select>
+    
+    <select id="selectGjzzdByXh" parameterType="String" resultMap="GjzzdResult">
+        <include refid="selectGjzzdVo"/>
+        where xh = #{xh}
+    </select>
+    <select id="countByGjz" resultType="java.lang.Integer">
+        select count(*) from wtgl_gjzzd where GJZ = #{gjz}
+    </select>
+
+    <insert id="insertGjzzd" parameterType="Gjzzd">
+        insert into wtgl_gjzzd
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="xh != null">xh,</if>
+            <if test="gjz != null">gjz,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="xh != null">#{xh},</if>
+            <if test="gjz != null">#{gjz},</if>
+         </trim>
+    </insert>
+
+    <update id="updateGjzzd" parameterType="Gjzzd">
+        update wtgl_gjzzd
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="gjz != null">gjz = #{gjz},</if>
+        </trim>
+        where xh = #{xh}
+    </update>
+
+    <delete id="deleteGjzzdByXh" parameterType="String">
+        delete from wtgl_gjzzd where xh = #{xh}
+    </delete>
+
+    <delete id="deleteGjzzdByXhs" parameterType="String">
+        delete from wtgl_gjzzd where xh in 
+        <foreach item="xh" collection="array" open="(" separator="," close=")">
+            #{xh}
+        </foreach>
+    </delete>
+</mapper>

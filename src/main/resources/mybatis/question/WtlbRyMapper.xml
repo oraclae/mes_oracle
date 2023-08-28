@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.question.mapper.WtlbRyMapper">
+
+    <resultMap type="WtlbRy" id="WtlbRyResult">
+        <result property="XH" column="XH"/>
+        <result property="WTLB" column="WTLB"/>
+        <result property="WTXL" column="WTXL"/>
+        <result property="DEPTID" column="DEPTID"/>
+        <result property="BJRXM" column="BJRXM"/>
+        <result property="BJRID" column="BJRID"/>
+        <result property="JSRXM" column="JSRXM"/>
+        <result property="JSRID" column="JSRID"/>
+    </resultMap>
+
+    <sql id="selectWtlbRyVo">
+        select XH, WTLB, WTXL, DEPTID, BJRXM, BJRID, JSRXM, JSRID
+        from WTGL_WTLB_RY
+    </sql>
+
+    <select id="selectWtlbRyList" parameterType="WtlbRy" resultMap="WtlbRyResult">
+        <include refid="selectWtlbRyVo"/>
+        <where>
+            <if test="WTLB != null  and WTLB != ''">and WTLB = #{WTLB}</if>
+            <if test="WTXL != null  and WTXL != ''">and WTXL = #{WTXL}</if>
+            <if test="DEPTID != null  and DEPTID != ''">and DEPTID = #{DEPTID}</if>
+            <if test="BJRXM != null  and BJRXM != ''">and BJRXM like '%' || #{BJRXM} || '%'</if>
+            <if test="BJRID != null  and BJRID != ''">and BJRID = #{BJRID}</if>
+            <if test="JSRXM != null  and JSRXM != ''">and JSRXM like '%' || #{JSRXM} || '%'</if>
+            <if test="JSRID != null  and JSRID != ''">and JSRID = #{JSRID}</if>
+        </where>
+        order by WTLB
+    </select>
+
+    <select id="selectWtlbRyByXh" parameterType="String" resultMap="WtlbRyResult">
+        <include refid="selectWtlbRyVo"/>
+        where XH = #{XH}
+    </select>
+    <select id="countByDeptIdAndWtlbAndWtxl" resultType="java.lang.Integer">
+        select count(*)
+        from WTGL_WTLB_RY
+        where DEPTID = #{DEPTID}
+          and WTLB = #{WTLB}
+          and WTXL = #{WTXL}
+    </select>
+
+    <insert id="insertWtlbRy" parameterType="WtlbRy">
+        insert into WTGL_WTLB_RY
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="XH != null">XH,</if>
+            <if test="WTLB != null">WTLB,</if>
+            <if test="WTXL != null">WTXL,</if>
+            <if test="DEPTID != null">DEPTID,</if>
+            <if test="BJRXM != null">BJRXM,</if>
+            <if test="BJRID != null">BJRID,</if>
+            <if test="JSRXM != null">JSRXM,</if>
+            <if test="JSRID != null">JSRID,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="XH != null">#{XH},</if>
+            <if test="WTLB != null">#{WTLB},</if>
+            <if test="WTXL != null">#{WTXL},</if>
+            <if test="DEPTID != null">#{DEPTID},</if>
+            <if test="BJRXM != null">#{BJRXM},</if>
+            <if test="BJRID != null">#{BJRID},</if>
+            <if test="JSRXM != null">#{JSRXM},</if>
+            <if test="JSRID != null">#{JSRID},</if>
+        </trim>
+    </insert>
+
+    <update id="updateWtlbRy" parameterType="WtlbRy">
+        update WTGL_WTLB_RY
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="WTLB != null">WTLB = #{WTLB},</if>
+            <if test="WTXL != null">WTXL = #{WTXL},</if>
+            <if test="DEPTID != null">DEPTID = #{DEPTID},</if>
+            <if test="BJRXM != null">BJRXM = #{BJRXM},</if>
+            <if test="BJRID != null">BJRID = #{BJRID},</if>
+            <if test="JSRXM != null">JSRXM = #{JSRXM},</if>
+            <if test="JSRID != null">JSRID = #{JSRID},</if>
+        </trim>
+        where XH = #{XH}
+    </update>
+
+    <delete id="deleteWtlbRyByXh" parameterType="String">
+        delete
+        from WTGL_WTLB_RY
+        where XH = #{XH}
+    </delete>
+
+    <delete id="deleteWtlbRyByXhs" parameterType="String">
+        delete from WTGL_WTLB_RY where XH in
+        <foreach item="XH" collection="array" open="(" separator="," close=")">
+            #{XH}
+        </foreach>
+    </delete>
+</mapper>

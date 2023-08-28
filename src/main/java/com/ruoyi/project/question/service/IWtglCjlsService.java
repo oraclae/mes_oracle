@@ -121,10 +121,10 @@ public interface IWtglCjlsService
 
     /**
      * 获取接收人列表
-     * @param wtlb 问题类别
+     * @param wtlbRy 问题类别
      * @return 接收人列表
      */
-    List<SysUser> getjsrBywtlb(String wtlb);
+    List<SysUser> getjsrBywtlb(WtlbRy wtlbRy);
 
     /**
      * 查询答案信息列表

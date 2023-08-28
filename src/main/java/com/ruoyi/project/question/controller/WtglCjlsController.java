@@ -1,5 +1,6 @@
 package com.ruoyi.project.question.controller;
 
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.framework.aspectj.lang.enums.BusinessType;
 import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
@@ -94,7 +95,11 @@ public class WtglCjlsController extends BaseController
     @PostMapping("/add")
     public AjaxResult add(@RequestBody WtglCjls wtglCjls)
     {
-        return toAjax(wtglCjlsService.insertWtglCjls(wtglCjls));
+        int i = wtglCjlsService.insertWtglCjls(wtglCjls);
+        if (i==0) {
+            return AjaxResult.error("对照表中没有您部门下问题类别为”"+wtglCjls.getWTLB()+"“，问题细类为“"+wtglCjls.getWTXL()+"“的数据，请先前往添加!");
+        }
+        return toAjax(i);
     }
 
     /**
@@ -165,8 +170,8 @@ public class WtglCjlsController extends BaseController
     /**
      * 获取接收人列表
      */
-    @GetMapping("/{wtlb}/getjsrBywtlb")
-    public TableDataInfo getjsrBywtlb(@PathVariable String wtlb)
+    @GetMapping("/getjsrBywtlb")
+    public TableDataInfo getjsrBywtlb(WtlbRy wtlb)
     {
         List<SysUser> list = wtglCjlsService.getjsrBywtlb(wtlb);
         return getDataTable(list);

@@ -4,25 +4,36 @@
     <div class="outer">
       <div class="left-side">
         <div style="width: 170px;position: relative;margin-left: 10px; display: inline-block"
-             v-for="(value,index) in this.buttons">
-          <img
-            :src="isHoveredId === value.butname+'-'+index ? require('@/assets/questionIcons/yesbutton.png') : require('@/assets/questionIcons/nobutton.png')"
-            style="width: 160px;height: 193px"
-            alt="按钮图像"
-            @mouseover="handleMouseOver(value.butname+'-'+index)"
-            @mouseout="handleMouseOut"
-            @click="addNew(value.butname)"
-          />
-          <img
-            class="overlay-image"
-            :src="isHoveredId === value.butname+'-'+index ? require('@/assets/questionIcons/'+value.imgname+'(1).png') : require('@/assets/questionIcons/'+value.imgname+'.png')"
-            :style="{ transform: isHoveredId ===value.butname+'-'+index ? 'scale(1)' : 'scale(0.9)' }"
-            @mouseover="handleMouseOver(value.butname+'-'+index)"
-            @click="addNew(value.butname)"
-          />
-          <span class="art-text" @click="addNew(value.butname)"
-                :style="{ color: isHoveredId ===value.butname+'-'+index ? 'rgb(255,195,99)': 'rgb(255,255,255)',fontSize: isHoveredId ===value.butname+'-'+index ? '19px' : '17px'}"
-                @mouseover="handleMouseOver(value.butname+'-'+index)">{{ value.butname }} </span>
+             v-for="(value) in this.buttons">
+          <div class="tongyong-div-hover" @click="addNew(value.butname)">
+            <div class="no-button-css">
+              <img
+                :src="require('@/assets/questionIcons/nobutton.png')"
+                style="width: 160px;height: 193px"
+                alt="按钮图像"
+              />
+              <img
+                class="overlay-image"
+                :src="require('@/assets/questionIcons/'+value.imgname+'.png')"
+                style="transform: scale(1)"
+              />
+              <span class="art-text"
+                    style="color: rgb(255,255,255); fontSize: 17px">{{ value.butname }} </span>
+            </div>
+            <div class="yes-button-css">
+              <img
+                :src="require('@/assets/questionIcons/yesbutton.png')"
+                style="width: 160px;height: 193px"
+                alt="按钮图像"
+              />
+              <img
+                class="overlay-image"
+                :src="require('@/assets/questionIcons/'+value.imgname+'(1).png')"
+              />
+              <span class="art-text"
+                    style="color: rgb(255,195,99); fontSize: 19px">{{ value.butname }} </span>
+            </div>
+          </div>
         </div>
       </div>
       <div class="right-side">
@@ -79,7 +90,7 @@
                   <th style="min-width: 100px">班产日期</th>
                   <th style="min-width: 100px">批次</th>
                   <th style="min-width: 100px">工序号</th>
-<!--                  <th style="min-width: 100px">工序名称</th>-->
+                  <!--                  <th style="min-width: 100px">工序名称</th>-->
                   <th style="min-width: 100px">问题描述</th>
                   <th style="min-width: 100px">设备型号</th>
                   <th style="min-width: 100px">是否满意</th>
@@ -150,10 +161,10 @@
                               :disabled="v.gxh == null">
                     <td>{{ v.gxh }}</td>
                   </el-tooltip>
-<!--                  <el-tooltip class="item" effect="dark" :content="v.gxmc" placement="top" :open-delay="500"
-                              :disabled="v.gxmc == null">
-                    <td>{{ v.gxmc }}</td>
-                  </el-tooltip>-->
+                  <!--                  <el-tooltip class="item" effect="dark" :content="v.gxmc" placement="top" :open-delay="500"
+                                                :disabled="v.gxmc == null">
+                                      <td>{{ v.gxmc }}</td>
+                                    </el-tooltip>-->
                   <el-tooltip class="item" effect="dark" :content="v.wtms" placement="top" :open-delay="500"
                               :disabled="v.wtms == null">
                     <td>{{ v.wtms }}</td>
@@ -226,17 +237,24 @@
         </div>
       </div>
     </div>
+    <!--选择问题细类弹框-->
+    <el-dialog title="请选择问题细类" :close-on-click-modal="false" :visible.sync="selectWtxlDialog" width="600px"
+               class="selectWtxlDialog"
+               append-to-body>
+      <el-table style="font-size: 18px" border v-loading="wtxlLoading" height="618px" :data="wtxlList"
+                @row-click="wtxlClick">
+        <el-table-column label-class-name="wtxlLable" label="序号" align="center" type="index" width="80"/>
+        <el-table-column label-class-name="wtxlLable" show-overflow-tooltip label="问题细类" prop="name"/>
+      </el-table>
+    </el-dialog>
     <!-- 添加提出问题对话框 -->
-    <el-dialog :visible.sync="open" width="600px" class="addDialog" append-to-body>
+    <el-dialog @close="isone = true" :close-on-click-modal="false" :visible.sync="open" width="600px" class="addDialog" append-to-body>
       <div class="dia">
         <b style="font-size: 23px;margin: 0;text-align: center;color: black;display: inline-block;width: 100%">创建问题</b>
         <el-form ref="form" :model="form" :rules="rules" label-width="120px" class="underline-input">
           <el-form-item style="font-size: 20px!important;" label="问题名称：" prop="wtmc">
             <el-input style="font-size: 20px" v-model="form.wtmc" placeholder="请输入问题名称"/>
           </el-form-item>
-          <!--              <el-form-item label="产品型号：" prop="cpxh">
-                          <el-input v-model="form.cpxh" placeholder="请输入产品型号"/>
-                        </el-form-item>-->
           <el-form-item label="生产订单号：" prop="scddh">
             <el-input v-model="form.scddh" placeholder="请输入生产订单号"/>
           </el-form-item>
@@ -259,17 +277,12 @@
             <el-input v-model="form.sbxh" placeholder="请输入设备型号"/>
           </el-form-item>
           <el-form-item label="问题类别：" prop="wtlb">
-            <el-input style="font-size: 18px;color: black" v-model="form.wtlb" :disabled="true"/>
+            <el-input style="font-size: 18px;color: black;pointer-events: none" v-model="form.wtlb"/>
           </el-form-item>
           <el-form-item label="问题细类：" prop="wtxl">
-            <el-select style="width: 100%" v-model="form.wtxl" clearable placeholder="请选择问题细类">
-              <el-option
-                v-for="item in wtxlList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
+            <div @click="selectWtxlDialog = true">
+              <el-input style="font-size: 18px;color: black;pointer-events: none" v-model="form.wtxl"/>
+            </div>
           </el-form-item>
           <el-form-item label="问题描述：" prop="wtms">
             <el-input
@@ -283,9 +296,8 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer" style="height: 50px;margin-top: 20px">
-          <el-button type="success" style="float: right;margin-right: 20px" @click="submitForm">确 定</el-button>
+          <el-button type="success" style="float: right;margin-right: 20px" @click="selectHistory">确 定</el-button>
           <el-button type="primary" style="float: right;margin-right: 20px" @click="cancel">取 消</el-button>
-          <el-button type="danger" style="float: right;margin-right: 20px" @click="selectHistory">启用问题处理库</el-button>
         </div>
       </div>
     </el-dialog>
@@ -347,7 +359,7 @@
     </el-dialog>
     <el-dialog class="dialogRad" :close-on-click-modal="false" title="启用问题处理库" width="1200px"
                :visible.sync="lishidaanDialog">
-      <zdhf @xiangxixinxi="xiangxixinxi" v-if="lishidaanDialog" :form="form"></zdhf>
+      <zdhf ref="lishidaanDialog" @xiangxixinxi="xiangxixinxi" @dialogCreatedQuestion="submitForm" v-if="lishidaanDialog" :form="form"></zdhf>
     </el-dialog>
     <!--详细信息弹窗-->
     <el-dialog class="zdhfDialog" :close-on-click-modal="false" @close="shifoumanyi" title="详细信息"
@@ -446,32 +458,13 @@
     <el-dialog class="butDialog" :title="anglTitle" :visible.sync="anglOpen" width="500px" append-to-body>
       <el-form ref="anglForm" :model="anglForm" :rules="anglRules" label-width="100px">
         <el-form-item label="按钮名" prop="butname">
-          <el-input v-model="anglForm.butname" placeholder="请输入按钮名" />
-        </el-form-item>        <el-form-item label="图片名" prop="imgname">
-        <el-input v-model="anglForm.imgname" placeholder="请输入图片名" />
-      </el-form-item>
-
-
-        <!--        <el-form-item label="菜单图标" prop="icon">
-                  <el-popover
-                    placement="bottom-start"
-                    width="460"
-                    trigger="click"
-                  >
-                    <div>
-                      <div v-for="(item, index) in buttonAll" :key="index" @click="selectedIcon(item)">
-                        <svg-icon :icon-class="item" style="height: 30px;width: 16px;" />
-                        <span>{{ item }}</span>
-                      </div>
-                    </div>
-                    <el-input slot="reference" v-model="anglForm.imgname" placeholder="点击选择图标" readonly></el-input>
-                  </el-popover>
-                </el-form-item>-->
-
-
-
+          <el-input v-model="anglForm.butname" placeholder="请输入按钮名"/>
+        </el-form-item>
+        <el-form-item label="图片名" prop="imgname">
+          <el-input v-model="anglForm.imgname" placeholder="请输入图片名"/>
+        </el-form-item>
         <el-form-item label="排序" prop="px">
-          <el-input v-model.number="anglForm.px" placeholder="请输入排序" />
+          <el-input v-model.number="anglForm.px" placeholder="请输入排序"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -496,7 +489,7 @@ import {
   updateDaccToRd
 } from "@/api/question/upQuestion.js";
 import {getJhjlByWtid, getwtxlMethod} from "@/api/question/question";
-import zdhf from "@/views/question/WTGL_ZDHF/index"
+import zdhf from "@/views/question/myquestion/znwdDialog"
 import treeTransfer from 'el-tree-transfer'; // 引入
 import xiangxixinxi from "@/views/question/myquestion/xiangxixinxi";
 
@@ -507,6 +500,14 @@ export default {
   },
   data() {
     return {
+      // 问题类别列表
+      wtxlList: [],
+      //问题细类列表遮罩层
+      wtxlLoading: false,
+      //选择问题细类弹窗
+      selectWtxlDialog: false,
+
+
       isone: true,
       //按钮
       buttons: [],
@@ -528,17 +529,16 @@ export default {
       //按钮管理表单验证
       anglRules: {
         px: [
-          { required: true, message: '排序不能为空'},
-          { type: 'number', message: '排序必须为数字值'}
+          {required: true, message: '排序不能为空'},
+          {type: 'number', message: '排序必须为数字值'}
         ],
         butname: [
-          { required: true, message: '按钮名不能为空'}
+          {required: true, message: '按钮名不能为空'}
         ],
         imgname: [
-          { required: true, message: '图片名不能为空'}
+          {required: true, message: '图片名不能为空'}
         ],
       },
-
 
 
       shifoumanyiDialog: false,//是否满意的弹出框
@@ -569,22 +569,21 @@ export default {
       },
       // 表单参数
       form: {},
-      // 问题类别列表
-      wtxlList: [],
+
       // 表单校验
       rules: {
-        wtms: [
-          {required: true, message: '请填问题描述', trigger: 'blur'}
-        ],
+        /* wtms: [
+           {required: true, message: '请填问题描述', trigger: 'blur'}
+         ],*/
         wtlb: [
           {required: true, message: '请填问题类别', trigger: 'blur'}
         ],
         wtxl: [
           {required: true, message: '请填问题细类', trigger: 'blur'}
         ],
-        wtmc: [
+        /*wtmc: [
           {required: true, message: '请填问题名称', trigger: 'blur'}
-        ],
+        ],*/
       },
       //鼠标是否在按钮内
       isHoveredId: "0",
@@ -709,6 +708,9 @@ export default {
       updateDaccToRd({daxxid: this.daccid}).then(res => {
         if (res.code === 200) {
           this.$message.success("已满意！");
+          if (this.lishidaanDialog) {
+            this.$refs.lishidaanDialog.getList()
+          }
         } else {
           this.$message.error("操作失败");
         }
@@ -787,7 +789,7 @@ export default {
       }
       if (this.selectedRows[0].wtzt === '接收') {
         this.closeJSDialog = true
-      }else {
+      } else {
         this.closeitDialog = true;
       }
     },
@@ -863,33 +865,47 @@ export default {
         this.single = this.selectedRows.length !== 1
       }
     },
-    // 新增按钮操作
+    //新建按钮打开问题细类选择
     addNew(value) {
       if (value === '待确认') {
         return;
       }
       this.reset();
       this.form.wtlb = value
+      this.wtxlLoading = true
       this.wtxlMethod()
+      this.selectWtxlDialog = true
+    },
+    //问题细类选择后打开创建弹窗
+    selectWtxl() {
       this.open = true;
+      this.selectWtxlDialog = false
     },
     //问题细类的获得方法
     wtxlMethod() {
       this.wtxlList = [];
       getwtxlMethod({wtlb: this.form.wtlb}).then(res => {
         if (res.code === 200) {
-          let data = res.rows;
-          for (let i = 0; i < data.length; i++) {
-            this.wtxlList.push({label: data[i], value: data[i]})
+          let list = []
+          list = res.rows;
+          for (let wtxl of list) {
+            this.wtxlList.push({name: wtxl})
           }
+          this.wtxlLoading = false
         }
       })
+    },
+    //问题细类单击触发
+    wtxlClick(row) {
+      this.form.wtxl = row.name
+      this.selectWtxl()
     },
     // 提交按钮
     submitForm() {
       if (!this.isone) {
         return;
       }
+      this.lishidaanDialog = false
       this.$refs["form"].validate(valid => {
         if (valid) {
           this.isone = false
@@ -898,7 +914,9 @@ export default {
             this.open = false;
             this.getList();
             this.isone = true
-          });
+          }).catch(response=>{
+            this.isone = true
+          })
         }
       });
     },
@@ -923,27 +941,48 @@ export default {
     selectHistory() {
       this.lishidaanDialog = true;
     },
-    //鼠标移入
-    handleMouseOver(str) {
-      this.isHoveredId = str;
-    },
-    //鼠标移出
-    handleMouseOut() {
-      this.isHoveredId = '0';
-    }
   }
 };
 </script>
 <style>
+/* css  鼠标悬浮时 */
+.selectWtxlDialog .el-table--enable-row-hover .el-table__body tr:hover > td {
+  background-color: rgba(161, 155, 155, 0.56) !important;
+}
+
+.selectWtxlDialog .wtxlLable {
+  font-size: 18px;
+  height: 23px;
+}
+
+.selectWtxlDialog .el-dialog {
+  border-radius: 30px;
+}
+
+.selectWtxlDialog .el-dialog__close {
+  font-size: 30px; /* 调整按钮大小 */
+}
+
+.selectWtxlDialog .el-dialog__headerbtn .el-dialog__close {
+  color: red;
+}
+
+.selectWtxlDialog .el-dialog__body {
+  padding-top: 0
+}
+
 .anglDialog .el-dialog:not(.is-fullscreen) {
   margin-top: 10% !important;
 }
+
 .anglDialog .el-dialog {
   border-radius: 10px;
 }
+
 .anglDialog .el-dialog__close {
   font-size: 30px;
 }
+
 .anglDialog .el-dialog__headerbtn .el-dialog__close {
   color: red;
 }
@@ -1176,4 +1215,19 @@ export default {
   color: #a9a9a9;
 }
 
+</style>
+<style scoped>
+/*悬浮改变*/
+/*未选中按钮*/
+.yes-button-css{
+  display: none;
+}
+/*未选中按钮被指中时*/
+.tongyong-div-hover:hover .yes-button-css{
+  display: inline-block;
+}
+/*选中按钮被指中时*/
+.tongyong-div-hover:hover .no-button-css{
+  display: none;
+}
 </style>

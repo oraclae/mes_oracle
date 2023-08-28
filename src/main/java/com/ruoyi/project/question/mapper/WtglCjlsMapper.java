@@ -220,4 +220,9 @@ public interface WtglCjlsMapper
      * 根据部门id查询用户
      */
     List<SysUser> selectUserByDeptId(Long deptId);
+
+    /**
+     * 获取被叫人
+     */
+    WtlbRy selectBjrByWtlbAndDeptId(@Param("wtglCjls") WtglCjls wtglCjls,@Param("deptId") String deptId);
 }

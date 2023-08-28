@@ -113,10 +113,11 @@ export function getcjksbmNumber() {
 }
 
 // 获取接收人列表
-export function getjsrBywtlb(wtlb) {
+export function getjsrBywtlb(query) {
   return request({
-    url: '/myjob/cjls/' + wtlb + '/getjsrBywtlb',
+    url: '/myjob/cjls/getjsrBywtlb',
     method: 'get',
+    params: query
   })
 }
 

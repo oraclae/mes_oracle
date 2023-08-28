@@ -1550,11 +1550,10 @@ export default {
         }
       }
       this.jsrList = []
-      getjsrBywtlb(this.selectedRows[0].wtlb).then(response => {
+      getjsrBywtlb({wtlb: this.selectedRows[0].wtlb,wtxl: this.selectedRows[0].wtxl,}).then(response => {
         this.jsrList = response.rows;
         this.wtjsDialog = false
         this.notBjzrrDialog = true
-        console.log(this.jsrList)
       })
     },
     // 解决方案表单重置

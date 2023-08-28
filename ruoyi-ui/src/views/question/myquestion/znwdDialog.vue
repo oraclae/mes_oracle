@@ -56,7 +56,7 @@
             </div>
             <div>
               <label>问题细类: </label>
-              <el-select v-model="queryParams.WTXL" clearable placeholder="请选择问题细类">
+              <el-select v-model="queryParams.WTXL" @change="handleQuery" clearable placeholder="请选择问题细类">
                 <el-option
                   v-for="item in wtxlList"
                   :key="item.value"
@@ -92,8 +92,14 @@
       </el-col>
       <el-col :span="4" style="height: 100%;display: flex;justify-content: center;align-items: center;">
         <el-button @click="handleQuery" type="primary"
-                   style="width: 60%;height: 60px;font-size: 18px;">
+                   style="width: 80%;height: 60px;font-size: 18px;">
           智能查询
+        </el-button>
+      </el-col>
+      <el-col :span="4" style="height: 100%;display: flex;justify-content: center;align-items: center;">
+        <el-button @click="dialogCreatedQuestion" type="success"
+                   style="width: 80%;height: 60px;font-size: 18px;">
+          创建问题
         </el-button>
       </el-col>
 
@@ -211,6 +217,9 @@ export default {
 
   },
   methods: {
+    dialogCreatedQuestion() {
+      this.$emit('dialogCreatedQuestion')
+    },
     //详细信息的方法
     xiangxixinxi(row) {
       if (this.form != null) {
@@ -259,6 +268,7 @@ export default {
     wtlbChange() {
       this.queryParams.WTXL = null;
       this.wtxlMethod();
+      this.handleQuery()
     },
     //问题细类的获得方法
     wtxlMethod() {
