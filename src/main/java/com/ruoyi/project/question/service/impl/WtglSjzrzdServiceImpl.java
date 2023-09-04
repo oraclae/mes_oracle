@@ -49,7 +49,7 @@ public class WtglSjzrzdServiceImpl implements IWtglSjzrzdService {
      * @return 结果
      */
     @Override
-    public int insertWtglSjzrzd(WtglSjzrzd wtglSjzrzd) {
+    public int insertWtglSjzrzd(WtglSjzrzd wtglSjzrzd) throws Exception{
         wtglSjzrzd.setXh(UUID.randomUUID().toString());
         return wtglSjzrzdMapper.insertWtglSjzrzd(wtglSjzrzd);
     }

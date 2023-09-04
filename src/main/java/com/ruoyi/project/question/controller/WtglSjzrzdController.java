@@ -24,14 +24,13 @@ import com.ruoyi.framework.web.page.TableDataInfo;
 
 /**
  * 升级责任人Controller
- * 
+ *
  * @author qxd
  * @date 2023-08-18
  */
 @RestController
 @RequestMapping("/system/sjzrzd")
-public class WtglSjzrzdController extends BaseController
-{
+public class WtglSjzrzdController extends BaseController {
     @Autowired
     private IWtglSjzrzdService wtglSjzrzdService;
 
@@ -40,8 +39,7 @@ public class WtglSjzrzdController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:sjzrzd:list')")
     @GetMapping("/list")
-    public TableDataInfo list(WtglSjzrzd wtglSjzrzd)
-    {
+    public TableDataInfo list(WtglSjzrzd wtglSjzrzd) {
         startPage();
         List<WtglSjzrzd> list = wtglSjzrzdService.selectWtglSjzrzdList(wtglSjzrzd);
         return getDataTable(list);
@@ -53,8 +51,7 @@ public class WtglSjzrzdController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:sjzrzd:export')")
     @Log(title = "升级责任人", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, WtglSjzrzd wtglSjzrzd)
-    {
+    public void export(HttpServletResponse response, WtglSjzrzd wtglSjzrzd) {
         List<WtglSjzrzd> list = wtglSjzrzdService.selectWtglSjzrzdList(wtglSjzrzd);
         ExcelUtil<WtglSjzrzd> util = new ExcelUtil<WtglSjzrzd>(WtglSjzrzd.class);
         util.exportExcel(response, list, "升级责任人数据");
@@ -65,8 +62,7 @@ public class WtglSjzrzdController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:sjzrzd:query')")
     @GetMapping(value = "/{xh}")
-    public AjaxResult getInfo(@PathVariable("xh") String xh)
-    {
+    public AjaxResult getInfo(@PathVariable("xh") String xh) {
         return success(wtglSjzrzdService.selectWtglSjzrzdByXh(xh));
     }
 
@@ -76,9 +72,13 @@ public class WtglSjzrzdController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:sjzrzd:add')")
     @Log(title = "升级责任人", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody WtglSjzrzd wtglSjzrzd)
-    {
-        return toAjax(wtglSjzrzdService.insertWtglSjzrzd(wtglSjzrzd));
+    public AjaxResult add(@RequestBody WtglSjzrzd wtglSjzrzd) {
+        try {
+            return toAjax(wtglSjzrzdService.insertWtglSjzrzd(wtglSjzrzd));
+        } catch (Exception e) {
+            System.out.println("当前责任人重复了");
+            return AjaxResult.error("当前责任人重复了");
+        }
     }
 
     /**
@@ -87,8 +87,7 @@ public class WtglSjzrzdController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:sjzrzd:edit')")
     @Log(title = "升级责任人", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody WtglSjzrzd wtglSjzrzd)
-    {
+    public AjaxResult edit(@RequestBody WtglSjzrzd wtglSjzrzd) {
         return toAjax(wtglSjzrzdService.updateWtglSjzrzd(wtglSjzrzd));
     }
 
@@ -97,9 +96,8 @@ public class WtglSjzrzdController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:sjzrzd:remove')")
     @Log(title = "升级责任人", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{xhs}")
-    public AjaxResult remove(@PathVariable String[] xhs)
-    {
+    @DeleteMapping("/{xhs}")
+    public AjaxResult remove(@PathVariable String[] xhs) {
         return toAjax(wtglSjzrzdService.deleteWtglSjzrzdByXhs(xhs));
     }
 }

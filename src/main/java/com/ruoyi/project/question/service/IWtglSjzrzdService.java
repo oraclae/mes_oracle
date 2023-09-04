@@ -33,7 +33,7 @@ public interface IWtglSjzrzdService {
      * @param wtglSjzrzd 升级责任人
      * @return 结果
      */
-    public int insertWtglSjzrzd(WtglSjzrzd wtglSjzrzd);
+    public int insertWtglSjzrzd(WtglSjzrzd wtglSjzrzd) throws Exception;
 
     /**
      * 修改升级责任人
