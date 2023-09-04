@@ -135,8 +135,8 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="被叫人" prop="bjrid">
-          <el-select v-model="form.bjrid" @change="setbjrxm" clearable
+        <el-form-item label="被叫人" prop="bjrxm">
+          <el-select v-model="form.bjrxm" @change="setbjrxm" clearable
                      placeholder="请选择被叫人">
             <el-option
               v-for="item in userList"
@@ -169,7 +169,7 @@
       <div class="two-row">
         <el-table
           height="300px"
-          :data="userList"
+          :data="userListOtherBy"
           @selection-change="jsrDiaSelectionChange"
           highlight-current-row
           row-key="id"
@@ -193,6 +193,13 @@
         </el-button>
         <el-button type="primary" size="small" style="margin-top: 10px" @click="jsrDiaSubmitButten">确 定</el-button>
         <el-button type="warning" size="small" style="margin-top: 10px" @click="jsrDiaCancelButten">退 出</el-button>
+        <pagination
+          style="display: inline-block; float: right"
+          v-show="userTotal>0"
+          :total="userTotal"
+          :page.sync="userQueryParams.current"
+          :limit.sync="userQueryParams.size"
+          @pagination="getUserListByDeptIdOtherBy"/>
       </div>
       <div class="four-row">
         <el-table
@@ -229,6 +236,7 @@ export default {
       wtlbList: [],//问题类别列表
       wtxlList: [],//问题细类列表
       userList: [],//当前部门下人员列表
+      userListOtherBy: [],//当前部门下人员列表
       selectJsrDialog: false,
 
       jsrDiaHandleSelect: [],//接收人选中数据
@@ -243,6 +251,7 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
+      selectRows: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -251,6 +260,7 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
+      userTotal: 0,
       // 问题类别人员对照表格数据
       wtlbryList: [],
       // 弹出层标题
@@ -266,6 +276,14 @@ export default {
         deptid: null,
         ryxm: null,
         ryid: null
+      },
+      userQueryParams: {
+        pageNum: 1,
+        pageSize: 10,
+        userName: undefined,
+        phonenumber: undefined,
+        status: undefined,
+        deptId: undefined
       },
       // 表单参数
       form: {},
@@ -298,8 +316,17 @@ export default {
     },
     //获取用户信息
     getUserListByDeptId() {
-      listUser({deptId: this.userInfo.deptId}).then(response => {
+      listUser({pageNum: 1,pageSize: 10,deptId: this.userInfo.deptId}).then(response => {
           this.userList = response.rows;
+        }
+      );
+    },
+    //获取用户信息
+    getUserListByDeptIdOtherBy() {
+      this.userQueryParams.deptId = this.userInfo.deptId
+      listUser(this.userQueryParams).then(response => {
+          this.userListOtherBy = response.rows;
+          this.userTotal = response.total;
         }
       );
     },
@@ -332,16 +359,9 @@ export default {
     //设置被叫人姓名
     setbjrxm() {
       for (let user of this.userList) {
-        if (user.userId === this.form.bjrid) {
+        if (user.userId === this.form.bjrxm) {
+          this.form.bjrid = this.form.bjrxm
           this.form.bjrxm = user.nickName
-        }
-      }
-    },
-    //设置接收人姓名
-    setjsrxm() {
-      for (let user of this.userList) {
-        if (user.userId === this.form.jsrid) {
-          this.form.jsrxm = user.nickName
         }
       }
     },
@@ -352,13 +372,20 @@ export default {
     },
     // 表单重置
     reset() {
+      this.jsrDiaUserSelectTableData = []
       this.form = {
         xh: null,
         wtlb: null,
         wtxl: null,
         deptid: null,
-        ryxm: null,
-        ryid: null
+        bjrxm: null,
+        bjrid: null,
+        bjrzh: null,
+        bjrbm: null,
+        jsrxm: null,
+        jsrid: null,
+        jsrzh: null,
+        jsrbm: null
       };
       this.resetForm("form");
     },
@@ -375,11 +402,13 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.xh)
+      this.selectRows = selection.map(item => item)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
     handleAdd() {
+      this.getUserListByDeptIdOtherBy()
       this.reset();
       this.wtxlList = []
       this.open = true;
@@ -387,12 +416,26 @@ export default {
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
+      this.getUserListByDeptIdOtherBy()
       this.reset();
       const xh = row.xh || this.ids
+      const data = row || this.selectRows
+      this.open = true;
       getWtlbry(xh).then(response => {
         this.form = response.data;
-        this.open = true;
         this.title = "修改问题类别人员对照";
+        if (this.form.wtlb != null && this.form.wtlb !== '') {
+          this.getWtxlList()
+        }
+        this.jsrDiaUserSelectTableData = []
+        const jsrzhs = data.jsrzh.split(",")
+        const jsrbms = data.jsrbm.split(",")
+        const jsrids = data.jsrid.split(",")
+        const jsrxms = data.jsrxm.split(",")
+        for (let i = 0;i<jsrids.length; i++) {
+          const data = {userId: jsrids[i],userName: jsrzhs[i],nickName: jsrxms[i],dept:{deptName:jsrbms[i]}}
+          this.jsrDiaUserSelectTableData.push(data)
+        }
       });
     },
     /** 提交按钮 */
@@ -449,7 +492,7 @@ export default {
       var isSelect = false;
       if (this.jsrDiaUserSelectTableData.length > 0) {
         this.jsrDiaUserSelectTableData.forEach(item => {
-          if (item.userId === row.userId) {
+          if (item.userId.toString() === row.userId.toString()) {
             isSelect = true;
           }
         });
@@ -463,7 +506,7 @@ export default {
       const data = this.jsrDiaHandleSelect;
       data.forEach(item => {
         this.jsrDiaUserSelectTableData.forEach((user, i) => {
-          if (item.userId === user.userId) {
+          if (item.userId.toString() === user.userId.toString()) {
             this.jsrDiaUserSelectTableData.splice(i, 1);
           }
         });
@@ -476,7 +519,7 @@ export default {
     jsrDiaDeleteUserData() {
       this.jsrDiaHandleChangeData.forEach(item => {
         this.jsrDiaUserSelectTableData.forEach((user, index) => {
-          if (item.userId === user.userId) {
+          if (item.userId.toString() === user.userId.toString()) {
             this.jsrDiaUserSelectTableData.splice(index, 1);
           }
         });
@@ -492,12 +535,18 @@ export default {
       }
       let jsrNameList = []
       let jsrIdList = []
+      let jsrzhList = []
+      let jsrbmList = []
       this.jsrDiaUserSelectTableData.forEach(item => {
         jsrNameList.push(item.nickName)
         jsrIdList.push(item.userId)
+        jsrzhList.push(item.userName)
+        jsrbmList.push(item.dept.deptName)
       })
       this.form.jsrxm = jsrNameList.join(",")
       this.form.jsrid = jsrIdList.join(",")
+      this.form.jsrzh = jsrzhList.join(",")
+      this.form.jsrbm = jsrbmList.join(",")
       this.selectJsrDialog = false
     },
     //取消弹框的按钮
@@ -510,6 +559,9 @@ export default {
 };
 </script>
 <style>
+.jsrDialog .pagination-container {
+  margin-top: 0;
+}
 .wtlbRyAddDialog .el-dialog {
   border-radius: 30px;
 }
@@ -526,6 +578,7 @@ export default {
 .wtlbRyAddDialog .el-dialog:not(.is-fullscreen) {
   margin-top: 10% !important;
 }
+
 .jsrDialog .el-dialog {
   border-radius: 30px;
 }

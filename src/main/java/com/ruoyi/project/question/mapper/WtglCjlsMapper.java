@@ -2,6 +2,7 @@ package com.ruoyi.project.question.mapper;
 
 import com.ruoyi.project.question.domain.*;
 import com.ruoyi.project.question.domain.vo.NumberVO;
+import com.ruoyi.project.question.domain.vo.WtlbXlVO;
 import com.ruoyi.project.question.domain.vo.WtxxVo;
 import com.ruoyi.project.system.domain.SysUser;
 import org.apache.ibatis.annotations.Param;
@@ -225,4 +226,9 @@ public interface WtglCjlsMapper
      * 获取被叫人
      */
     WtlbRy selectBjrByWtlbAndDeptId(@Param("wtglCjls") WtglCjls wtglCjls,@Param("deptId") String deptId);
+
+    /**
+     * 获取问题类别细类
+     */
+    List<WtlbXlVO> getWtlbXlList();
 }

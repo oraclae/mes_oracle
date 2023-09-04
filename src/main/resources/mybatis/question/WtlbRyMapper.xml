@@ -11,12 +11,16 @@
         <result property="DEPTID" column="DEPTID"/>
         <result property="BJRXM" column="BJRXM"/>
         <result property="BJRID" column="BJRID"/>
+        <result property="BJRZH" column="BJRZH"/>
+        <result property="BJRBM" column="BJRBM"/>
         <result property="JSRXM" column="JSRXM"/>
         <result property="JSRID" column="JSRID"/>
+        <result property="JSRZH" column="JSRZH"/>
+        <result property="JSRBM" column="JSRBM"/>
     </resultMap>
 
     <sql id="selectWtlbRyVo">
-        select XH, WTLB, WTXL, DEPTID, BJRXM, BJRID, JSRXM, JSRID
+        select XH, WTLB, WTXL, DEPTID, BJRXM, BJRID, BJRZH, BJRBM, JSRXM, JSRID, JSRZH, JSRBM
         from WTGL_WTLB_RY
     </sql>
 
@@ -55,8 +59,12 @@
             <if test="DEPTID != null">DEPTID,</if>
             <if test="BJRXM != null">BJRXM,</if>
             <if test="BJRID != null">BJRID,</if>
+            <if test="BJRZH != null">BJRZH,</if>
+            <if test="BJRBM != null">BJRBM,</if>
             <if test="JSRXM != null">JSRXM,</if>
             <if test="JSRID != null">JSRID,</if>
+            <if test="JSRZH != null">JSRZH,</if>
+            <if test="JSRBM != null">JSRBM,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="XH != null">#{XH},</if>
@@ -65,8 +73,12 @@
             <if test="DEPTID != null">#{DEPTID},</if>
             <if test="BJRXM != null">#{BJRXM},</if>
             <if test="BJRID != null">#{BJRID},</if>
+            <if test="BJRZH != null">#{BJRZH},</if>
+            <if test="BJRBM != null">#{BJRBM},</if>
             <if test="JSRXM != null">#{JSRXM},</if>
             <if test="JSRID != null">#{JSRID},</if>
+            <if test="JSRZH != null">#{JSRZH},</if>
+            <if test="JSRBM != null">#{JSRBM},</if>
         </trim>
     </insert>
 
@@ -78,8 +90,12 @@
             <if test="DEPTID != null">DEPTID = #{DEPTID},</if>
             <if test="BJRXM != null">BJRXM = #{BJRXM},</if>
             <if test="BJRID != null">BJRID = #{BJRID},</if>
+            <if test="BJRZH != null">BJRZH = #{BJRZH},</if>
+            <if test="BJRBM != null">BJRBM = #{BJRBM},</if>
             <if test="JSRXM != null">JSRXM = #{JSRXM},</if>
             <if test="JSRID != null">JSRID = #{JSRID},</if>
+            <if test="JSRZH != null">JSRZH = #{JSRZH},</if>
+            <if test="JSRBM != null">JSRBM = #{JSRBM},</if>
         </trim>
         where XH = #{XH}
     </update>

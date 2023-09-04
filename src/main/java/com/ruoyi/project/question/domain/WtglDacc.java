@@ -122,6 +122,11 @@ public class WtglDacc{
      */
     private String KEYWORDS;
 
+    /**
+     * 部门ID
+     */
+    private String DEPTID;
+
     /** 请求参数 */
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Map<String, Object> params;

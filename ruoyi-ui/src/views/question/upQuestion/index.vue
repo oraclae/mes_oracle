@@ -1,40 +1,36 @@
 <template>
-  <div class="upcontainer"
-       :style="{backgroundImage: 'url(' + backgroundImageUrl + ')', backgroundSize: 'cover', backgroundPosition: 'center' }">
+  <div class="upcontainer">
     <div class="outer">
       <div class="left-side">
-        <div style="width: 170px;position: relative;margin-left: 10px; display: inline-block"
-             v-for="(value) in this.buttons">
-          <div class="tongyong-div-hover" @click="addNew(value.butname)">
-            <div class="no-button-css">
-              <img
-                :src="require('@/assets/questionIcons/nobutton.png')"
-                style="width: 160px;height: 193px"
-                alt="按钮图像"
-              />
-              <img
-                class="overlay-image"
-                :src="require('@/assets/questionIcons/'+value.imgname+'.png')"
-                style="transform: scale(1)"
-              />
-              <span class="art-text"
-                    style="color: rgb(255,255,255); fontSize: 17px">{{ value.butname }} </span>
-            </div>
-            <div class="yes-button-css">
-              <img
-                :src="require('@/assets/questionIcons/yesbutton.png')"
-                style="width: 160px;height: 193px"
-                alt="按钮图像"
-              />
-              <img
-                class="overlay-image"
-                :src="require('@/assets/questionIcons/'+value.imgname+'(1).png')"
-              />
-              <span class="art-text"
-                    style="color: rgb(255,195,99); fontSize: 19px">{{ value.butname }} </span>
+        <el-button
+          type="primary"
+          icon="el-icon-arrow-left"
+          :disabled="showWtlb"
+          @click="showWtlb = true"
+          style="margin-bottom: 15px"
+        >返回
+        </el-button>
+        <br>
+        <transition name="fade" mode="out-in">
+          <div v-if="showWtlb" key="wtlb" style="width: 370px;">
+            <!--问题类别-->
+            <div style="display: inline-block;vertical-align: middle;"
+                 v-for="(value,index) in this.wtlbXlList" :key="value.wtlb+'-'+index">
+              <div class="addWtlbButtonDiv" :style="{marginLeft:(index+2)%5===0? '60px':0}">
+                <button class="addWtlbButton" @click="addNew(value.wtlb)">{{ value.wtlb }}</button>
+              </div>
             </div>
           </div>
-        </div>
+          <!--问题细类-->
+          <div v-else key="wtxl" style="width: 370px;">
+            <div style="display: inline-block;vertical-align: middle;"
+                 v-for="(value,index) in this.wtlbXlList[wtlbIndex].wtxl" :key="value+'-'+index">
+              <div class="addWtlbButtonDiv" :style="{marginLeft:(index+2)%5===0? '60px':0}">
+                <button class="addWtlbButton" @click="wtxlClick(value)">{{ value }}</button>
+              </div>
+            </div>
+          </div>
+        </transition>
       </div>
       <div class="right-side">
         <div class="r-onerow" style="height: 45px;margin-bottom: 10px">
@@ -61,179 +57,50 @@
               type="danger"
               :disabled="multiple"
               @click="handleDelete"
-              v-hasPermi="['myjob:cjls:remove']"
             >删除
             </el-button>
             <el-button type="primary" @click="angl">按钮管理</el-button>
           </div>
-          <b style="color: white;font-size: 28px;">现场配合问题</b>
+          <b style="color: #4f4f4f;font-size: 28px;">现场配合问题</b>
         </div>
-        <div class="r-tworow" style="height: calc(100% - 55px)">
-          <div style="max-height: calc(100% - 50px); overflow-x: auto; overflow-y: auto">
-            <div style="width: auto; height: auto;">
-              <table border="1"
-                     style="table-layout: fixed; border-collapse: collapse; color: white;border-color: #00A9FF;min-width: 100%">
-                <tr>
-                  <th style="min-width: 45px">
-                    <input style="width: 20px; height: 20px;" type="checkbox" v-model="selectAll"
-                           @change="selectAllRows"/>
-                  </th>
-                  <th style="min-width: 110px">创建部门科室</th>
-                  <th style="min-width: 100px;height: 45px">问题名称</th>
-                  <th style="min-width: 100px;height: 45px">问题状态</th>
-                  <th style="min-width: 100px;height: 45px">问题类别</th>
-                  <th style="min-width: 100px;height: 45px">问题细类</th>
-                  <th style="min-width: 120px">生产订单号</th>
-                  <!--                  <th style="min-width: 100px">产品型号</th>-->
-                  <th style="min-width: 100px">产品型号</th>
-                  <th style="min-width: 100px">件号</th>
-                  <th style="min-width: 100px">班产日期</th>
-                  <th style="min-width: 100px">批次</th>
-                  <th style="min-width: 100px">工序号</th>
-                  <!--                  <th style="min-width: 100px">工序名称</th>-->
-                  <th style="min-width: 100px">问题描述</th>
-                  <th style="min-width: 100px">设备型号</th>
-                  <th style="min-width: 100px">是否满意</th>
-                  <th style="min-width: 100px">提报人</th>
-                  <th style="min-width: 110px">被叫责任科室</th>
-                  <th style="min-width: 100px">被叫人</th>
-                  <th style="min-width: 120px">提报-接收时间</th>
-                  <th style="min-width: 120px">提报-当前时间</th>
-                  <th style="min-width: 100px">接收人</th>
-                  <th style="min-width: 100px">解决方案</th>
-                  <th style="min-width: 100px">创建时间</th>
-                  <th style="min-width: 100px">提报人ID</th>
-                  <th style="min-width: 100px">被叫人ID</th>
-                  <th style="min-width: 100px">接收人ID</th>
-                </tr>
-                <tr v-for="(v , i) in cjlsList" :key="i">
-                  <td>
-                    <input v-if="v.lsid != null" style="color: #00DD77; width: 20px; height: 20px;" type="checkbox"
-                           v-model="selectedRows"
-                           @change="handleSelectionChange(selectedRows)"
-                           :value="v"/>
-                  </td>
-                  <el-tooltip class="item" effect="dark" :content="v.cjbmks" placement="top" :open-delay="500"
-                              :disabled="v.cjbmks == null">
-                    <td>{{ v.cjbmks }}</td>
-                  </el-tooltip>
-                  <el-tooltip class="item" effect="dark" :content="v.wtmc" placement="top" :open-delay="500"
-                              :disabled="v.wtmc == null">
-                    <td>{{ v.wtmc }}</td>
-                  </el-tooltip>
-                  <el-tooltip class="item" effect="dark" :content="v.wtzt" placement="top" :open-delay="500"
-                              :disabled="v.wtzt == null">
-                    <td>{{ v.wtzt }}</td>
-                  </el-tooltip>
-                  <el-tooltip class="item" effect="dark" :content="v.wtlb" placement="top" :open-delay="500"
-                              :disabled="v.wtlb == null">
-                    <td>{{ v.wtlb }}</td>
-                  </el-tooltip>
-                  <el-tooltip class="item" effect="dark" :content="v.wtxl" placement="top" :open-delay="500"
-                              :disabled="v.wtxl == null">
-                    <td>{{ v.wtxl }}</td>
-                  </el-tooltip>
-                  <el-tooltip class="item" effect="dark" :content="v.scddh" placement="top" :open-delay="500"
-                              :disabled="v.scddh == null">
-                    <td>{{ v.scddh }}</td>
-                  </el-tooltip>
-                  <!--                  <el-tooltip class="item" effect="dark" :content="v.cpxh" placement="top" :open-delay="500"
-                                                :disabled="v.cpxh == null">
-                                      <td>{{ v.cpxh }}</td>
-                                    </el-tooltip>-->
-                  <el-tooltip class="item" effect="dark" :content="v.cpxh" placement="top" :open-delay="500"
-                              :disabled="v.cpxh == null">
-                    <td>{{ v.cpxh }}</td>
-                  </el-tooltip>
-                  <el-tooltip class="item" effect="dark" :content="v.jh" placement="top" :open-delay="500"
-                              :disabled="v.jh == null">
-                    <td>{{ v.jh }}</td>
-                  </el-tooltip>
-                  <el-tooltip class="item" effect="dark" :content="v.bcrq" placement="top" :open-delay="500"
-                              :disabled="v.bcrq == null">
-                    <td>{{ v.bcrq }}</td>
-                  </el-tooltip>
-                  <el-tooltip class="item" effect="dark" :content="v.pc" placement="top" :open-delay="500"
-                              :disabled="v.pc == null">
-                    <td>{{ v.pc }}</td>
-                  </el-tooltip>
-                  <el-tooltip class="item" effect="dark" :content="v.gxh" placement="top" :open-delay="500"
-                              :disabled="v.gxh == null">
-                    <td>{{ v.gxh }}</td>
-                  </el-tooltip>
-                  <!--                  <el-tooltip class="item" effect="dark" :content="v.gxmc" placement="top" :open-delay="500"
-                                                :disabled="v.gxmc == null">
-                                      <td>{{ v.gxmc }}</td>
-                                    </el-tooltip>-->
-                  <el-tooltip class="item" effect="dark" :content="v.wtms" placement="top" :open-delay="500"
-                              :disabled="v.wtms == null">
-                    <td>{{ v.wtms }}</td>
-                  </el-tooltip>
-                  <el-tooltip class="item" effect="dark" :content="v.sbxh" placement="top" :open-delay="500"
-                              :disabled="v.sbxh == null">
-                    <td>{{ v.sbxh }}</td>
-                  </el-tooltip>
-                  <el-tooltip class="item" effect="dark" :content="v.sfmy" placement="top" :open-delay="500"
-                              :disabled="v.sfmy == null">
-                    <td>{{ v.sfmy }}</td>
-                  </el-tooltip>
-                  <el-tooltip class="item" effect="dark" :content="v.tbr" placement="top" :open-delay="500"
-                              :disabled="v.tbr == null">
-                    <td>{{ v.tbr }}</td>
-                  </el-tooltip>
-                  <el-tooltip class="item" effect="dark" :content="v.bjzrks" placement="top" :open-delay="500"
-                              :disabled="v.bjzrks == null">
-                    <td>{{ v.bjzrks }}</td>
-                  </el-tooltip>
-                  <el-tooltip class="item" effect="dark" :content="v.bjzrr" placement="top" :open-delay="500"
-                              :disabled="v.bjzrr == null">
-                    <td>{{ v.bjzrr }}</td>
-                  </el-tooltip>
-                  <el-tooltip class="item" effect="dark" :content="v.tbjssj" placement="top" :open-delay="500"
-                              :disabled="v.tbjssj == null">
-                    <td>{{ v.tbjssj }}</td>
-                  </el-tooltip>
-                  <el-tooltip class="item" effect="dark" :content="v.tbdqst" placement="top" :open-delay="500"
-                              :disabled="v.tbdqst == null">
-                    <td>{{ v.tbdqst }}</td>
-                  </el-tooltip>
-                  <el-tooltip class="item" effect="dark" :content="v.jsr" placement="top" :open-delay="500"
-                              :disabled="v.jsr == null">
-                    <td>{{ v.jsr }}</td>
-                  </el-tooltip>
-                  <el-tooltip class="item" effect="dark" :content="v.jjfa" placement="top" :open-delay="500"
-                              :disabled="v.jjfa == null">
-                    <td>{{ v.jjfa }}</td>
-                  </el-tooltip>
-                  <el-tooltip class="item" effect="dark" :content="v.cjsj" placement="top" :open-delay="500"
-                              :disabled="v.cjsj == null">
-                    <td>{{ v.cjsj }}</td>
-                  </el-tooltip>
-                  <el-tooltip class="item" effect="dark" :content="v.tbrid" placement="top" :open-delay="500"
-                              :disabled="v.tbrid == null">
-                    <td>{{ v.tbrid }}</td>
-                  </el-tooltip>
-                  <el-tooltip class="item" effect="dark" :content="v.bjrid" placement="top" :open-delay="500"
-                              :disabled="v.bjrid == null">
-                    <td>{{ v.bjrid }}</td>
-                  </el-tooltip>
-                  <el-tooltip class="item" effect="dark" :content="v.jsrid" placement="top" :open-delay="500"
-                              :disabled="v.jsrid == null">
-                    <td>{{ v.jsrid }}</td>
-                  </el-tooltip>
-                </tr>
-              </table>
-            </div>
-          </div>
-          <div style="height: 50px">
-            <pagination
-              :total="total"
-              :page.sync="queryParams.pageNum"
-              :limit.sync="queryParams.pageSize"
-              @pagination="getList"
-              style="background-color: transparent;margin-right: 50px"
-            />
-          </div>
+        <el-table border v-loading="loading" height="calc(100vh - 200px)" :data="cjlsList"
+                  @selection-change="handleSelectionChange">
+          <el-table-column type="selection" width="55" align="center"/>
+          <el-table-column type="index" label="序号" align="center" width="50px"/>
+          <el-table-column show-overflow-tooltip label="创建部门科室" header-align="center" width="150px" prop="cjbmks"/>
+          <el-table-column show-overflow-tooltip label="问题名称" header-align="center" width="100px" prop="wtmc"/>
+          <el-table-column show-overflow-tooltip label="问题状态" header-align="center" width="100px" prop="wtzt"/>
+          <el-table-column show-overflow-tooltip label="问题类别" header-align="center" width="100px" prop="wtlb"/>
+          <el-table-column show-overflow-tooltip label="问题细类" header-align="center" width="100px" prop="wtxl"/>
+          <el-table-column show-overflow-tooltip label="生产订单号" header-align="center" width="120px" prop="scddh"/>
+          <el-table-column show-overflow-tooltip label="产品型号" header-align="center" width="100px" prop="cpxh"/>
+          <el-table-column show-overflow-tooltip label="件号" header-align="center" width="100px" prop="jh"/>
+          <el-table-column show-overflow-tooltip label="班产日期" header-align="center" width="120px" prop="bcrq"/>
+          <el-table-column show-overflow-tooltip label="批次" header-align="center" width="100px" prop="pc"/>
+          <el-table-column show-overflow-tooltip label="工序号" header-align="center" width="100px" prop="gxh"/>
+          <el-table-column show-overflow-tooltip label="问题描述" header-align="center" width="100px" prop="wtms"/>
+          <el-table-column show-overflow-tooltip label="设备型号" header-align="center" width="100px" prop="sbxh"/>
+          <el-table-column show-overflow-tooltip label="是否满意" header-align="center" width="100px" prop="sfmy"/>
+          <el-table-column show-overflow-tooltip label="提报人" header-align="center" width="100px" prop="tbr"/>
+          <el-table-column show-overflow-tooltip label="被叫责任科室" header-align="center" width="120px" prop="bjzrks"/>
+          <el-table-column show-overflow-tooltip label="被叫人" header-align="center" width="100px" prop="bjzrr"/>
+          <el-table-column show-overflow-tooltip label="接收时间" header-align="center" width="100px" prop="tbjssj"/>
+          <el-table-column show-overflow-tooltip label="当前时间" header-align="center" width="100px" prop="tbdqst"/>
+          <el-table-column show-overflow-tooltip label="接收人" header-align="center" width="100px" prop="jsr"/>
+          <el-table-column show-overflow-tooltip label="解决方案" header-align="center" width="100px" prop="jjfa"/>
+          <el-table-column show-overflow-tooltip label="创建时间" header-align="center" width="100px" prop="cjsj"/>
+          <el-table-column show-overflow-tooltip label="提报人ID" header-align="center" width="100px" prop="tbrid"/>
+          <el-table-column show-overflow-tooltip label="被叫人ID" header-align="center" width="100px" prop="bjrid"/>
+          <el-table-column show-overflow-tooltip label="接收人ID" header-align="center" width="100px" prop="jsrid"/>
+        </el-table>
+        <div style="height: 50px">
+          <pagination
+            :total="total"
+            :page.sync="queryParams.pageNum"
+            :limit.sync="queryParams.pageSize"
+            @pagination="getList"
+            style="background-color: transparent;margin-right: 50px"
+          />
         </div>
       </div>
     </div>
@@ -241,16 +108,22 @@
     <el-dialog title="请选择问题细类" :close-on-click-modal="false" :visible.sync="selectWtxlDialog" width="600px"
                class="selectWtxlDialog"
                append-to-body>
-      <el-table style="font-size: 18px" border v-loading="wtxlLoading" height="618px" :data="wtxlList"
+      <el-table border v-loading="wtxlLoading" v-if="wtxlLoading" height="618px" :data="this.wtlbXlList[wtlbIndex].wtxl"
                 @row-click="wtxlClick">
         <el-table-column label-class-name="wtxlLable" label="序号" align="center" type="index" width="80"/>
-        <el-table-column label-class-name="wtxlLable" show-overflow-tooltip label="问题细类" prop="name"/>
+        <el-table-column label-class-name="wtxlLable" show-overflow-tooltip label="问题细类">
+          <template slot-scope="scope">
+            <span>{{ scope.row }}</span>
+          </template>
+        </el-table-column>
       </el-table>
     </el-dialog>
     <!-- 添加提出问题对话框 -->
-    <el-dialog @close="isone = true" :close-on-click-modal="false" :visible.sync="open" width="600px" class="addDialog" append-to-body>
+    <el-dialog @close="addNewClose" :close-on-click-modal="false" :visible.sync="open" width="600px"
+               class="addDialog" append-to-body>
       <div class="dia">
-        <b style="font-size: 23px;margin: 0;text-align: center;color: black;display: inline-block;width: 100%">创建问题</b>
+        <b
+          style="font-size: 23px;margin: 0;text-align: center;color: black;display: inline-block;width: 100%">创建问题</b>
         <el-form ref="form" :model="form" :rules="rules" label-width="120px" class="underline-input">
           <el-form-item style="font-size: 20px!important;" label="问题名称：" prop="wtmc">
             <el-input style="font-size: 20px" v-model="form.wtmc" placeholder="请输入问题名称"/>
@@ -280,7 +153,7 @@
             <el-input style="font-size: 18px;color: black;pointer-events: none" v-model="form.wtlb"/>
           </el-form-item>
           <el-form-item label="问题细类：" prop="wtxl">
-            <div @click="selectWtxlDialog = true">
+            <div @click="selectWtxl">
               <el-input style="font-size: 18px;color: black;pointer-events: none" v-model="form.wtxl"/>
             </div>
           </el-form-item>
@@ -329,7 +202,6 @@
         <el-button @click="closeitDialog = false" style="margin-left: 20px">取 消</el-button>
       </span>
     </el-dialog>
-
     <!--关闭按钮弹窗-->
     <el-dialog
       class="butDialog"
@@ -357,9 +229,11 @@
         <el-button @click="handleDeleteDialog = false" style="margin-left: 30px">取 消</el-button>
       </span>
     </el-dialog>
-    <el-dialog class="dialogRad" :close-on-click-modal="false" title="启用问题处理库" width="1200px"
+    <!--查询历史答案-->
+    <el-dialog class="addDialog" :close-on-click-modal="false" title="启用问题处理库" width="1200px"
                :visible.sync="lishidaanDialog">
-      <zdhf ref="lishidaanDialog" @xiangxixinxi="xiangxixinxi" @dialogCreatedQuestion="submitForm" v-if="lishidaanDialog" :form="form"></zdhf>
+      <zdhf ref="lishidaanDialog" @xiangxixinxi="xiangxixinxi" @dialogCreatedQuestion="submitForm"
+            v-if="lishidaanDialog" :form="form"></zdhf>
     </el-dialog>
     <!--详细信息弹窗-->
     <el-dialog class="zdhfDialog" :close-on-click-modal="false" @close="shifoumanyi" title="详细信息"
@@ -432,7 +306,6 @@
         <el-table-column type="selection" width="55" align="center"/>
         <el-table-column label="序号" align="center" type="index" width="50"/>
         <el-table-column show-overflow-tooltip label="按钮名" align="center" prop="butname"/>
-        <el-table-column show-overflow-tooltip label="图片名" align="center" prop="imgname"/>
         <el-table-column show-overflow-tooltip width="50px" label="排序" align="center" prop="px"/>
         <el-table-column show-overflow-tooltip label="操作" width="150px" align="center">
           <template slot-scope="scope">
@@ -460,9 +333,6 @@
         <el-form-item label="按钮名" prop="butname">
           <el-input v-model="anglForm.butname" placeholder="请输入按钮名"/>
         </el-form-item>
-        <el-form-item label="图片名" prop="imgname">
-          <el-input v-model="anglForm.imgname" placeholder="请输入图片名"/>
-        </el-form-item>
         <el-form-item label="排序" prop="px">
           <el-input v-model.number="anglForm.px" placeholder="请输入排序"/>
         </el-form-item>
@@ -486,28 +356,33 @@ import {
   addCjls,
   delCjls,
   changewtzt,
-  updateDaccToRd
+  updateDaccToRd,
+  getWtlbXlList
 } from "@/api/question/upQuestion.js";
 import {getJhjlByWtid, getwtxlMethod} from "@/api/question/question";
 import zdhf from "@/views/question/myquestion/znwdDialog"
-import treeTransfer from 'el-tree-transfer'; // 引入
+import treeTransfer from 'el-tree-transfer';
 import xiangxixinxi from "@/views/question/myquestion/xiangxixinxi";
+import Button from "@/views/question/soundModule/Button";
 
 export default {
   name: "Cjls",
   components: {
+    Button,
     treeTransfer, zdhf, xiangxixinxi
   },
   data() {
     return {
+      wtlbXlList: [],//问题类别细类列表
+      wtlbIndex: 0,//选中问题类别下标
+      showWtlb: true,//是否显示问题类别按钮
       // 问题类别列表
       wtxlList: [],
       //问题细类列表遮罩层
       wtxlLoading: false,
       //选择问题细类弹窗
       selectWtxlDialog: false,
-
-
+      //防止多次点击
       isone: true,
       //按钮
       buttons: [],
@@ -532,9 +407,6 @@ export default {
           {required: true, message: '排序不能为空'},
           {type: 'number', message: '排序必须为数字值'}
         ],
-        butname: [
-          {required: true, message: '按钮名不能为空'}
-        ],
         imgname: [
           {required: true, message: '图片名不能为空'}
         ],
@@ -546,6 +418,7 @@ export default {
       jhsjList: [],//交互数据的数据集合
       lishidaanDialog: false,
       backgroundImageUrl: require('@/assets/questionIcons/背景.png'),
+      loading: false,//遮罩层
       // 选中数组
       ids: [],
       //选中数据
@@ -599,10 +472,24 @@ export default {
   },
   created() {
     this.getList();
-    this.getUpButtons();
+    this.getWtlbXlList()
   },
 
   methods: {
+    //新增弹窗关闭方法
+    addNewClose(){
+      this.isone = true
+      this.reset()
+    },
+    selectWtxl() {
+      this.selectWtxlDialog = true
+    },
+    //获取问题类别细类列表
+    getWtlbXlList() {
+      getWtlbXlList().then(response => {
+        this.wtlbXlList = response.rows
+      })
+    },
 
     //获取按钮列表
     getUpButtons() {
@@ -614,6 +501,11 @@ export default {
     },
     //按钮管理按钮
     angl() {
+      this.anglLoading = true
+      getUpButtons().then(response => {
+        this.buttons = response.rows
+        this.anglLoading = false
+      })
       this.anglDialog = true
     },
     //按钮管理新增按钮
@@ -723,6 +615,7 @@ export default {
     },
     // 查询提出问题列表
     getList() {
+      this.loading = true
       listCjls(this.queryParams).then(response => {
         this.cjlsList = response.rows;
         this.total = response.total;
@@ -737,12 +630,13 @@ export default {
           v.tbdqst = minutesDifference.toString() + "天"
         })
         //补充空值
-        if (this.cjlsList.length < this.queryParams.pageSize) {
+        /*if (this.cjlsList.length < this.queryParams.pageSize) {
           for (let i = this.cjlsList.length; i < this.queryParams.pageSize; i++) {
             const item = {}
             this.cjlsList.push(item)
           }
-        }
+        }*/
+        this.loading = false
       });
     },
     // 弹框内取消按钮
@@ -766,10 +660,6 @@ export default {
       changewtzt(data, '取消').then(() => {
         this.getList();
         this.$message.success("取消成功");
-        this.selectedRows = []
-        this.ids = this.selectedRows.map(item => item.lsid)
-        this.multiple = this.selectedRows.length === 0
-        this.single = this.selectedRows.length !== 1
         this.cancelWtztDialog = false
       })
     },
@@ -799,10 +689,6 @@ export default {
       changewtzt(data, str).then(response => {
         this.$message.success(str + "!");
         this.getList();
-        this.selectedRows = []
-        this.ids = this.selectedRows.map(item => item.lsid)
-        this.multiple = this.selectedRows.length === 0
-        this.single = this.selectedRows.length !== 1
         this.closeitDialog = false
         this.closeJSDialog = false
       })
@@ -837,49 +723,29 @@ export default {
         jsrid: null,
         cjbmks: null,
         wtmc: null,
-        wtlb: null,
         wtxl: null,
+        wtlb: this.form.wtlb
       };
-      this.resetForm("form");
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.lsid)
       this.selectedRows = selection.map(item => item)
-      this.multiple = selection.length === 0
       this.single = selection.length !== 1
-    },
-    //全选
-    selectAllRows() {
-      if (this.selectAll) {
-        // 全选
-        this.selectedRows = this.cjlsList.map(v => v);
-        this.ids = this.cjlsList.map(item => item.lsid)
-        this.multiple = this.selectedRows.length === 0
-        this.single = this.selectedRows.length !== 1
-      } else {
-        // 取消全选
-        this.selectedRows = [];
-        this.ids = [];
-        this.multiple = this.selectedRows.length === 0
-        this.single = this.selectedRows.length !== 1
-      }
+      this.multiple = !selection.length
     },
     //新建按钮打开问题细类选择
     addNew(value) {
-      if (value === '待确认') {
+      if (value === '待确认' || value === '未确认') {
         return;
       }
-      this.reset();
       this.form.wtlb = value
-      this.wtxlLoading = true
-      this.wtxlMethod()
-      this.selectWtxlDialog = true
-    },
-    //问题细类选择后打开创建弹窗
-    selectWtxl() {
-      this.open = true;
-      this.selectWtxlDialog = false
+      this.wtlbXlList.forEach((v, i) => {
+        if (v.wtlb === value) {
+          this.wtlbIndex = i
+        }
+      })
+      this.showWtlb = false
     },
     //问题细类的获得方法
     wtxlMethod() {
@@ -892,13 +758,15 @@ export default {
             this.wtxlList.push({name: wtxl})
           }
           this.wtxlLoading = false
+
         }
       })
     },
     //问题细类单击触发
-    wtxlClick(row) {
-      this.form.wtxl = row.name
-      this.selectWtxl()
+    wtxlClick(wtxl) {
+      this.form.wtxl = wtxl
+      this.open = true;
+      this.selectWtxlDialog = false
     },
     // 提交按钮
     submitForm() {
@@ -914,7 +782,7 @@ export default {
             this.open = false;
             this.getList();
             this.isone = true
-          }).catch(response=>{
+          }).catch(response => {
             this.isone = true
           })
         }
@@ -930,10 +798,6 @@ export default {
       delCjls(LSIDs).then(() => {
         this.getList();
         this.$message.success("删除成功");
-        this.selectedRows = []
-        this.ids = this.selectedRows.map(item => item.lsid)
-        this.multiple = this.selectedRows.length === 0
-        this.single = this.selectedRows.length !== 1
         this.handleDeleteDialog = false
       })
     },
@@ -945,30 +809,104 @@ export default {
 };
 </script>
 <style>
-/* css  鼠标悬浮时 */
-.selectWtxlDialog .el-table--enable-row-hover .el-table__body tr:hover > td {
-  background-color: rgba(161, 155, 155, 0.56) !important;
+
+
+/*主*/
+.upcontainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%; /* 使用视口宽度单位 */
+  height: 100%; /* 使用视口高度单位 */
 }
 
-.selectWtxlDialog .wtxlLable {
-  font-size: 18px;
-  height: 23px;
+.upcontainer .outer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  width: 100%;
+  height: 100%;
 }
 
-.selectWtxlDialog .el-dialog {
-  border-radius: 30px;
+/*左div*/
+.upcontainer .left-side {
+  float: left; /* 左侧浮动 */
+  height: 98%;
+  overflow: auto;
+  width: 400px;
+  display: inline-block;
+  padding: 15px 15px 15px 15px;
 }
 
-.selectWtxlDialog .el-dialog__close {
-  font-size: 30px; /* 调整按钮大小 */
+/*右div*/
+.upcontainer .right-side {
+  width: calc(100% - 400px);
+  flex: 1;
+  padding: 5px 20px 20px 1px;
 }
 
-.selectWtxlDialog .el-dialog__headerbtn .el-dialog__close {
-  color: red;
+/*问题类别问题细类按钮样式*/
+.addWtlbButtonDiv {
+  width: 123px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  position: relative;
 }
 
-.selectWtxlDialog .el-dialog__body {
-  padding-top: 0
+.addWtlbButton {
+  font-size: 16px;
+  width: 110px;
+  height: 120px;
+  background: #3498db;
+  position: relative;
+  border: none;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  color: white;
+  transition-duration: 0.1s;
+}
+
+/*按钮鼠标悬浮效果*/
+.addWtlbButton:hover {
+  transform: scale(1.1);
+}
+/*问题类别问题细类过度动画*/
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s;
+}
+
+.fade-enter,
+.fade-leave-to /* .fade-leave-active 在Vue 2.1.8以及之前版本中可用 */
+{
+  opacity: 0;
+}
+
+/*表格*/
+.upcontainer tr {
+  text-align: center;
+}
+
+/*页数签*/
+.upcontainer .pagination-container {
+  margin: 0 !important;
+  margin-right: 50px !important;
+}
+
+.outer td {
+  max-width: 150px;
+  height: 45px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dia td {
+  height: 40px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .anglDialog .el-dialog:not(.is-fullscreen) {
@@ -1023,68 +961,6 @@ export default {
   color: red;
 }
 
-/*主*/
-.upcontainer {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%; /* 使用视口宽度单位 */
-  height: 100%; /* 使用视口高度单位 */
-}
-
-.upcontainer .outer {
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: flex;
-  width: 100%;
-  height: 100%;
-}
-
-/*左div*/
-.upcontainer .left-side {
-  float: left; /* 左侧浮动 */
-  height: 98%;
-  overflow: auto;
-  width: 400px;
-  display: inline-block;
-  padding: 15px;
-}
-
-/*右div*/
-.upcontainer .right-side {
-  width: calc(100% - 400px);
-  flex: 1;
-  padding: 20px;
-  padding-top: 5px;
-}
-
-/*表格*/
-.upcontainer tr {
-  text-align: center;
-}
-
-/*页数签*/
-.upcontainer .pagination-container {
-  margin: 0 !important;
-  margin-right: 50px !important;
-}
-
-.outer td {
-  max-width: 150px;
-  height: 45px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.dia td {
-  height: 40px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 /*按钮中的字*/
 .art-text {
   position: absolute;
@@ -1103,25 +979,6 @@ export default {
   left: 38px;
   z-index: 1;
   width: 85px
-}
-
-/* 隐藏垂直滚动条 */
-.outer ::-webkit-scrollbar {
-  width: 8px; /* 设置滚动条的宽度 */
-  height: 8px;
-}
-
-.outer ::-webkit-scrollbar-track {
-  background-color: transparent; /* 设置滚动条轨道的背景色为透明 */
-}
-
-.outer ::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.3); /* 设置滚动条的颜色和透明度 */
-  border-radius: 4px; /* 设置滚动条的边框半径 */
-}
-
-.outer ::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(255, 255, 255, 0.5); /* 设置鼠标悬停时滚动条的颜色和透明度 */
 }
 
 .underline-input .el-input__inner {
@@ -1211,23 +1068,8 @@ export default {
   padding: 0 20px;
 }
 
-.upcontainer .el-pagination__total, .el-pagination__jump {
-  color: #a9a9a9;
-}
-
-</style>
-<style scoped>
-/*悬浮改变*/
-/*未选中按钮*/
-.yes-button-css{
-  display: none;
-}
-/*未选中按钮被指中时*/
-.tongyong-div-hover:hover .yes-button-css{
-  display: inline-block;
-}
-/*选中按钮被指中时*/
-.tongyong-div-hover:hover .no-button-css{
-  display: none;
+.selectWtxlDialog .wtxlLable {
+  height: 25px;
+  font-size: 18px
 }
 </style>

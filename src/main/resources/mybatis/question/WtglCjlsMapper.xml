@@ -205,6 +205,7 @@
             <if test="wtglDacc.GXH != null  and wtglDacc.GXH != ''">and GXH = #{wtglDacc.GXH}</if>
             <if test="wtglDacc.CPXH != null  and wtglDacc.CPXH != ''">and CPXH = #{wtglDacc.CPXH}</if>
             <if test="wtglDacc.JH != null  and wtglDacc.JH != ''">and JH = #{wtglDacc.JH}</if>
+            <if test="wtglDacc.DEPTID != null  and wtglDacc.DEPTID != ''">and DEPTID = #{wtglDacc.DEPTID}</if>
         </where>
         order by RD desc
     </select>
@@ -329,6 +330,19 @@
         where WTLB = #{wtglCjls.WTLB}
           and WTXL = #{wtglCjls.WTXL}
           and DEPTID = #{deptId}
+    </select>
+    <resultMap id="wtlbXlList" type="com.ruoyi.project.question.domain.vo.WtlbXlVO">
+        <result property="WTLB" column="BUTNAME"/>
+        <collection property="WTXL" ofType="String">
+            <constructor>
+                <arg column="CJD"/>
+            </constructor>
+        </collection>
+    </resultMap>
+    <select id="getWtlbXlList" resultMap="wtlbXlList">
+        select BUTNAME, CJD
+        from WTGL_UPBUTTON BUT
+                 left join WTGL_YWZD WY on BUT.BUTNAME = WY.ZJD
     </select>
     <insert id="insertWtglCjls" parameterType="WtglCjls">
         insert into WTGL_CJLS

@@ -28,4 +28,5 @@ public class DaccVO {
     private String GXMC;             //工序名称
     private String JH;             //件号
     private String CPXH;             //产品型号
+    private String DEPTID;             //部门id
 }

@@ -4,6 +4,7 @@ import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.project.question.domain.*;
 import com.ruoyi.project.question.domain.vo.DaccVO;
 import com.ruoyi.project.question.domain.vo.NumberVO;
+import com.ruoyi.project.question.domain.vo.WtlbXlVO;
 import com.ruoyi.project.question.domain.vo.WtxxVo;
 import com.ruoyi.project.question.mapper.QuestionMapper;
 import com.ruoyi.project.question.mapper.WtglCjlsMapper;
@@ -14,6 +15,7 @@ import com.ruoyi.project.system.domain.SysDept;
 import com.ruoyi.project.system.domain.SysUser;
 import com.ruoyi.project.system.mapper.SysDeptMapper;
 import com.ruoyi.project.system.mapper.SysUserMapper;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -397,6 +399,7 @@ public class WtglCjlsServiceImpl implements IWtglCjlsService {
      */
     @Override
     public List<WtglDacc> listDaccToZN(WtglDacc wtglDacc) {
+        wtglDacc.setDEPTID(SecurityUtils.getDeptId().toString());
         return wtglCjlsMapper.listDaccToZN(wtglDacc);
     }
 
@@ -447,6 +450,15 @@ public class WtglCjlsServiceImpl implements IWtglCjlsService {
     @Override
     public int delangl(String[] xhs) {
         return wtglCjlsMapper.delangl(xhs);
+    }
+
+    /**
+     * 获取问题类别细类
+     */
+    @Override
+    public List<WtlbXlVO> getWtlbXlList() {
+        List<WtlbXlVO> list = wtglCjlsMapper.getWtlbXlList();
+        return list;
     }
 
     /**

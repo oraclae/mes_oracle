@@ -1,6 +1,14 @@
 import request from '@/utils/request'
 
 // 查询提出问题列表
+export function getWtlbXlList() {
+  return request({
+    url: '/myjob/cjls/getWtlbXlList',
+    method: 'get'
+  })
+}
+
+// 查询提出问题列表
 export function listCjls(query) {
   return request({
     url: '/myjob/cjls/list',

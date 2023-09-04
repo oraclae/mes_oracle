@@ -165,7 +165,8 @@
         DAXXID,
         CPXH,
         JH,
-        RD)
+        RD,
+        DEPTID)
         VALUES
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="dacc.WTID != null">#{dacc.WTID},</if>
@@ -204,6 +205,8 @@
             <if test="dacc.JH == null">null,</if>
             <if test="dacc.RD != null">#{dacc.RD},</if>
             <if test="dacc.RD == null">null,</if>
+            <if test="dacc.DEPTID != null">#{dacc.DEPTID},</if>
+            <if test="dacc.DEPTID == null">null,</if>
         </trim>
     </insert>
     <insert id="createZRDB">

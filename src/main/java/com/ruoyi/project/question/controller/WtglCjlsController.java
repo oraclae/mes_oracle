@@ -7,6 +7,7 @@ import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.framework.web.page.TableDataInfo;
 import com.ruoyi.project.question.domain.*;
 import com.ruoyi.project.question.domain.vo.NumberVO;
+import com.ruoyi.project.question.domain.vo.WtlbXlVO;
 import com.ruoyi.project.question.domain.vo.WtxxVo;
 import com.ruoyi.project.question.service.IWtglCjlsService;
 import com.ruoyi.project.system.domain.SysUser;
@@ -28,6 +29,16 @@ public class WtglCjlsController extends BaseController
 {
     @Autowired
     private IWtglCjlsService wtglCjlsService;
+
+    /**
+     * 获取问题类别细类
+     */
+    @GetMapping("/getWtlbXlList")
+    public TableDataInfo getWtlbXlList()
+    {
+        List<WtlbXlVO> list = wtglCjlsService.getWtlbXlList();
+        return getDataTable(list);
+    }
 
     /**
      * 查询提出问题列表
@@ -195,7 +206,6 @@ public class WtglCjlsController extends BaseController
     {
         startPage();
         List<WtglDacc> list = wtglCjlsService.listDaccToZN(wtglDacc);
-        System.out.println(list);
         return getDataTable(list);
     }
 

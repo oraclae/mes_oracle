@@ -1,40 +1,37 @@
 <template>
-  <div class="downcontainer"
-       :style="{backgroundImage: 'url(' + backgroundImageUrl + ')', backgroundSize: 'cover', backgroundPosition: 'center' }">
+  <div class="downcontainer">
     <div class="left-side">
       <div style="width: 100%;height: 100%">
         <el-row :gutter="10"
-                style="text-align: center;color: white;margin-top: 20px;cursor: default;margin-left: 40px">
+                style="text-align: center;margin-top: 20px;cursor: default;margin-left: 40px">
           <el-col :span="12">
-            <div style="position: relative;width: 80%;color: rgb(0 255 48);">
-              <img
-                :src="require('@/assets/questionIcons/数量.png')"
-                style="width: 100%"
-              />
-              <b style="font-size: 22px">完成数量</b>
+            <div style="width: 80%;color: rgb(0 255 48);">
               <b
-                style="position: absolute;width: 100%;top: 0;left: 0;font-size: 46px;text-shadow: rgb(0 86 255) 2px 2px 4px">{{
+                style="width: 100%;top: 0;left: 0;font-size: 46px;text-shadow: rgb(0 86 255) 2px 2px 4px">{{
                   this.wcsl
                 }}</b>
+              <br>
+              <div style="margin-top: 10px">
+                <b style="font-size: 25px;color: black">完成数量</b>
+              </div>
             </div>
           </el-col>
           <el-col :span="12">
-            <div style="position: relative;width: 80%;color: rgb(255 40 40)">
-              <img
-                :src="require('@/assets/questionIcons/数量.png')"
-                style="width: 100%"
-              />
-              <b style="font-size: 22px">未完成数量</b>
+            <div style="width: 80%;color: rgb(255 40 40)">
               <b
-                style="position: absolute;width: 100%;top: 0;left: 0;font-size: 46px;text-shadow: rgb(140 0 255) 2px 2px 4px">{{
+                style="width: 100%;top: 0;left: 0;font-size: 46px;text-shadow: rgb(140 0 255) 2px 2px 4px">{{
                   this.wwcsl
                 }}</b>
+              <br>
+              <div style="margin-top: 10px">
+                <b style="font-size: 25px;color: black">未完成数量</b>
+              </div>
             </div>
           </el-col>
         </el-row>
         <div>
-          <div id="piechart" style="width: 100%;height: 300px;bottom: 30px"/>
-          <div id="histogram" style="width:100%;height: 470px;bottom: 60px"/>
+          <div id="piechart" style="width: 100%;height: 300px"/>
+          <div id="histogram" style="width:100%;height: 470px"/>
         </div>
       </div>
     </div>
@@ -50,203 +47,75 @@
             </el-button>
             <el-button
               type="primary"
-              :disabled="multiple"
+              :disabled="single"
               @click="receive"
             >接收按钮
             </el-button>
             <el-button
               type="success"
-              :disabled="multiple"
+              :disabled="single"
               @click="solve"
             >解决方案
             </el-button>
           </el-col>
           <el-col :span="13">
-            <b style="color: white;font-size: 20px">现场配合问题</b>
+            <b style="font-size: 20px">现场配合问题</b>
           </el-col>
         </el-row>
-
       </div>
-      <div class="r-tworow" style="height: calc((100% - 36px - 36px - 30px)*0.4)">
-        <div
-          style="width: 100%;max-height: calc(100% - 50px); overflow-x: auto;">
-          <div style="width: auto; height: auto;">
-            <table border="1"
-                   style="table-layout: fixed; border-collapse: collapse; color: white;border-color: #00A9FF;min-width: 100%">
-              <tr>
-                <th style="min-width: 45px">
-                  <input style="width: 20px; height: 20px;" type="checkbox" v-model="selectAll"
-                         @change="selectAllRows"/>
-                </th>
-                <th style="min-width: 80px">序号</th>
-                <th style="min-width: 110px">展示</th>
-                <th style="min-width: 110px">创建部门科室</th>
-                <th style="min-width: 100px;height: 45px">问题名称</th>
-                <th style="min-width: 100px;height: 45px">问题类别</th>
-                <th style="min-width: 100px;height: 45px">问题细类</th>
-                <th style="min-width: 100px;height: 45px">问题状态</th>
-                <th style="min-width: 120px">生产订单号</th>
-                <!--                <th style="min-width: 100px">产品型号</th>-->
-                <th style="min-width: 100px">产品型号</th>
-                <th style="min-width: 100px">件号</th>
-                <th style="min-width: 100px">班产日期</th>
-                <th style="min-width: 100px">批次</th>
-                <th style="min-width: 100px">工序号</th>
-<!--                <th style="min-width: 100px">工序名称</th>-->
-                <th style="min-width: 100px">问题描述</th>
-                <th style="min-width: 100px">设备型号</th>
-                <th style="min-width: 100px">是否满意</th>
-                <th style="min-width: 100px">提报人</th>
-                <th style="min-width: 110px">被叫责任科室</th>
-                <th style="min-width: 100px">被叫人</th>
-                <th style="min-width: 120px">提报-接收时间</th>
-                <th style="min-width: 120px">提报-当前时间</th>
-                <th style="min-width: 100px">接收人</th>
-                <th style="min-width: 100px">解决方案</th>
-                <th style="min-width: 100px">创建时间</th>
-                <th style="min-width: 100px">提报人ID</th>
-                <th style="min-width: 100px">被叫人ID</th>
-                <th style="min-width: 100px">接收人ID</th>
-              </tr>
-              <tr v-for="(v , i) in downQuestionList" :key="i">
-                <td>
-                  <input style="color: #00DD77; width: 20px; height: 20px;" type="checkbox" v-model="selectedRows"
-                         @change="handleSelectionChange(selectedRows)"
-                         :value="v"/>
-                </td>
-                <td>{{ i + 1 }}</td>
-                <td>
-                  <div
-                    v-if="v.wtzt === '已完成' || v.wtzt === '确认已完成' || v.wtzt === '提交' || v.wtzt === '接收' && (v.jjfa == null || v.jjfa === '')">
-                    <img
-                      style="width: 40px"
-                      v-if="v.wtzt === '提交'"
-                      :src="require('@/assets/questionIcons/红灯.png')"
-                    />
-                    <img
-                      style="width: 40px"
-                      v-if="v.wtzt === '接收' && (v.jjfa == null || v.jjfa === '')"
-                      :src="require('@/assets/questionIcons/黄灯.png')"
-                    />
-                  </div>
-                  <img
-                    style="width: 40px"
-                    v-else
-                    :src="require('@/assets/questionIcons/绿灯.png')"
-                  />
-                </td>
-                <el-tooltip class="item" effect="dark" :content="v.cjbmks" placement="top" :open-delay="500"
-                            :disabled="v.cjbmks == null">
-                  <td>{{ v.cjbmks }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.wtmc" placement="top" :open-delay="500"
-                            :disabled="v.wtmc == null">
-                  <td>{{ v.wtmc }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.wtlb" placement="top" :open-delay="500"
-                            :disabled="v.wtlb == null">
-                  <td>{{ v.wtlb }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.wtxl" placement="top" :open-delay="500"
-                            :disabled="v.wtxl == null">
-                  <td>{{ v.wtxl }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.wtzt" placement="top" :open-delay="500"
-                            :disabled="v.wtzt == null">
-                  <td>{{ v.wtzt }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.scddh" placement="top" :open-delay="500"
-                            :disabled="v.scddh == null">
-                  <td>{{ v.scddh }}</td>
-                </el-tooltip>
-                <!--                <el-tooltip class="item" effect="dark" :content="v.cpxh" placement="top" :open-delay="500"
-                                            :disabled="v.cpxh == null">
-                                  <td>{{ v.cpxh }}</td>
-                                </el-tooltip>-->
-                <el-tooltip class="item" effect="dark" :content="v.cpxh" placement="top" :open-delay="500"
-                            :disabled="v.cpxh == null">
-                  <td>{{ v.cpxh }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.jh" placement="top" :open-delay="500"
-                            :disabled="v.jh == null">
-                  <td>{{ v.jh }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.bcrq" placement="top" :open-delay="500"
-                            :disabled="v.bcrq == null">
-                  <td>{{ v.bcrq }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.pc" placement="top" :open-delay="500"
-                            :disabled="v.pc == null">
-                  <td>{{ v.pc }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.gxh" placement="top" :open-delay="500"
-                            :disabled="v.gxh == null">
-                  <td>{{ v.gxh }}</td>
-                </el-tooltip>
-<!--                <el-tooltip class="item" effect="dark" :content="v.gxmc" placement="top" :open-delay="500"
-                            :disabled="v.gxmc == null">
-                  <td>{{ v.gxmc }}</td>
-                </el-tooltip>-->
-                <el-tooltip class="item" effect="dark" :content="v.wtms" placement="top" :open-delay="500"
-                            :disabled="v.wtms == null">
-                  <td>{{ v.wtms }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.sbxh" placement="top" :open-delay="500"
-                            :disabled="v.sbxh == null">
-                  <td>{{ v.sbxh }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.sfmy" placement="top" :open-delay="500"
-                            :disabled="v.sfmy == null">
-                  <td>{{ v.sfmy }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.tbr" placement="top" :open-delay="500"
-                            :disabled="v.tbr == null">
-                  <td>{{ v.tbr }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.bjzrks" placement="top" :open-delay="500"
-                            :disabled="v.bjzrks == null">
-                  <td>{{ v.bjzrks }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.bjzrr" placement="top" :open-delay="500"
-                            :disabled="v.bjzrr == null">
-                  <td>{{ v.bjzrr }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.tbjssj" placement="top" :open-delay="500"
-                            :disabled="v.tbjssj == null">
-                  <td>{{ v.tbjssj }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.tbdqst" placement="top" :open-delay="500"
-                            :disabled="v.tbdqst == null">
-                  <td>{{ v.tbdqst }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.jsr" placement="top" :open-delay="500"
-                            :disabled="v.jsr == null">
-                  <td>{{ v.jsr }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.jjfa" placement="top" :open-delay="500"
-                            :disabled="v.jjfa == null">
-                  <td>{{ v.jjfa }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.cjsj" placement="top" :open-delay="500"
-                            :disabled="v.cjsj == null">
-                  <td>{{ v.cjsj }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.tbrid" placement="top" :open-delay="500"
-                            :disabled="v.tbrid == null">
-                  <td>{{ v.tbrid }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.bjrid" placement="top" :open-delay="500"
-                            :disabled="v.bjrid == null">
-                  <td>{{ v.bjrid }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.jsrid" placement="top" :open-delay="500"
-                            :disabled="v.jsrid == null">
-                  <td>{{ v.jsrid }}</td>
-                </el-tooltip>
-              </tr>
-            </table>
-          </div>
-        </div>
+      <div class="r-tworow" style="height: calc((100% - 36px - 36px - 30px)*0.5)">
+        <el-table border v-loading="downQuestionLoading" height="calc(50vh - 150px)" :data="downQuestionList"
+                  @selection-change="handleSelectionChange">
+          <el-table-column type="selection" width="55" align="center"/>
+          <el-table-column type="index" label="序号" align="center" width="50px"/>
+          <el-table-column show-overflow-tooltip label="展示" header-align="center" width="50px">
+            <template slot-scope="scope">
+              <div
+                v-if="scope.row.wtzt === '已完成' || scope.row.wtzt === '确认已完成' || scope.row.wtzt === '提交' || scope.row.wtzt === '接收' && (scope.row.jjfa == null || scope.row.jjfa === '')">
+                <img
+                  style="width: 30px;margin-top: 4px"
+                  v-if="scope.row.wtzt === '提交'"
+                  :src="require('@/assets/questionIcons/红灯.png')"
+                />
+                <img
+                  style="width: 30px;margin-top: 4px"
+                  v-if="scope.row.wtzt === '接收' && (scope.row.jjfa == null || scope.row.jjfa === '')"
+                  :src="require('@/assets/questionIcons/黄灯.png')"
+                />
+              </div>
+              <img
+                style="width: 30px;margin-top: 4px"
+                v-else
+                :src="require('@/assets/questionIcons/绿灯.png')"
+              />
+            </template>
+          </el-table-column>
+          <el-table-column show-overflow-tooltip label="创建部门科室" header-align="center" width="150px" prop="cjbmks"/>
+          <el-table-column show-overflow-tooltip label="问题名称" header-align="center" width="150px" prop="wtmc"/>
+          <el-table-column show-overflow-tooltip label="问题类别" header-align="center" width="150px" prop="wtlb"/>
+          <el-table-column show-overflow-tooltip label="问题细类" header-align="center" width="150px" prop="wtxl"/>
+          <el-table-column show-overflow-tooltip label="问题状态" header-align="center" width="150px" prop="wtzt"/>
+          <el-table-column show-overflow-tooltip label="生产订单号" header-align="center" width="150px" prop="scddh"/>
+          <el-table-column show-overflow-tooltip label="产品型号" header-align="center" width="150px" prop="cpxh"/>
+          <el-table-column show-overflow-tooltip label="件号" header-align="center" width="150px" prop="jh"/>
+          <el-table-column show-overflow-tooltip label="班产日期" header-align="center" width="150px" prop="bcrq"/>
+          <el-table-column show-overflow-tooltip label="批次" header-align="center" width="150px" prop="pc"/>
+          <el-table-column show-overflow-tooltip label="工序号" header-align="center" width="150px" prop="gxh"/>
+          <el-table-column show-overflow-tooltip label="问题描述" header-align="center" width="150px" prop="wtms"/>
+          <el-table-column show-overflow-tooltip label="设备型号" header-align="center" width="150px" prop="sbxh"/>
+          <el-table-column show-overflow-tooltip label="是否满意" header-align="center" width="150px" prop="sfmy"/>
+          <el-table-column show-overflow-tooltip label="提报人" header-align="center" width="150px" prop="tbr"/>
+          <el-table-column show-overflow-tooltip label="被叫责任科室" header-align="center" width="150px" prop="bjzrks"/>
+          <el-table-column show-overflow-tooltip label="被叫人" header-align="center" width="150px" prop="bjzrr"/>
+          <el-table-column show-overflow-tooltip label="接收时间" header-align="center" width="150px" prop="tbjssj"/>
+          <el-table-column show-overflow-tooltip label="当前时间" header-align="center" width="150px" prop="tbdqst"/>
+          <el-table-column show-overflow-tooltip label="接收人" header-align="center" width="150px" prop="jsr"/>
+          <el-table-column show-overflow-tooltip label="解决方案" header-align="center" width="150px" prop="jjfa"/>
+          <el-table-column show-overflow-tooltip label="创建时间" header-align="center" width="150px" prop="cjsj"/>
+          <el-table-column show-overflow-tooltip label="提报人ID" header-align="center" width="150px" prop="tbrid"/>
+          <el-table-column show-overflow-tooltip label="被叫人ID" header-align="center" width="150px" prop="bjrid"/>
+          <el-table-column show-overflow-tooltip label="接收人ID" header-align="center" width="150px" prop="jsrid"/>
+        </el-table>
         <div style="height: 50px">
           <pagination
             :total="total"
@@ -280,152 +149,47 @@
             </el-button>
           </el-col>
           <el-col :span="13">
-            <b style="color: white;font-size: 20px">跟踪协同问题</b>
+            <b style="font-size: 20px">跟踪协同问题</b>
           </el-col>
         </el-row>
       </div>
-      <div class="r-fourrow" style="height: calc((100% - 36px - 36px - 30px)*0.6)">
-        <div
-          style="width: 100%;max-height: calc(100% - 50px); overflow-x: auto;">
-          <div style="width: auto; height: auto;">
-            <table border="1"
-                   style="table-layout: fixed; border-collapse: collapse; color: white;border-color: #00A9FF;min-width: 100%">
-              <tr>
-                <th style="min-width: 45px">
-                  <input style="width: 20px; height: 20px;" type="checkbox" v-model="ywcjselectAll"
-                         @change="ywcjselectAllRows"/>
-                </th>
-                <th style="min-width: 80px;height: 45px">序号</th>
-                <th style="min-width: 80px;height: 45px">关注</th>
-                <th style="min-width: 140px;height: 45px">我的问题待办数量</th>
-                <th style="min-width: 100px">问题编号</th>
-                <th style="min-width: 100px">人员</th>
-                <th style="min-width: 100px">部门</th>
-                <th style="min-width: 100px">问题名称</th>
-                <th style="min-width: 100px">工序号</th>
-                <th style="min-width: 110px">问题创建时间</th>
-                <th style="min-width: 100px">生产订单号</th>
-                <th style="min-width: 100px">产品型号</th>
-                <th style="min-width: 100px">问题来源</th>
-                <th style="min-width: 100px">问题类别</th>
-                <th style="min-width: 100px">问题细类</th>
-                <th style="min-width: 100px">问题描述</th>
-                <th style="min-width: 100px">责任部门</th>
-                <th style="min-width: 100px">责任人</th>
-                <th style="min-width: 100px">重要程度</th>
-                <th style="min-width: 110px">希望解决时间</th>
-                <th style="min-width: 100px">升级责任人</th>
-                <th style="min-width: 100px">问题状态</th>
-                <th style="min-width: 100px">接收时间</th>
-                <th style="min-width: 100px">解决时间/时</th>
-                <th style="min-width: 110px">是否例行反馈</th>
-              </tr>
-              <tr v-for="(v , i) in ywcjList" :key="i">
-                <td>
-                  <input style="color: #00DD77; width: 20px; height: 20px;" type="checkbox" v-model="ywcjselectedRows"
-                         @change="ywcjSelectionChange(ywcjselectedRows)"
-                         :value="v"/>
-                </td>
-                <td>{{ i + 1 }}</td>
-                <td>
-                  <img
-                    v-if="v.sfgz"
-                    style="width: 35px"
-                    :src="require('@/assets/questionIcons/红旗子.png')"
-                  />
-                </td>
-                <el-tooltip class="item" effect="dark" :content="v.wtdb.toString()" placement="top" :open-delay="500"
-                            :disabled="v.wtdb == null">
-                  <td>{{ v.wtdb }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.wtbh" placement="top" :open-delay="500"
-                            :disabled="v.wtbh == null">
-                  <td>{{ v.wtbh }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.cjr" placement="top" :open-delay="500"
-                            :disabled="v.cjr == null">
-                  <td>{{ v.cjr }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.cjbm" placement="top" :open-delay="500"
-                            :disabled="v.cjbm == null">
-                  <td>{{ v.cjbm }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.wtmc" placement="top" :open-delay="500"
-                            :disabled="v.wtmc == null">
-                  <td>{{ v.wtmc }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.gxh" placement="top" :open-delay="500"
-                            :disabled="v.gxh == null">
-                  <td>{{ v.gxh }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.cjsj" placement="top" :open-delay="500"
-                            :disabled="v.cjsj == null">
-                  <td>{{ v.cjsj }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.scddh" placement="top" :open-delay="500"
-                            :disabled="v.scddh == null">
-                  <td>{{ v.scddh }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.cpxh" placement="top" :open-delay="500"
-                            :disabled="v.cpxh == null">
-                  <td>{{ v.cpxh }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.wtly" placement="top" :open-delay="500"
-                            :disabled="v.wtly == null">
-                  <td>{{ v.wtly }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.wtlb" placement="top" :open-delay="500"
-                            :disabled="v.wtlb == null">
-                  <td>{{ v.wtlb }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.wtxl" placement="top" :open-delay="500"
-                            :disabled="v.wtxl == null">
-                  <td>{{ v.wtxl }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.wtms" placement="top" :open-delay="500"
-                            :disabled="v.wtms == null">
-                  <td>{{ v.wtms }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.zrbm" placement="top" :open-delay="500"
-                            :disabled="v.zrbm == null">
-                  <td>{{ v.zrbm }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.zrr" placement="top" :open-delay="500"
-                            :disabled="v.zrr == null">
-                  <td>{{ v.zrr }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.zycd" placement="top" :open-delay="500"
-                            :disabled="v.zycd == null">
-                  <td>{{ v.zycd }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.xwjjsj" placement="top" :open-delay="500"
-                            :disabled="v.xwjjsj == null">
-                  <td>{{ v.xwjjsj }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.sjzrr" placement="top" :open-delay="500"
-                            :disabled="v.sjzrr == null">
-                  <td>{{ v.sjzrr }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.wtzt" placement="top" :open-delay="500"
-                            :disabled="v.wtzt == null">
-                  <td>{{ v.wtzt }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.jssj" placement="top" :open-delay="500"
-                            :disabled="v.jssj == null">
-                  <td>{{ v.jssj }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.jjsj" placement="top" :open-delay="500"
-                            :disabled="v.jjsj == null">
-                  <td>{{ v.jjsj }}</td>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" :content="v.lxfk" placement="top" :open-delay="500"
-                            :disabled="v.lxfk == null">
-                  <td>{{ v.lxfk }}</td>
-                </el-tooltip>
-              </tr>
-            </table>
-          </div>
-        </div>
+      <div class="r-fourrow" style="height: calc((100% - 36px - 36px - 30px)*0.5)">
+        <el-table border v-loading="ywcjQuestionLoading" height="calc(50vh - 150px)" :data="ywcjList"
+                  @selection-change="ywcjSelectionChange">
+          <el-table-column type="selection" width="55" align="center"/>
+          <el-table-column type="index" label="序号" align="center" width="50px"/>
+          <el-table-column show-overflow-tooltip label="关注" header-align="center" width="50px">
+            <template slot-scope="scope">
+              <img
+                v-if="scope.row.sfgz"
+                style="width: 30px;margin-top: 4px"
+                :src="require('@/assets/questionIcons/红旗子.png')"
+              />
+            </template>
+          </el-table-column>
+          <el-table-column show-overflow-tooltip label="我的问题待办数量" header-align="center" width="150px" prop="wtdb"/>
+          <el-table-column show-overflow-tooltip label="问题编号" header-align="center" width="150px" prop="wtbh"/>
+          <el-table-column show-overflow-tooltip label="人员" header-align="center" width="150px" prop="cjr"/>
+          <el-table-column show-overflow-tooltip label="部门" header-align="center" width="150px" prop="cjbm"/>
+          <el-table-column show-overflow-tooltip label="问题名称" header-align="center" width="150px" prop="wtmc"/>
+          <el-table-column show-overflow-tooltip label="工序号" header-align="center" width="150px" prop="gxh"/>
+          <el-table-column show-overflow-tooltip label="问题创建时间" header-align="center" width="150px" prop="cjsj"/>
+          <el-table-column show-overflow-tooltip label="生产订单号" header-align="center" width="150px" prop="scddh"/>
+          <el-table-column show-overflow-tooltip label="产品型号" header-align="center" width="150px" prop="cpxh"/>
+          <el-table-column show-overflow-tooltip label="问题来源" header-align="center" width="150px" prop="wtly"/>
+          <el-table-column show-overflow-tooltip label="问题类别" header-align="center" width="150px" prop="wtlb"/>
+          <el-table-column show-overflow-tooltip label="问题细类" header-align="center" width="150px" prop="wtxl"/>
+          <el-table-column show-overflow-tooltip label="问题描述" header-align="center" width="150px" prop="wtms"/>
+          <el-table-column show-overflow-tooltip label="责任部门" header-align="center" width="150px" prop="zrbm"/>
+          <el-table-column show-overflow-tooltip label="责任人" header-align="center" width="150px" prop="zrr"/>
+          <el-table-column show-overflow-tooltip label="重要程度" header-align="center" width="150px" prop="zycd"/>
+          <el-table-column show-overflow-tooltip label="希望解决时间" header-align="center" width="150px" prop="xwjjsj"/>
+          <el-table-column show-overflow-tooltip label="升级责任人" header-align="center" width="150px" prop="sjzrr"/>
+          <el-table-column show-overflow-tooltip label="问题状态" header-align="center" width="150px" prop="wtzt"/>
+          <el-table-column show-overflow-tooltip label="接收时间" header-align="center" width="150px" prop="jssj"/>
+          <el-table-column show-overflow-tooltip label="解决时间/时" header-align="center" width="150px" prop="jjsj"/>
+          <el-table-column show-overflow-tooltip label="是否例行反馈" header-align="center" width="150px" prop="lxfk"/>
+        </el-table>
         <div style="height: 50px">
           <pagination
             :total="ywcjtotal"
@@ -849,11 +613,11 @@
                   <div class="chatName" v-text="item.hfr"></div>
                   <div style="vertical-align: top;display: inline-block">
                     <div
-                         @click="huifuyangshione(item.xh)"
-                         :class="{ 'clicked': currentDivIndex === item.xh }"
-                         class="chatBox chatBox-left"
-                         v-text="item.hfxx"
-                         style="word-wrap: break-word;max-width: 200px;white-space: normal"></div>
+                      @click="huifuyangshione(item.xh)"
+                      :class="{ 'clicked': currentDivIndex === item.xh }"
+                      class="chatBox chatBox-left"
+                      v-text="item.hfxx"
+                      style="word-wrap: break-word;max-width: 200px;white-space: normal"></div>
                     <div class="chatTime"><span
                       style="font-size: 14px;vertical-align: bottom;margin-left: 3px">{{ item.wtcjsj }}</span></div>
                   </div>
@@ -1005,6 +769,8 @@ export default {
       single: true,
       // 非多个禁用
       multiple: true,
+      // 非单个禁用
+      ywcjsingle: true,
       // 非多个禁用
       ywcjmultiple: true,
       // 显示搜索条件
@@ -1015,8 +781,10 @@ export default {
       ywcjtotal: 0,
       // 问题接收表格数据
       downQuestionList: [],
+      downQuestionLoading: false,//遮罩层
       // 跟踪协同问题表格数据
       ywcjList: [],
+      ywcjQuestionLoading: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -1102,7 +870,6 @@ export default {
   mounted() {
     this.histogram()
     document.addEventListener('click', this.handlePageClick);
-
   },
   beforeDestroy() {
     document.removeEventListener('click', this.handlePageClick);
@@ -1196,7 +963,7 @@ export default {
           left: '280px',
           top: 'center',
           textStyle: {
-            color: 'white', // 设置图例字体的颜色
+            color: 'black', // 设置图例字体的颜色
             fontSize: 20  // 设置图例字体的大小
           },
           formatter: function (name) {
@@ -1214,7 +981,7 @@ export default {
             data: this.piechartData,
             label: {
               show: false,
-              color: 'white',
+              color: 'black',
               fontSize: 20,
               formatter: '{b}：{c}', // 自定义标签内容格式，{c} 表示数据项的值
             },
@@ -1249,12 +1016,12 @@ export default {
           type: 'category',
           data: this.histogramCategory,
           axisLabel: {
-            color: 'white',
+            color: 'black',
             fontSize: 20
           },
           axisLine: {
             lineStyle: {
-              color: 'white',  // 将 y 轴线颜色设置为白色
+              color: 'black',  // 将 y 轴线颜色设置为白色
             }
           }
         },
@@ -1262,7 +1029,7 @@ export default {
           type: 'value',
           position: 'top',
           axisLabel: {
-            color: 'white'  // 将 x 轴标签字体颜色设置为白色
+            color: 'black'  // 将 x 轴标签字体颜色设置为白色
           },
         },
         series: [
@@ -1270,7 +1037,7 @@ export default {
             data: this.histogramValue,
             type: 'bar',
             itemStyle: {
-              color: '#3CD0D0',  // 将柱状图的颜色设置为 "#3CD0D0"
+              color: '#1890ff',  // 将柱状图的颜色设置为 "#3CD0D0"
               barBorderRadius: 4
             }
           }
@@ -1290,14 +1057,6 @@ export default {
               window.speechSynthesis.speak(speechUtterance);
             }
           }
-          // 请更改xml文件
-          /*if (v.wtzt === '接收') {
-            const speechText = "请" + v.jsr + "解决问题"
-            const speechUtterance = new SpeechSynthesisUtterance(speechText);
-            for (let i = 0; i < 3; i++) {
-              window.speechSynthesis.speak(speechUtterance);
-            }
-          }*/
         })
         if (this.oldDownQuestionList.length > 0) {
           //十分钟一次读数据
@@ -1322,23 +1081,16 @@ export default {
                 window.speechSynthesis.speak(speechUtterance);
               }
             }
-            /*if (v.wtzt === '接收') {
-              const speechText = "请" + v.jsr + "解决问题"
-              const speechUtterance = new SpeechSynthesisUtterance(speechText);
-              for (let i = 0; i < 3; i++) {
-                window.speechSynthesis.speak(speechUtterance);
-              }
-            }*/
           })
         }
-      }, 3*60*1000); // 3分钟
+      }, 3 * 60 * 1000); // 3分钟
     },
     /** 5分钟定时获取现场配合问题列表并朗读新数据 */
     intervalGetxcphList() {
       this.threeTimer = setInterval(() => {
         this.getNewxcphListAllAndSpeech()
         this.getYWCJList()
-      }, 3*60*1000); // 3分钟
+      }, 3 * 60 * 1000); // 3分钟
     },
     //获取新数据并朗读，如果有新数据则重置10分钟定时器
     getNewxcphListAllAndSpeech() {
@@ -1377,6 +1129,7 @@ export default {
     },
     /** 查询问题接收列表 */
     getxcphList() {
+      this.downQuestionLoading = true
       downlistCjls(this.queryParams).then(response => {
         this.downQuestionList = response.rows;
         // 设置提报-当前时间
@@ -1390,9 +1143,7 @@ export default {
           v.tbdqst = minutesDifference.toString() + "天"
         })
         this.total = response.total;
-        this.selectedRows = []
-        this.ids = []
-        this.multiple = true
+        this.downQuestionLoading = false
       });
       //获取问题数量
       this.getwcsl()
@@ -1401,12 +1152,11 @@ export default {
     },
     /** 查询跟踪协同问题列表 */
     getYWCJList() {
+      this.ywcjQuestionLoading = true
       ywcjList(this.ywcjqueryParams).then(res => {
         this.ywcjList = res.rows;
         this.ywcjtotal = res.total;
-        this.ywcjselectedRows = []
-        this.ywcjids = []
-        this.ywcjmultiple = true
+        this.ywcjQuestionLoading = false
       });
       //获取问题数量
       this.getwcsl()
@@ -1472,39 +1222,15 @@ export default {
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.lsid)
       this.selectedRows = selection.map(item => item)
-      this.multiple = selection.length === 0
+      this.single = selection.length !== 1
+      this.multiple = !selection.length
     },
     // 跟踪协同问题多选框选中数据
     ywcjSelectionChange(selection) {
       this.ywcjids = selection.map(item => item.id)
       this.ywcjselectedRows = selection.map(item => item)
-      this.ywcjmultiple = selection.length === 0
-    },
-    //全选
-    selectAllRows() {
-      if (this.selectAll) {
-        // 全选
-        this.selectedRows = this.downQuestionList.map(v => v);
-        this.ids = this.downQuestionList.map(item => item.lsid)
-      } else {
-        // 取消全选
-        this.selectedRows = [];
-        this.ids = [];
-      }
-      this.multiple = this.selectedRows.length === 0
-    },
-    //跟踪协同问题全选
-    ywcjselectAllRows() {
-      if (this.ywcjselectAll) {
-        // 全选
-        this.ywcjselectedRows = this.ywcjList.map(v => v);
-        this.ywcjids = this.ywcjList.map(item => item.id)
-      } else {
-        // 取消全选
-        this.ywcjselectedRows = [];
-        this.ywcjids = [];
-      }
-      this.ywcjmultiple = this.ywcjselectedRows.length === 0
+      this.ywcjsingle = selection.length !== 1
+      this.ywcjmultiple = !selection.length
     },
     // 接收按钮
     receive() {
@@ -1521,7 +1247,7 @@ export default {
       let selectedRows = this.selectedRows
       if (whether === '否') {
         let jsrData = {}
-        this.jsrList.forEach(item=>{
+        this.jsrList.forEach(item => {
           if (item.userId === this.jsrId) {
             jsrData = item
           }
@@ -1534,7 +1260,6 @@ export default {
       wtjsIt(selectedRows, whether).then(() => {
         this.$modal.msgSuccess("接收成功！");
         this.getxcphList();
-        this.multiple = this.selectedRows.length === 0
         this.wtjsDialog = false
         this.notBjzrrDialog = false
       })
@@ -1550,10 +1275,10 @@ export default {
         }
       }
       this.jsrList = []
-      getjsrBywtlb({wtlb: this.selectedRows[0].wtlb,wtxl: this.selectedRows[0].wtxl,}).then(response => {
+      this.wtjsDialog = false
+      this.notBjzrrDialog = true
+      getjsrBywtlb({wtlb: this.selectedRows[0].wtlb, wtxl: this.selectedRows[0].wtxl,}).then(response => {
         this.jsrList = response.rows;
-        this.wtjsDialog = false
-        this.notBjzrrDialog = true
       })
     },
     // 解决方案表单重置
@@ -1587,7 +1312,6 @@ export default {
             this.$modal.msgSuccess("修改成功！");
             /*修改xml状态申请已完成*/
             this.getxcphList();
-            this.multiple = this.selectedRows.length === 0
             this.solveDialog = false
           })
         }
@@ -2082,7 +1806,6 @@ export default {
 }
 
 
-
 .dialog .fj .el-checkbox__label {
   font-size: 16px;
 }
@@ -2168,6 +1891,15 @@ export default {
 
 .dialogRad .el-checkbox__input.is-checked + .el-checkbox__label {
   color: black;
+}
+
+.el-table--medium .el-table__cell {
+  padding: 0 !important;
+  height: 40px !important;
+}
+
+.el-table--medium .el-table__cell div {
+  /*height: 40px!important;*/
 }
 </style>
 <style scoped lang="scss">
@@ -2289,20 +2021,5 @@ export default {
 .dialog {
   position: absolute;;
   z-index: 1;
-}
-</style>
-<style scoped>
-/*滚动条*/
-::-webkit-scrollbar-track {
-  background-color: transparent; /* 设置滚动条轨道的背景色为透明 */
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.3); /* 设置滚动条的颜色和透明度 */
-  border-radius: 4px; /* 设置滚动条的边框半径 */
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(255, 255, 255, 0.5); /* 设置鼠标悬停时滚动条的颜色和透明度 */
 }
 </style>

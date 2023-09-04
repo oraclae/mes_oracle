@@ -203,8 +203,6 @@ export default {
     };
   },
   mounted() {
-    //this.getList();
-    this.wtlbMethod();
     if (this.form != null) {
       this.queryParams.WTMS = this.form.wtms
       this.queryParams.WTMC = this.form.wtmc
@@ -213,8 +211,12 @@ export default {
       this.queryParams.GXH = this.form.gxh
       this.queryParams.WTLB = this.form.wtlb
       this.queryParams.WTXL = this.form.wtxl
+      if (this.form.wtlb != null && this.form.wtlb !== '') {
+        this.wtxlMethod()
+      }
+      this.handleQuery()
     }
-
+    this.wtlbMethod();
   },
   methods: {
     dialogCreatedQuestion() {

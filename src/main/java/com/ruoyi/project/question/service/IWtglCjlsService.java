@@ -2,6 +2,7 @@ package com.ruoyi.project.question.service;
 
 import com.ruoyi.project.question.domain.*;
 import com.ruoyi.project.question.domain.vo.NumberVO;
+import com.ruoyi.project.question.domain.vo.WtlbXlVO;
 import com.ruoyi.project.question.domain.vo.WtxxVo;
 import com.ruoyi.project.system.domain.SysUser;
 
@@ -205,4 +206,9 @@ public interface IWtglCjlsService
      * 删除提出问题按钮
      */
     int delangl(String[] xhs);
+
+    /**
+     * 获取问题类别细类
+     */
+    List<WtlbXlVO> getWtlbXlList();
 }

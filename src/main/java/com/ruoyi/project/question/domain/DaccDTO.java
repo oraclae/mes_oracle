@@ -20,4 +20,5 @@ public class DaccDTO {
    private String ZRR;
    private String CPXH;
    private String JH;
+   private String DACCID;
 }

@@ -610,6 +610,7 @@ public class QuestionServiceImpl implements QuestionService {
                 }
             }
         if (daccVO.getWTID() != null) {
+            daccVO.setDEPTID(SecurityUtils.getDeptId().toString());
             questionMapper.saveDaccList(daccVO);
         }
     }

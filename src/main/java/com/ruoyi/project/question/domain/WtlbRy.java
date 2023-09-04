@@ -46,13 +46,29 @@ public class WtlbRy extends BaseEntity
     @Excel(name = "被叫人id")
     private String BJRID;
 
-    /** 被叫人id */
+    /** 被叫人账号 */
+    @Excel(name = "被叫人账号")
+    private String BJRZH;
+
+    /** 被叫人部门 */
+    @Excel(name = "被叫人部门")
+    private String BJRBM;
+
+    /** 接收人姓名 */
     @Excel(name = "接收人姓名")
     private String JSRXM;
 
-    /** 被叫人id */
+    /** 接收人ID */
     @Excel(name = "接收人ID")
     private String JSRID;
+
+    /** 接收人账号 */
+    @Excel(name = "接收人账号")
+    private String JSRZH;
+
+    /** 接收人部门 */
+    @Excel(name = "接收人部门")
+    private String JSRBM;
 
     /** 请求参数 */
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
