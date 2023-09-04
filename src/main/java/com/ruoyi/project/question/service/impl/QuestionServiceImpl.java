@@ -752,15 +752,23 @@ public class QuestionServiceImpl implements QuestionService {
     public void shengjizrr() {
         //先获得我的问题表数据（数据中问题升级为true的数据选中出来）
         List<WtxxVo> wtxxVos = questionMapper.selectWtxxByWtsj();
-        //获得该wtid的责任人变成没有主责任人
-        questionMapper.updateZrdb(wtxxVos);
+        if (wtxxVos.size() > 0) {
+            //获得该wtid的责任人变成没有主责任人
+            questionMapper.updateZrdb(wtxxVos);
+        }
         for (WtxxVo wtxxVo : wtxxVos) {
             //查询升级人字典表数据
             WtglSjzrzd wtglSjzrzd = new WtglSjzrzd();
             wtglSjzrzd.setDqzer(wtxxVo.getDQZRR());
             List<WtglSjzrzd> wtglSjzrzds = wtglSjzrzdService.selectWtglSjzrzdList(wtglSjzrzd);
             if (wtglSjzrzds.size() != 1) {
-                System.out.println("当前问题名称"+wtxxVo.getWTMC()+"的升级人数据为空或者出现多个升级人");
+                if (wtglSjzrzds.size() == 0) {
+                    System.out.println("这个数据没有升级人了，给这个数据将问题升级变成false");
+                    WtxxDTO wtxxDTO = new WtxxDTO();
+                    wtxxDTO.setID(wtxxVo.getID());
+                    wtxxDTO.setWTSJ("false");
+                    questionMapper.updateQuestion(wtxxDTO);
+                }
                 if (wtglSjzrzds.size() > 1) {
                     System.out.println("请联系管理员，查看字典数据，是否一个升级人的二级升级人为多个升级人");
                 }

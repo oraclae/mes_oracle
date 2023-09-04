@@ -794,6 +794,7 @@
         select *
         from WTGL_YWCJ
         where WTSJ = 'true'
+          and WTZT in ('提交','接受','反馈')
           and TO_DATE(TO_CHAR(SYSDATE - 1 / 12, 'YYYY-MM-DD HH24:MI:SS'), 'YYYY-MM-DD HH24:MI:SS') > CJSJ
     </select>
 
