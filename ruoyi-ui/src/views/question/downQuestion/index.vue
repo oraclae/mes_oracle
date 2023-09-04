@@ -45,18 +45,6 @@
               @click="refresh"
             >刷新
             </el-button>
-            <el-button
-              type="primary"
-              :disabled="single"
-              @click="receive"
-            >接收按钮
-            </el-button>
-            <el-button
-              type="success"
-              :disabled="single"
-              @click="solve"
-            >解决方案
-            </el-button>
           </el-col>
           <el-col :span="13">
             <b style="font-size: 20px">现场配合问题</b>
@@ -64,9 +52,28 @@
         </el-row>
       </div>
       <div class="r-tworow" style="height: calc((100% - 36px - 36px - 30px)*0.5)">
-        <el-table border v-loading="downQuestionLoading" height="calc(50vh - 150px)" :data="downQuestionList"
-                  @selection-change="handleSelectionChange">
-          <el-table-column type="selection" width="55" align="center"/>
+        <el-table border v-loading="downQuestionLoading" height="calc(50vh - 150px)" :data="downQuestionList" @row-dblclick="jswtOrJjfa">
+          <!--          <el-table-column type="selection" width="55" align="center"/>-->
+          <el-table-column label="操作" width="100px" align="center" class-name="small-padding fixed-width">
+            <template slot-scope="scope">
+              <el-button
+                v-if="scope.row.wtzt === '提交'"
+                size="mini"
+                type="text"
+                icon="el-icon-edit"
+                @click="receive(scope.row)"
+              >接收问题
+              </el-button>
+              <el-button
+                v-if="scope.row.wtzt === '接收'"
+                size="mini"
+                type="text"
+                icon="el-icon-edit"
+                @click="solve(scope.row)"
+              >解决方案
+              </el-button>
+            </template>
+          </el-table-column>
           <el-table-column type="index" label="序号" align="center" width="50px"/>
           <el-table-column show-overflow-tooltip label="展示" header-align="center" width="50px">
             <template slot-scope="scope">
@@ -135,18 +142,6 @@
               @click="refreshYWCJ"
             >刷新
             </el-button>
-            <el-button
-              type="primary"
-              :disabled="ywcjmultiple"
-              @click="questionDetails"
-            >任务详细
-            </el-button>
-            <el-button
-              type="danger"
-              :disabled="ywcjmultiple"
-              @click="closeQuestion"
-            >申请关闭
-            </el-button>
           </el-col>
           <el-col :span="13">
             <b style="font-size: 20px">跟踪协同问题</b>
@@ -154,9 +149,18 @@
         </el-row>
       </div>
       <div class="r-fourrow" style="height: calc((100% - 36px - 36px - 30px)*0.5)">
-        <el-table border v-loading="ywcjQuestionLoading" height="calc(50vh - 150px)" :data="ywcjList"
-                  @selection-change="ywcjSelectionChange">
-          <el-table-column type="selection" width="55" align="center"/>
+        <el-table border v-loading="ywcjQuestionLoading" height="calc(50vh - 150px)" :data="ywcjList" @row-dblclick="questionDetails">
+          <el-table-column label="操作" width="100px" align="center" class-name="small-padding fixed-width">
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-edit"
+                @click="questionDetails(scope.row)"
+              >任务详细
+              </el-button>
+            </template>
+          </el-table-column>
           <el-table-column type="index" label="序号" align="center" width="50px"/>
           <el-table-column show-overflow-tooltip label="关注" header-align="center" width="50px">
             <template slot-scope="scope">
@@ -208,7 +212,7 @@
       center
       v-if="wtjsDialog"
       :visible.sync="wtjsDialog" width="500px">
-      <span slot="title" style="font-size: 30px;">系统提示</span>
+      <span slot="title" style="font-size: 30px;">接收问题</span>
       <div style="font-size: 20px;text-align: center;width: 100%; color: black">是否为被叫责任人?</div>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="wtjsOK('是')">是</el-button>
@@ -718,7 +722,7 @@ import {
   deleteJhjlByXh,
   getJhjl,
   getzerData,
-  saveJhjlList, updateMyDoListStatus,
+  saveJhjlList, updateMyDoListStatus, updateWtztEnd,
 } from "@/api/question/question";
 import * as echarts from 'echarts';
 import {listById, getFjByIds} from "@/api/fj/fj";
@@ -758,9 +762,9 @@ export default {
       // 跟踪协同问题选中数组
       ywcjids: [],
       //选中数据
-      selectedRows: [],
+      selectedRow: {},
       //跟踪协同问题选中数据
-      ywcjselectedRows: [],
+      closureID: {},//点击回复预览的数据，存在这里: {},
       // 是否全选
       selectAll: false,
       // 跟踪协同问题是否全选
@@ -831,7 +835,6 @@ export default {
       huifuId: '',//存上级的id值
       ejhfppyj: '',//存下级的所有id
       //回复预览框需要的的属性
-      closureID: {},//点击回复预览的数据，存在这里
       lingdaopishiDialog: false,//领导批示按钮的弹出框的是否显示
       lixingfankuiDialog: false,//例行反馈按钮的弹出框的是否显示
       huifuDialog: false,//回复按钮的弹出框的是否显示
@@ -1218,33 +1221,26 @@ export default {
     refreshYWCJ() {
       this.getYWCJList()
     },
-    // 多选框选中数据
-    handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.lsid)
-      this.selectedRows = selection.map(item => item)
-      this.single = selection.length !== 1
-      this.multiple = !selection.length
-    },
-    // 跟踪协同问题多选框选中数据
-    ywcjSelectionChange(selection) {
-      this.ywcjids = selection.map(item => item.id)
-      this.ywcjselectedRows = selection.map(item => item)
-      this.ywcjsingle = selection.length !== 1
-      this.ywcjmultiple = !selection.length
+    //现场配合问题双击
+    jswtOrJjfa(row){
+      if (row.wtzt === "提交") {
+        this.receive(row)
+      }else if (row.wtzt === "接收") {
+        this.solve(row)
+      }
     },
     // 接收按钮
-    receive() {
-      for (let i = 0; i < this.selectedRows.length; i++) {
-        if (this.selectedRows[i].wtzt !== '提交') {
-          this.$modal.msgError("问题状态为提交状态才可以接收！");
-          return;
-        }
+    receive(row) {
+      if (row.wtzt !== '提交') {
+        this.$modal.msgError("问题状态为提交状态才可以接收！");
+        return;
       }
+      this.selectedRow = row
       this.wtjsDialog = true
     },
     // 问题接收弹窗 是/否 按钮
     wtjsOK(whether) {
-      let selectedRows = this.selectedRows
+      let selectedRow = this.selectedRow
       if (whether === '否') {
         let jsrData = {}
         this.jsrList.forEach(item => {
@@ -1252,13 +1248,13 @@ export default {
             jsrData = item
           }
         })
-        selectedRows.forEach((v, i) => {
-          v.jsr = jsrData.nickName
-          v.jsrid = jsrData.userId.toString()
-        })
+        selectedRow.jsr = jsrData.nickName
+        selectedRow.jsrid = jsrData.userId.toString()
       }
-      wtjsIt(selectedRows, whether).then(() => {
-        this.$modal.msgSuccess("接收成功！");
+      let list = []
+      list.push(selectedRow)
+      wtjsIt(list, whether).then(() => {
+        this.$message.success("接收成功！");
         this.getxcphList();
         this.wtjsDialog = false
         this.notBjzrrDialog = false
@@ -1266,50 +1262,38 @@ export default {
     },
     // 问题接收弹窗 否 按钮
     notBjzrr() {
-      for (let i = 0; i < this.selectedRows.length; i++) {
-        for (let j = 0; j < this.selectedRows.length; j++) {
-          if (this.selectedRows[i].wtlb !== this.selectedRows[j].wtlb) {
-            this.$modal.msgError("所选项的问题类别不同！");
-            return;
-          }
-        }
-      }
       this.jsrList = []
       this.wtjsDialog = false
       this.notBjzrrDialog = true
-      getjsrBywtlb({wtlb: this.selectedRows[0].wtlb, wtxl: this.selectedRows[0].wtxl,}).then(response => {
+      console.log(this.selectedRow)
+      getjsrBywtlb({wtlb: this.selectedRow.wtlb, wtxl: this.selectedRow.wtxl,}).then(response => {
         this.jsrList = response.rows;
       })
     },
     // 解决方案表单重置
-    jjfareset() {
+    jjfareset(row) {
       this.jjfaform = {
-        jjfa: this.selectedRows[0].jjfa
+        jjfa: row.jjfa
       }
       this.resetForm("jjfaform");
     },
     // 解决方案按钮
-    solve() {
-      if (this.selectedRows.length !== 1) {
-        this.$modal.msgError("只可以选择一条数据！");
+    solve(row) {
+      if (row.wtzt !== '接收') {
+        this.$modal.msgError("只有接收状态的问题可以填写解决方案！");
         return;
       }
-      for (let item of this.selectedRows) {
-        if (item.wtzt !== '接收') {
-          this.$modal.msgError("只有接收状态的问题可以填写解决方案！");
-          return;
-        }
-      }
-      this.jjfareset()
+      this.selectedRow = row
+      this.jjfareset(row)
       this.solveDialog = true
     },
     // 解决方案确定按钮
     solveOK() {
       this.$refs["jjfaform"].validate(valid => {
         if (valid) {
-          const id = this.selectedRows[0].lsid
+          const id = this.selectedRow.lsid
           updatejjfa(id, this.jjfaform.jjfa).then(response => {
-            this.$modal.msgSuccess("修改成功！");
+            this.$message.success("修改成功！");
             /*修改xml状态申请已完成*/
             this.getxcphList();
             this.solveDialog = false
@@ -1317,53 +1301,19 @@ export default {
         }
       });
     },
-    // 申请关闭按钮
-    /*toClose() {
-      //验证
-      for (let i = 0; i < this.selectedRows.length; i++) {
-        if (this.selectedRows[i].jjfa == null || this.selectedRows[i].jjfa === '') {
-          this.$modal.msgError("请填写解决方案！");
-          return;
-        }
-        if (this.selectedRows[i].wtzt === '接受') {
-          this.$modal.msgError("所选问题不是接受状态！");
-          return;
-        }
-      }
-      this.toCloseDialog = true
-    },*/
-    // 申请关闭确定按钮
-    /*toCloseOK() {
-      const LSIDs = this.ids
-      changewtzt(LSIDs, '申请已完成').then(() => {
-        this.$modal.msgSuccess("申请已完成！");
-        this.getxcphList();
-        this.toCloseDialog = false
-      })
-    },*/
     //任务详情按钮
-    questionDetails() {
+    questionDetails(row) {
       this.withd = '1090px'
       this.isShow = false
       this.isShowLdps = false
       this.currentDivIndex = '';
       this.jhsjList = [];
-      this.closureID = {};
       this.wtms = '';
       this.fujian = false;
-      let number = this.ywcjselectedRows.length;
-      if (number <= 0) {
-        this.$message.error("请选择一条数据");
-        return
-      }
-      if (number > 1) {
-        this.$message.error("只能选择一条数据");
-        return;
-      }
       this.islxfk = false;
-      this.closureID = this.ywcjselectedRows[0];
+      this.closureID = row;
       this.computTime(this.closureID);
-      this.wtms = this.ywcjselectedRows[0].wtms;
+      this.wtms = row.wtms;
       if (this.closureID.lxfk === '例行反馈') {
         this.loadJhjlList('例行反馈');
         this.islxfk = true;
@@ -1397,25 +1347,17 @@ export default {
     },
     //责任人的申请关闭
     closeQuestion() {
-      if (this.ywcjselectedRows.length < 1) {
-        this.$message.error("请至少选择一条数据");
-      } else if (this.ywcjselectedRows.length > 1) {
-        this.$message.error("只能择一条数据");
-      } else {
-        let ids = [];
-        this.ywcjselectedRows.forEach(item => {
-          const id = {id: '', value: ''};
-          id.id = item.id;
-          id.value = '待关闭';
-          ids.push(id);
-        });
-        updateMyDoListStatus(ids).then(res => {
-          if (res.code === 200) {
-            this.$message.success("修改成功");
-            this.getYWCJList();
-          }
-        })
-      }
+      let ids = [];
+      const id = {id: '', value: ''};
+      id.id = this.closureID.id;
+      id.value = '待关闭';
+      ids.push(id);
+      updateMyDoListStatus(ids).then(res => {
+        if (res.code === 200) {
+          this.$message.success("修改成功");
+          this.getYWCJList();
+        }
+      })
     },
     //回复预览页面的责任人的数据
     loadzerData() {

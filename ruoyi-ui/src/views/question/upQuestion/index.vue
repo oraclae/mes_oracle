@@ -2,15 +2,18 @@
   <div class="upcontainer">
     <div class="outer">
       <div class="left-side">
-        <el-button
-          type="primary"
-          icon="el-icon-arrow-left"
-          :disabled="showWtlb"
-          @click="showWtlb = true"
-          style="margin-bottom: 15px"
-        >返回
-        </el-button>
-        <br>
+        <div style="position: relative;width: 100%;margin-bottom: 15px">
+          <el-button
+            type="primary"
+            icon="el-icon-arrow-left"
+            :disabled="showWtlb"
+            @click="showWtlb = true"
+          >返回
+          </el-button>
+          <transition name="fade" mode="out-in">
+            <b style="float: right;margin-top: 3px;color: #00afff" v-if="!showWtlb">{{ form.wtlb }}</b>
+          </transition>
+        </div>
         <transition name="fade" mode="out-in">
           <div v-if="showWtlb" key="wtlb" style="width: 370px;">
             <!--问题类别-->
@@ -41,18 +44,18 @@
               @click="getList"
             >刷新
             </el-button>
-            <el-button
+<!--            <el-button
               type="primary"
-              :disabled="multiple"
+              :disabled="canquxiao"
               @click="cancelWtzt"
             >取消
             </el-button>
             <el-button
               type="danger"
-              :disabled="single"
+              :disabled="canguanbi"
               @click="closeit"
             >关闭
-            </el-button>
+            </el-button>-->
             <el-button
               type="danger"
               :disabled="multiple"
@@ -66,6 +69,33 @@
         <el-table border v-loading="loading" height="calc(100vh - 200px)" :data="cjlsList"
                   @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="55" align="center"/>
+          <el-table-column label="操作" width="120px" align="center" class-name="small-padding fixed-width">
+            <template slot-scope="scope">
+              <el-button
+                v-if="scope.row.wtzt === '提交'"
+                size="mini"
+                type="text"
+                icon="el-icon-remove-outline"
+                @click="cancelWtzt(scope.row)"
+              >取消
+              </el-button>
+              <el-button
+                v-if="scope.row.wtzt === '接收' || scope.row.wtzt === '申请已关闭'"
+                size="mini"
+                type="text"
+                icon="el-icon-circle-close"
+                @click="closeit(scope.row)"
+              >关闭
+              </el-button>
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-delete"
+                @click="handleDelete(scope.row)"
+              >删除
+              </el-button>
+            </template>
+          </el-table-column>
           <el-table-column type="index" label="序号" align="center" width="50px"/>
           <el-table-column show-overflow-tooltip label="创建部门科室" header-align="center" width="150px" prop="cjbmks"/>
           <el-table-column show-overflow-tooltip label="问题名称" header-align="center" width="100px" prop="wtmc"/>
@@ -218,6 +248,7 @@
     </el-dialog>
     <!--删除按钮弹窗-->
     <el-dialog
+      @close="deleteRowId = null"
       class="butDialog"
       title
       center
@@ -423,10 +454,14 @@ export default {
       ids: [],
       //选中数据
       selectedRows: [],
+      selectedRow: {},
+      deleteRowId: "",//删除的对象id
       // 是否全选
       selectAll: false,
       // 非多个禁用
       multiple: true,
+      canquxiao: true,//能否取消
+      canguanbi: true,//能否关闭
       // 非单个禁用
       single: true,
       // 总条数
@@ -477,7 +512,7 @@ export default {
 
   methods: {
     //新增弹窗关闭方法
-    addNewClose(){
+    addNewClose() {
       this.isone = true
       this.reset()
     },
@@ -645,19 +680,15 @@ export default {
       this.reset();
     },
     // 取消按钮
-    cancelWtzt() {
-      for (let item of this.selectedRows) {
-        if (item.wtzt !== '提交') {
-          this.$message.error("问题状态只有为“提交”才可以取消")
-          return
-        }
-      }
+    cancelWtzt(row) {
+      this.selectedRow = row
       this.cancelWtztDialog = true
     },
     // 取消弹窗内确定按钮
     cancelWtztOK() {
-      const data = this.selectedRows
-      changewtzt(data, '取消').then(() => {
+      let list = []
+      list.push(this.selectedRow)
+      changewtzt(list, '取消').then(() => {
         this.getList();
         this.$message.success("取消成功");
         this.cancelWtztDialog = false
@@ -665,28 +696,14 @@ export default {
     },
     // 关闭按钮
     closeit() {
-      if (this.selectedRows[0].wtzt === '取消') {
-        this.$message.error('问题状态为取消状态不能关闭')
-        return
-      }
-      if (this.selectedRows[0].wtzt === '提交') {
-        this.$message.error('问题状态为提交状态不能关闭')
-        return
-      }
-      if (this.selectedRows[0].wtzt === '已完成' || this.selectedRows[0].wtzt === '确认已完成') {
-        this.$message.error('该问题已关闭')
-        return
-      }
-      if (this.selectedRows[0].wtzt === '接收') {
-        this.closeJSDialog = true
-      } else {
-        this.closeitDialog = true;
-      }
+      this.selectedRow = row
+      this.closeitDialog = true;
     },
     // 关闭确认按钮
     closeitOK(str) {
-      const data = this.selectedRows
-      changewtzt(data, str).then(response => {
+      let list = []
+      list.push(this.selectedRow)
+      changewtzt(list, str).then(response => {
         this.$message.success(str + "!");
         this.getList();
         this.closeitDialog = false
@@ -733,6 +750,17 @@ export default {
       this.selectedRows = selection.map(item => item)
       this.single = selection.length !== 1
       this.multiple = !selection.length
+
+      this.canquxiao = true
+      this.canguanbi = true
+      if (selection.length === 1) {
+        if (selection[0].wtzt === "提交") {
+          this.canquxiao = false
+        }
+        if (selection[0].wtzt === "接收" || selection[0].wtzt === "申请已关闭") {
+          this.canguanbi = false
+        }
+      }
     },
     //新建按钮打开问题细类选择
     addNew(value) {
@@ -789,12 +817,13 @@ export default {
       });
     },
     // 删除按钮操作
-    handleDelete() {
+    handleDelete(row) {
+      this.deleteRowId = row.lsid
       this.handleDeleteDialog = true
     },
     // 删除确定按钮
     handleDeleteOK() {
-      const LSIDs = this.ids
+      const LSIDs = this.deleteRowId || this.ids
       delCjls(LSIDs).then(() => {
         this.getList();
         this.$message.success("删除成功");
@@ -871,6 +900,7 @@ export default {
 .addWtlbButton:hover {
   transform: scale(1.1);
 }
+
 /*问题类别问题细类过度动画*/
 .fade-enter-active,
 .fade-leave-active {

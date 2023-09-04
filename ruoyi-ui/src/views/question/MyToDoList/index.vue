@@ -1399,6 +1399,7 @@ export default {
     updateWtzt() {
       let wt={id:this.closureID.id, wtzt: this.closureID.wtzt};
       updateWtztEnd(wt).then(res=>{
+        this.load()
       });
     },
     //问题关注的方法
