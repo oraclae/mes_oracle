@@ -742,7 +742,6 @@ export default {
       wwcts: '',//未完成天数
       cqts: '',//超期天数
       wcts: '',//完成天数
-      backgroundImageUrl: require('@/assets/questionIcons/背景.png'),
       //问题状态与数量
       wtztNumber: [],
       //饼图数据
