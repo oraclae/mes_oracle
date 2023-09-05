@@ -391,6 +391,7 @@
     <update id="updateQuestion" parameterType="com.ruoyi.project.question.domain.WtxxDTO">
         update WTGL_YWCJ
         <trim prefix="SET" suffixOverrides=",">
+            <if test="WTSJ != null">WTSJ = #{WTSJ},</if>
             <if test="WTMC != null">WTMC = #{WTMC},</if>
             <if test="XWJJSJ != null">XWJJSJ = #{XWJJSJ},</if>
             <if test="ZYCD != null">ZYCD = #{ZYCD},</if>
