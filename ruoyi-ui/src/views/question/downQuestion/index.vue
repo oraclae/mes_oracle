@@ -1,38 +1,36 @@
 <template>
   <div class="downcontainer">
     <div class="left-side">
-      <div style="width: 100%;height: 100%">
-        <el-row :gutter="10"
-                style="text-align: center;margin-top: 20px;cursor: default;margin-left: 40px">
-          <el-col :span="12">
-            <div style="width: 80%;color: rgb(0 255 48);">
-              <b
-                style="width: 100%;top: 0;left: 0;font-size: 46px;text-shadow: rgb(0 86 255) 2px 2px 4px">{{
-                  this.wcsl
-                }}</b>
-              <br>
-              <div style="margin-top: 10px">
-                <b style="font-size: 25px;color: black">完成数量</b>
-              </div>
+      <el-row :gutter="10"
+              style="text-align: center;margin-top: 20px;cursor: default;margin-left: 40px">
+        <el-col :span="12">
+          <div style="width: 80%;color: rgb(0 255 48);">
+            <b
+              style="width: 100%;top: 0;left: 0;font-size: 46px;text-shadow: rgb(0 86 255) 2px 2px 4px">{{
+                this.wcsl
+              }}</b>
+            <br>
+            <div style="margin-top: 10px">
+              <b style="font-size: 25px;color: black">完成数量</b>
             </div>
-          </el-col>
-          <el-col :span="12">
-            <div style="width: 80%;color: rgb(255 40 40)">
-              <b
-                style="width: 100%;top: 0;left: 0;font-size: 46px;text-shadow: rgb(140 0 255) 2px 2px 4px">{{
-                  this.wwcsl
-                }}</b>
-              <br>
-              <div style="margin-top: 10px">
-                <b style="font-size: 25px;color: black">未完成数量</b>
-              </div>
+          </div>
+        </el-col>
+        <el-col :span="12">
+          <div style="width: 80%;color: rgb(255 40 40)">
+            <b
+              style="width: 100%;top: 0;left: 0;font-size: 46px;text-shadow: rgb(140 0 255) 2px 2px 4px">{{
+                this.wwcsl
+              }}</b>
+            <br>
+            <div style="margin-top: 10px">
+              <b style="font-size: 25px;color: black">未完成数量</b>
             </div>
-          </el-col>
-        </el-row>
-        <div>
-          <div id="piechart" style="width: 100%;height: 300px"/>
-          <div id="histogram" style="width:100%;height: 470px"/>
-        </div>
+          </div>
+        </el-col>
+      </el-row>
+      <div style="height: 710px;overflow: hidden">
+        <div id="piechart" style="width: 100%;height: 300px"/>
+          <div id="histogram" style="width:100%;height: 470px;bottom: 50px"/>
       </div>
     </div>
     <div class="right-side">
@@ -52,7 +50,8 @@
         </el-row>
       </div>
       <div class="r-tworow" style="height: calc((100% - 36px - 36px - 30px)*0.5)">
-        <el-table border v-loading="downQuestionLoading" height="calc(50vh - 150px)" :data="downQuestionList" @row-dblclick="jswtOrJjfa">
+        <el-table border v-loading="downQuestionLoading" height="calc(50vh - 150px)" :data="downQuestionList"
+                  @row-dblclick="jswtOrJjfa">
           <!--          <el-table-column type="selection" width="55" align="center"/>-->
           <el-table-column label="操作" width="100px" align="center" class-name="small-padding fixed-width">
             <template slot-scope="scope">
@@ -70,6 +69,7 @@
                 type="text"
                 icon="el-icon-edit"
                 @click="solve(scope.row)"
+                style="color: red"
               >解决方案
               </el-button>
             </template>
@@ -119,9 +119,6 @@
           <el-table-column show-overflow-tooltip label="接收人" header-align="center" width="150px" prop="jsr"/>
           <el-table-column show-overflow-tooltip label="解决方案" header-align="center" width="150px" prop="jjfa"/>
           <el-table-column show-overflow-tooltip label="创建时间" header-align="center" width="150px" prop="cjsj"/>
-          <el-table-column show-overflow-tooltip label="提报人ID" header-align="center" width="150px" prop="tbrid"/>
-          <el-table-column show-overflow-tooltip label="被叫人ID" header-align="center" width="150px" prop="bjrid"/>
-          <el-table-column show-overflow-tooltip label="接收人ID" header-align="center" width="150px" prop="jsrid"/>
         </el-table>
         <div style="height: 50px">
           <pagination
@@ -149,7 +146,8 @@
         </el-row>
       </div>
       <div class="r-fourrow" style="height: calc((100% - 36px - 36px - 30px)*0.5)">
-        <el-table border v-loading="ywcjQuestionLoading" height="calc(50vh - 150px)" :data="ywcjList" @row-dblclick="questionDetails">
+        <el-table border v-loading="ywcjQuestionLoading" height="calc(50vh - 150px)" :data="ywcjList"
+                  @row-dblclick="questionDetails">
           <el-table-column label="操作" width="100px" align="center" class-name="small-padding fixed-width">
             <template slot-scope="scope">
               <el-button
@@ -260,7 +258,8 @@
         </el-form>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click.once="solveOK()">确 定</el-button>
+        <el-button type="primary" @click="zndyDialog()">启用问题处理库</el-button>
+        <el-button type="primary" @click="solveOK()">确 定</el-button>
         <el-button @click="solveDialog = false" style="margin-left: 20px">取 消</el-button>
       </span>
     </el-dialog>
@@ -703,6 +702,33 @@
                width="40%" append-to-body>
       <fj v-if="openScfj" :fileList="fileList" :row="selectFj"></fj>
     </el-dialog>
+
+    <el-dialog class="dialogRad" :close-on-click-modal="false" title="启用问题处理库" width="1200px"
+               :visible.sync="lishidaanDialog">
+      <zdhf ref="cxda" @xiangxixinxi="xiangxixinxi" @dialogdafk="dialogdafk"
+            v-if="lishidaanDialog" :form="selectedRow"></zdhf>
+    </el-dialog>
+    <!--详细信息弹窗-->
+    <el-dialog class="buttonDialog" :close-on-click-modal="false" @close="shifoumanyi" title="详细信息"
+               :visible.sync="xiangxiDialog">
+      <xiangxixinxi v-if="xiangxiDialog" :jhsj-list="jhsjList"></xiangxixinxi>
+    </el-dialog>
+    <!--是否满意-->
+    <el-dialog
+      :close-on-click-modal="false"
+      class="buttonDialog"
+      title
+      center
+      v-if="shifoumanyiDialog"
+      :visible.sync="shifoumanyiDialog" width="500px">
+      <span slot="title" style="font-size: 30px;">系统提示</span>
+      <div style="font-size: 20px;text-align: center;width: 100%">问题解决方案是否满意?</div>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click.once="closeitOK">满 意</el-button>
+        <el-button type="primary" @click.once="shifoumanyiDialog=false" style="margin-left: 20px">不满意</el-button>
+        <el-button @click="shifoumanyiDialog=false" style="margin-left: 20px">取消</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -715,26 +741,33 @@ import {
   getcjksbmNumber,
   speechListCjls,
   wtjsIt,
-  getjsrBywtlb
+  getjsrBywtlb, updateDaccToRd
 } from "@/api/question/upQuestion";
 import {
   activate,
   deleteJhjlByXh,
-  getJhjl,
+  getJhjl, getJhjlByWtid,
   getzerData,
   saveJhjlList, updateMyDoListStatus, updateWtztEnd,
 } from "@/api/question/question";
 import * as echarts from 'echarts';
 import {listById, getFjByIds} from "@/api/fj/fj";
 import fj from "@/views/fj/fj";
+import {getUserInfo} from "@/api/question/wtlbry";
+import zdhf from "@/views/question/MyToDoList/znwdDialog";
+import xiangxixinxi from "@/views/question/myquestion/xiangxixinxi";
 
 export default {
   name: "DownQuestion",
   components: {
-    fj
+    fj, zdhf, xiangxixinxi
   },
   data() {
     return {
+      userInfo: {},
+      lishidaanDialog: false,//历史答案弹窗
+      xiangxiDialog: false,//详细信息是否弹出框
+      shifoumanyiDialog: false,//是否满意的弹出框
       fileList: [],//文件的集合
       openScfj: false,//是否打开上传附件弹出框
       whoFjBut: '',//谁的附件上传按钮
@@ -872,11 +905,58 @@ export default {
   mounted() {
     this.histogram()
     document.addEventListener('click', this.handlePageClick);
+    this.getUserInfo()
   },
   beforeDestroy() {
     document.removeEventListener('click', this.handlePageClick);
   },
   methods: {
+    getUserInfo() {
+      getUserInfo().then(response => {
+        this.userInfo = response.data
+        console.log(this.userInfo)
+      })
+    },
+    //满意的按钮执行方法
+    closeitOK() {
+      updateDaccToRd({daxxid: this.daccid}).then(res => {
+        if (res.code === 200) {
+          this.$message.success("已满意！");
+          this.$refs.cxda.getList();
+        } else {
+          this.$message.error("操作失败");
+        }
+      });
+      this.shifoumanyiDialog = false;
+    },
+    //关闭详细信息执行的方法
+    shifoumanyi() {
+      this.shifoumanyiDialog = true;
+    },
+    dialogdafk(row) {
+      const id = this.selectedRow.lsid
+      updatejjfa(id, row.daxx).then(() => {
+        this.$message.success("修改成功！");
+        /*修改xml状态申请已完成*/
+        this.getxcphList();
+        this.solveDialog = false
+        this.lishidaanDialog = false
+      })
+    },
+    //详细信息的方法
+    xiangxixinxi(row) {
+      this.daccid = row.daxxid;
+      this.jhsjList = [];
+      getJhjlByWtid({WTID: row.wtid}).then(res => {
+        if (res.code === 200) {
+          this.jhsjList = res.rows;
+        }
+      });
+      this.xiangxiDialog = true
+    },
+    zndyDialog() {
+      this.lishidaanDialog = true
+    },
     //下载文件
     downLoadFile(row) {
       var name = row.wjmc;
@@ -959,8 +1039,8 @@ export default {
           trigger: 'item'
         },
         legend: {
-          itemWidth: 40, // 设置图例项的宽度
-          itemHeight: 40, // 设置图例项的高度
+          itemWidth: 35, // 设置图例项的宽度
+          itemHeight: 35, // 设置图例项的高度
           orient: 'vertical',
           left: '280px',
           top: 'center',
@@ -978,7 +1058,7 @@ export default {
         series: [
           {
             type: 'pie',
-            radius: '60%',
+            radius: '75%',
             center: ['30%', '50%'],  // 设置系列相对于图表区域的位置，这里将系列位置设置为居中靠上
             data: this.piechartData,
             label: {
@@ -1091,7 +1171,7 @@ export default {
     intervalGetxcphList() {
       this.threeTimer = setInterval(() => {
         this.getNewxcphListAllAndSpeech()
-        this.getYWCJList()
+        this.getxcphList()
       }, 3 * 60 * 1000); // 3分钟
     },
     //获取新数据并朗读，如果有新数据则重置10分钟定时器
@@ -1185,10 +1265,13 @@ export default {
             const data = {value: v.num, name: v.str, itemStyle: {color: '#ff8c00'}}
             this.piechartData.push(data)
           } else if (v.str === '申请已完成') {
-            const data = {value: v.num, name: v.str, itemStyle: {color: '#2fff00'}}
+            const data = {value: v.num, name: v.str, itemStyle: {color: '#00ffd9'}}
             this.piechartData.push(data)
           } else if (v.str === '确认已完成') {
             const data = {value: v.num, name: v.str, itemStyle: {color: '#00c4ff'}}
+            this.piechartData.push(data)
+          } else if (v.str === '已完成') {
+            const data = {value: v.num, name: v.str, itemStyle: {color: '#1dce14'}}
             this.piechartData.push(data)
           } else {
             const data = {value: v.num, name: v.str}
@@ -1221,10 +1304,10 @@ export default {
       this.getYWCJList()
     },
     //现场配合问题双击
-    jswtOrJjfa(row){
+    jswtOrJjfa(row) {
       if (row.wtzt === "提交") {
         this.receive(row)
-      }else if (row.wtzt === "接收") {
+      } else if (row.wtzt === "接收") {
         this.solve(row)
       }
     },
@@ -1239,7 +1322,13 @@ export default {
     },
     // 问题接收弹窗 是/否 按钮
     wtjsOK(whether) {
-      let selectedRow = this.selectedRow
+      if (whether === "是") {
+        if (this.selectedRow.bjrid !== this.userInfo.userId.toString()) {
+          this.$message.error("您不是被叫人，不能点“是”")
+          return
+        }
+      }
+      let selectedRow = this.selectedRow;
       if (whether === '否') {
         let jsrData = {}
         this.jsrList.forEach(item => {
@@ -1278,9 +1367,9 @@ export default {
     },
     // 解决方案按钮
     solve(row) {
-      if (row.wtzt !== '接收') {
-        this.$modal.msgError("只有接收状态的问题可以填写解决方案！");
-        return;
+      if (row.bjrid !== this.userInfo.userId.toString()) {
+        this.$message.error("您不是接收人，不能填写解决方案")
+        return
       }
       this.selectedRow = row
       this.jjfareset(row)
@@ -1695,11 +1784,13 @@ export default {
 
 /*左div*/
 .downcontainer .left-side {
+  overflow: auto;
   float: left; /* 左侧浮动 */
-  height: 98%;
+  height: 100%;
   width: 500px;
   display: inline-block;
   padding: 15px;
+  padding-bottom: 0;
 }
 
 /*右div*/
@@ -1834,13 +1925,9 @@ export default {
   color: black;
 }
 
-.el-table--medium .el-table__cell {
+.downcontainer .el-table--medium .el-table__cell {
   padding: 0 !important;
   height: 40px !important;
-}
-
-.el-table--medium .el-table__cell div {
-  /*height: 40px!important;*/
 }
 </style>
 <style scoped lang="scss">

@@ -80,7 +80,7 @@
               >取消
               </el-button>
               <el-button
-                v-if="scope.row.wtzt === '接收' || scope.row.wtzt === '申请已关闭'"
+                v-if="scope.row.wtzt === '接收' || scope.row.wtzt === '申请已完成'"
                 size="mini"
                 type="text"
                 icon="el-icon-circle-close"
@@ -287,7 +287,7 @@
       </span>
     </el-dialog>
     <!--按钮管理弹窗-->
-    <el-dialog class="anglDialog" width="800px" :close-on-click-modal="false" @close="getUpButtons" title="按钮管理"
+    <el-dialog class="anglDialog" width="800px" :close-on-click-modal="false" title="按钮管理"
                :visible.sync="anglDialog">
       <el-row :gutter="10" class="mb8">
         <el-col :span="1.5">
@@ -563,6 +563,7 @@ export default {
             message: '删除成功!'
           });
           this.getUpButtons()
+          this.getWtlbXlList()
         })
       }).catch(() => {
       });
@@ -602,12 +603,14 @@ export default {
               this.$message.success("修改成功");
               this.anglOpen = false;
               this.getUpButtons();
+              this.getWtlbXlList()
             });
           } else {
             addUpButton(this.anglForm).then(() => {
               this.$message.success("新增成功");
               this.anglOpen = false;
               this.getUpButtons();
+              this.getWtlbXlList()
             });
           }
         }
@@ -695,9 +698,13 @@ export default {
       })
     },
     // 关闭按钮
-    closeit() {
+    closeit(row) {
       this.selectedRow = row
-      this.closeitDialog = true;
+      if (row.wtzt === "接收") {
+        this.closeJSDialog = true
+      }else {
+        this.closeitDialog = true;
+      }
     },
     // 关闭确认按钮
     closeitOK(str) {
@@ -757,7 +764,7 @@ export default {
         if (selection[0].wtzt === "提交") {
           this.canquxiao = false
         }
-        if (selection[0].wtzt === "接收" || selection[0].wtzt === "申请已关闭") {
+        if (selection[0].wtzt === "接收" || selection[0].wtzt === "申请已完成") {
           this.canguanbi = false
         }
       }
@@ -838,7 +845,10 @@ export default {
 };
 </script>
 <style>
-
+.upcontainer .el-table--medium .el-table__cell {
+  padding: 0 !important;
+  height: 40px !important;
+}
 
 /*主*/
 .upcontainer {
@@ -940,7 +950,7 @@ export default {
 }
 
 .anglDialog .el-dialog:not(.is-fullscreen) {
-  margin-top: 10% !important;
+  margin-top: 5% !important;
 }
 
 .anglDialog .el-dialog {

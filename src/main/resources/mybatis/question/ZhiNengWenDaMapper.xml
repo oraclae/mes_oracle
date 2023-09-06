@@ -8,12 +8,10 @@
         SELECT * FROM ( SELECT TMP_PAGE.*, ROWNUM PAGEHELPER_ROW_ID FROM (
         select DAXXID,DAXX from WTGL_DACC
         <where>
-            <if test="WTMC != null  and WTMC != ''">and WTMC like concat('%', #{WTMC}, '%')
+            <if test="WTMC != null  and WTMC != ''">and WTMC like '%' || #{WTMC} || '%'
             </if>
             <if test="WTLB != null  and WTLB != ''">and WTLB = #{WTLB}</if>
             <if test="WTXL != null  and WTXL != ''">and WTXL = #{WTXL}</if>
-            <if test="WTMS != null  and WTMS != ''">and WTMS like concat('%', #{WTMS}, '%')
-            </if>
             <if test="GXH != null  and GXH != ''">and GXH = #{GXH}</if>
             <if test="CPXH != null  and CPXH != ''">and CPXH = #{CPXH}</if>
             <if test="JH != null  and JH != ''">and JH = #{JH}</if>
@@ -23,15 +21,23 @@
                 </foreach>
                 )
             </if>
+            <if test="GJZLIST != null and GJZLIST.size() != 0 ">
+                and (
+                <foreach collection="GJZLIST" separator=" or " item="gjz">
+                    (WTMC like '%' || #{gjz} || '%'
+                    or WTMS like '%' || #{gjz} || '%'
+                    or DAXX like '%' || #{gjz} || '%')
+                </foreach>
+                )
+            </if>
+
             and RD = (
             select MAX(RD) from WTGL_DACC
             <where>
-                <if test="WTMC != null  and WTMC != ''">and WTMC like concat('%', #{WTMC}, '%')
+                <if test="WTMC != null  and WTMC != ''">and WTMC like '%' || #{WTMC} || '%'
                 </if>
                 <if test="WTLB != null  and WTLB != ''">and WTLB = #{WTLB}</if>
                 <if test="WTXL != null  and WTXL != ''">and WTXL = #{WTXL}</if>
-                <if test="WTMS != null  and WTMS != ''">and WTMS like concat('%', #{WTMS}, '%')
-                </if>
                 <if test="GXH != null  and GXH != ''">and GXH = #{GXH}</if>
                 <if test="CPXH != null  and CPXH != ''">and CPXH = #{CPXH}</if>
                 <if test="JH != null  and JH != ''">and JH = #{JH}</if>
@@ -41,9 +47,21 @@
                     </foreach>
                     )
                 </if>
+                <if test="GJZLIST != null and GJZLIST.size() != 0 ">
+                    and (
+                    <foreach collection="GJZLIST" separator=" or " item="gjz">
+                        (WTMC like '%' || #{gjz} || '%'
+                        or WTMS like '%' || #{gjz} || '%'
+                        or DAXX like '%' || #{gjz} || '%')
+                    </foreach>
+                    )
+                </if>
             </where>
             )
         </where>
         ) TMP_PAGE) WHERE PAGEHELPER_ROW_ID = 1
+    </select>
+    <select id="selectGjz" resultType="java.lang.String">
+        select GJZ from WTGL_GJZZD where GJZ like '%' || #{wtms} || '%'
     </select>
 </mapper>

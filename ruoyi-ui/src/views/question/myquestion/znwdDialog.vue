@@ -7,8 +7,8 @@
             <div>
               <label>关键字: </label>
               <el-input
-                v-model="queryParams.WTMC"
-                placeholder="请输入问题名称"
+                v-model="queryParams.KEYWORDS"
+                placeholder="请输入关键字"
                 clearable
                 @keyup.enter.native="handleQuery"
               />
@@ -198,7 +198,8 @@ export default {
         JH: null,
         GXH: null,
         WTLB: null,
-        WTXL: null
+        WTXL: null,
+        KEYWORDS: null
       }
     };
   },
@@ -293,7 +294,8 @@ export default {
         (this.queryParams.JH == null || this.queryParams.JH === '') &&
         (this.queryParams.GXH == null || this.queryParams.GXH === '') &&
         (this.queryParams.WTLB == null || this.queryParams.WTLB === '') &&
-        (this.queryParams.WTXL == null || this.queryParams.WTXL === '')
+        (this.queryParams.WTXL == null || this.queryParams.WTXL === '') &&
+        (this.queryParams.KEYWORDS == null || this.queryParams.KEYWORDS === '')
       ) {
         this.$message.error("请输入查询条件!")
         return

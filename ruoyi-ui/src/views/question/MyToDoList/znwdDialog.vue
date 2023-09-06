@@ -56,7 +56,7 @@
             </div>
             <div>
               <label>问题细类: </label>
-              <el-select v-model="queryParams.WTXL" clearable placeholder="请选择问题细类">
+              <el-select v-model="queryParams.WTXL" @change="handleQuery" clearable placeholder="请选择问题细类">
                 <el-option
                   v-for="item in wtxlList"
                   :key="item.value"
@@ -92,14 +92,21 @@
       </el-col>
       <el-col :span="4" style="height: 100%;display: flex;justify-content: center;align-items: center;">
         <el-button @click="handleQuery" type="primary"
-                   style="width: 60%;height: 60px;font-size: 18px;">
+                   style="width: 80%;height: 60px;font-size: 18px;">
           智能查询
+        </el-button>
+      </el-col>
+      <el-col :span="4" style="height: 100%;display: flex;justify-content: center;align-items: center;">
+        <el-button @click="dialogdafk" type="success" :disabled="single"
+                   style="width: 80%;height: 60px;font-size: 18px;">
+          答案反馈
         </el-button>
       </el-col>
 
     </el-row>
     <el-table border v-loading="loading" height="calc(100vh - 320px)" :data="daccList"
               @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="50"/>
       <el-table-column label="序号" type="index" width="50"/>
       <el-table-column show-overflow-tooltip label="产品型号" align="center" prop="cpxh"/>
       <el-table-column show-overflow-tooltip label="件号" align="center" prop="jh"/>
@@ -158,6 +165,7 @@ export default {
   components: {xiangxixinxi},
   data() {
     return {
+      val:[],
       shifoumanyiDialog: false,//是否满意的弹出框
       xiangxiDialog: false,//详细信息是否弹出框
       jhsjList: [],//交互数据的数据集合
@@ -198,8 +206,6 @@ export default {
     };
   },
   mounted() {
-    //this.getList();
-    this.wtlbMethod();
     if (this.form != null) {
       this.queryParams.WTMS = this.form.wtms
       this.queryParams.WTMC = this.form.wtmc
@@ -208,10 +214,17 @@ export default {
       this.queryParams.GXH = this.form.gxh
       this.queryParams.WTLB = this.form.wtlb
       this.queryParams.WTXL = this.form.wtxl
+      if (this.form.wtlb != null && this.form.wtlb !== '') {
+        this.wtxlMethod()
+      }
+      this.handleQuery()
     }
-
+    this.wtlbMethod();
   },
   methods: {
+    dialogdafk() {
+      this.$emit('dialogdafk',this.val[0])
+    },
     //详细信息的方法
     xiangxixinxi(row) {
       if (this.form != null) {
@@ -260,6 +273,7 @@ export default {
     wtlbChange() {
       this.queryParams.WTXL = null;
       this.wtxlMethod();
+      this.handleQuery()
     },
     //问题细类的获得方法
     wtxlMethod() {
@@ -330,6 +344,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.daxxid)
+      this.val = selection
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },

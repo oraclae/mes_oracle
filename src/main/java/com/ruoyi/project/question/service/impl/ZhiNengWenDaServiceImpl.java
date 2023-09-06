@@ -7,6 +7,8 @@ import com.ruoyi.project.question.service.IZhiNengWenDaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Author: LiHai
  * Date: 2023/7/25
@@ -22,7 +24,14 @@ public class ZhiNengWenDaServiceImpl implements IZhiNengWenDaService {
      */
     @Override
     public ZhiNengWenDaSelectVO selectDataByNotId(ZhiNengWenDaDTO zhiNengWenDaDTO) {
-        System.out.println(zhiNengWenDaDTO.getIds().length);
+        String wtms = zhiNengWenDaDTO.getWTMS();
+        if (wtms != null) {
+            List<String> gjzList = zhiNengWenDaMapper.selectGjz(wtms);
+            if (gjzList.size() == 0) {
+                return null;
+            }
+            zhiNengWenDaDTO.setGJZLIST(gjzList);
+        }
         return zhiNengWenDaMapper.selectDataByNotId(zhiNengWenDaDTO);
     }
 }

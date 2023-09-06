@@ -2,6 +2,8 @@ package com.ruoyi.project.question.domain;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * Author: QXD
  * Date: 2023/6/29 8:37
@@ -29,4 +31,5 @@ public class ZhiNengWenDaDTO {
     private String GXMC;             //工序名称
     private String JH;             //件号
     private String CPXH;             //产品型号
+    private List<String> GJZLIST;   //关键字
 }

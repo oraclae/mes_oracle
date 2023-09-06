@@ -213,6 +213,7 @@ public class WtglCjlsServiceImpl implements IWtglCjlsService {
                 daccVO.setWTMS(wtglCjls.getWTMS());
                 daccVO.setDAXX(wtglCjls.getJJFA());
                 daccVO.setDAXXID(UUID.randomUUID().toString());
+                daccVO.setDEPTID(SecurityUtils.getDeptId().toString());
                 daccVOS.add(daccVO);
                 questionMapper.saveDaccList(daccVO);
             }

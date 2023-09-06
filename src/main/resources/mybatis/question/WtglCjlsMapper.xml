@@ -206,6 +206,11 @@
             <if test="wtglDacc.CPXH != null  and wtglDacc.CPXH != ''">and CPXH = #{wtglDacc.CPXH}</if>
             <if test="wtglDacc.JH != null  and wtglDacc.JH != ''">and JH = #{wtglDacc.JH}</if>
             <if test="wtglDacc.DEPTID != null  and wtglDacc.DEPTID != ''">and DEPTID = #{wtglDacc.DEPTID}</if>
+            <if test="wtglDacc.KEYWORDS != null  and wtglDacc.KEYWORDS != ''">
+            and (WTMC like '%' || #{wtglDacc.KEYWORDS} || '%'
+            or WTMS like '%' || #{wtglDacc.KEYWORDS} || '%'
+            or DAXX like '%' || #{wtglDacc.KEYWORDS} || '%')
+        </if>
         </where>
         order by RD desc
     </select>
@@ -343,6 +348,7 @@
         select BUTNAME, CJD
         from WTGL_UPBUTTON BUT
                  left join WTGL_YWZD WY on BUT.BUTNAME = WY.ZJD
+        order by PX
     </select>
     <insert id="insertWtglCjls" parameterType="WtglCjls">
         insert into WTGL_CJLS
