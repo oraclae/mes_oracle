@@ -25,7 +25,7 @@ public class ScheduledTasks extends BaseController {
     private QuestionService questionService;
 
     @Scheduled(cron = "0 0 8,10,12,14,16 * * ?") //每天8 10 12 14 16
-//    @PostConstruct
+    //@PostConstruct
     private void shengjizrr() throws Exception {
         log.debug("升级责任人开始");
         questionService.shengjizrr();

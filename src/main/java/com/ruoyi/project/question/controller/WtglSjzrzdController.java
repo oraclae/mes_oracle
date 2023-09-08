@@ -4,6 +4,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.project.question.domain.WtglSjzrzd;
+import com.ruoyi.project.question.domain.WtxxDTO;
 import com.ruoyi.project.question.service.IWtglSjzrzdService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,6 @@ public class WtglSjzrzdController extends BaseController {
     /**
      * 查询升级责任人列表
      */
-    @PreAuthorize("@ss.hasPermi('system:sjzrzd:list')")
     @GetMapping("/list")
     public TableDataInfo list(WtglSjzrzd wtglSjzrzd) {
         startPage();
@@ -48,7 +48,6 @@ public class WtglSjzrzdController extends BaseController {
     /**
      * 导出升级责任人列表
      */
-    @PreAuthorize("@ss.hasPermi('system:sjzrzd:export')")
     @Log(title = "升级责任人", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, WtglSjzrzd wtglSjzrzd) {
@@ -60,7 +59,6 @@ public class WtglSjzrzdController extends BaseController {
     /**
      * 获取升级责任人详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:sjzrzd:query')")
     @GetMapping(value = "/{xh}")
     public AjaxResult getInfo(@PathVariable("xh") String xh) {
         return success(wtglSjzrzdService.selectWtglSjzrzdByXh(xh));
@@ -69,7 +67,6 @@ public class WtglSjzrzdController extends BaseController {
     /**
      * 新增升级责任人
      */
-    @PreAuthorize("@ss.hasPermi('system:sjzrzd:add')")
     @Log(title = "升级责任人", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody WtglSjzrzd wtglSjzrzd) {
@@ -84,7 +81,6 @@ public class WtglSjzrzdController extends BaseController {
     /**
      * 修改升级责任人
      */
-    @PreAuthorize("@ss.hasPermi('system:sjzrzd:edit')")
     @Log(title = "升级责任人", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody WtglSjzrzd wtglSjzrzd) {
@@ -94,10 +90,33 @@ public class WtglSjzrzdController extends BaseController {
     /**
      * 删除升级责任人
      */
-    @PreAuthorize("@ss.hasPermi('system:sjzrzd:remove')")
     @Log(title = "升级责任人", businessType = BusinessType.DELETE)
     @DeleteMapping("/{xhs}")
     public AjaxResult remove(@PathVariable String[] xhs) {
         return toAjax(wtglSjzrzdService.deleteWtglSjzrzdByXhs(xhs));
+    }
+
+
+    /**
+     * 通过责任人id查询整个升级人数据
+     */
+    @GetMapping(value = "/getSjzrzdByZrrid/{zrrid}")
+    public AjaxResult getSjzrzdByZrrid(@PathVariable("zrrid") String zrrid) {
+        return success(wtglSjzrzdService.selectWtglSjzrzdByZrrid(zrrid));
+    }
+
+    /**
+     * 问题升级的方法
+     */
+    @PostMapping("/wtsjOneZrr")
+    public AjaxResult wtsjOneZrr(@RequestBody WtxxDTO wtxxDTO) {
+        int i = wtglSjzrzdService.wtsjOneZrr(wtxxDTO);
+        if (i == 0) {
+            return AjaxResult.error("请确定升级责任人表的一级责任人的id是否正确");
+        } else if (i == 500) {
+            return AjaxResult.error("升级责任人已存在，问题不可升级");
+        } else {
+            return AjaxResult.success("升级成功");
+        }
     }
 }

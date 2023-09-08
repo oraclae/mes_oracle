@@ -422,6 +422,21 @@
             )
         </if>
     </update>
+    <update id="updateZRDBData" parameterType="com.ruoyi.project.question.domain.vo.ZrrVO">
+        update WTGL_ZRDB
+        <set>
+            <if test="zrdb.ZRRID !=null" >ZRRID = #{zrdb.ZRRID}</if>
+            <if test="zrdb.WTID !=null" >WTID = #{zrdb.WTID}</if>
+            <if test="zrdb.ZRRZT !=null" >ZRRZT = #{zrdb.ZRRZT}</if>
+            <if test="zrdb.ZRBM !=null" >ZRBM = #{zrdb.ZRBM}</if>
+            <if test="zrdb.ZRKS !=null" >ZRKS = #{zrdb.ZRKS}</if>
+            <if test="zrdb.ZRR !=null" >ZRR = #{zrdb.ZRR}</if>
+            <if test="zrdb.ZRBMID !=null" >ZRBMID = #{zrdb.ZRBMID}</if>
+            <if test="zrdb.ZRKSID !=null" >ZRKSID = #{zrdb.ZRKSID}</if>
+            <if test="zrdb.SFZZRR !=null" >SFZZRR = #{zrdb.SFZZRR}</if>
+        </set>
+        where XH=#{zrdb.XH}
+    </update>
     <delete id="deleteQuestions">
         delete from WTGL_YWCJ where ID in (
         <foreach collection="ids" item="id" separator=",">

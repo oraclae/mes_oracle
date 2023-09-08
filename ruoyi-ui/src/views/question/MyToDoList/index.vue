@@ -310,15 +310,19 @@
             <el-button style="background-color: red" type="warning" size="small"
                        @click="applyForClosure(closureID)">申请关闭
             </el-button>
-            <div style="display: inline-block;text-align: center;margin-left: 240px;font-size: 15px">
+            <el-button v-if="queryParams.radios==='处理中'|| queryParams.radios==='待办' && closureID.yjjb != null && closureID.yjjb!==''"
+                       style="background-color: red" type="warning" size="small"
+                       @click.once="wtsjOne">问题升级-{{closureID.yjjb}}
+            </el-button>
+            <div style="display: inline-block;text-align: center;margin-right: 80px;font-size: 15px;float: right">
               <div><label>未完成天数</label></div>
               <div><label>{{ wwcts === 'NAN天' ? '0天' : wwcts }}</label></div>
             </div>
-            <div style="display: inline-block;text-align: center;margin-left: 120px;font-size: 15px">
+            <div style="display: inline-block;text-align: center;margin-right: 80px;font-size: 15px;float: right">
               <div><label>超期天数</label></div>
               <div><label>{{ cqts === 'NAN天' ? '0天' : cqts }}</label></div>
             </div>
-            <div style="display: inline-block;text-align: center;margin-left: 140px;font-size: 15px">
+            <div style="display: inline-block;text-align: center;margin-right: 80px;font-size: 15px;float: right">
               <div><label>完成天数</label></div>
               <div><label>{{ wcts === 'NAN天' ? '0天' : wcts }}</label></div>
             </div>
@@ -735,6 +739,7 @@ import fj from "@/views/fj/fj";
 import deptTreeSelect from "@/views/question/myquestion/deptTreeSelect";
 import zdhf from "@/views/question/WTGL_ZDHF";
 import xiangxixinxi from "@/views/question/myquestion/xiangxixinxi";
+import {getSjzrzdByZrrid, wtsjOneZrr} from "@/api/question/sjzrzd";
 
 export default {
   components: {
@@ -847,6 +852,17 @@ export default {
     };
   },
   methods: {
+    //问题升级
+    wtsjOne() {
+      wtsjOneZrr(this.closureID).then(res => {
+        if (res.code === 200) {
+          this.$message.success("升级成功");
+          this.dialogReload();
+        } else {
+          this.$message.error(res.msg);
+        }
+      });
+    },
     //下载文件
     downLoadFile(row) {
       var name = row.wjmc;
@@ -943,6 +959,7 @@ export default {
         this.fujian = false;
         this.islxfk = false;
         this.closureID = row;
+        this.getSjzr(this.closureID.zrrid);
         this.wtms = row.wtms;
         if (this.closureID.lxfk === '例行反馈') {
           this.loadJhjlList('例行反馈');
@@ -1354,6 +1371,7 @@ export default {
       }
       this.islxfk = false;
       this.closureID = this.handleSelect[0];
+      this.getSjzr(this.closureID.zrrid);
       this.computTime(this.closureID);
       this.wtms = this.handleSelect[0].wtms;
       if (this.closureID.lxfk === '例行反馈') {
@@ -1375,6 +1393,13 @@ export default {
       if (this.closureID.wtzt === '提交') {
         this.updateWtzt();
       }
+    },
+    //给closureID赋值一级级别和一级级别id
+    getSjzr(zrrid) {
+      getSjzrzdByZrrid(zrrid).then(res=>{
+        this.closureID.yjjb = res.data.yjjb;
+        this.closureID.yjzrrId = res.data.yjzrrid;
+      })
     },
     //弹窗内刷新按钮
     dialogReload() {

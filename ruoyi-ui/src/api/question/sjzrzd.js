@@ -42,3 +42,21 @@ export function delSjzrzd(xh) {
     method: 'delete'
   })
 }
+
+//通过升级人id查询升级人
+export function getSjzrzdByZrrid(zrrid) {
+  return request({
+    url: '/system/sjzrzd/getSjzrzdByZrrid/' + zrrid,
+    method: 'get'
+  })
+}
+
+//问题升级责任人
+export function wtsjOneZrr(data) {
+  return request({
+    url: '/system/sjzrzd/wtsjOneZrr',
+    method: 'post',
+    data: data
+  })
+}
+

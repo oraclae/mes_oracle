@@ -9,7 +9,7 @@ import com.ruoyi.framework.web.domain.BaseEntity;
 
 /**
  * 升级责任人对象 wtgl_sjzrzd
- * 
+ *
  * @author qxd
  * @date 2023-08-18
  */
@@ -28,8 +28,10 @@ public class WtglSjzrzd extends BaseEntity
     private String zrbm;
 
     /** 责任科室 */
-    @Excel(name = "责任科室")
-    private String zrks;
+    @Excel(name = "一级级别")
+    private String yjjb;
+    @Excel(name = "当前级别")
+    private String dqjb;
 
     /** 一级责任人 */
     @Excel(name = "一级责任人")

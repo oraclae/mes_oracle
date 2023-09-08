@@ -255,5 +255,13 @@ public interface QuestionMapper {
     //获得问题升级等于true的数据
     List<WtxxVo> selectWtxxByWtsj();
 
+    /**
+     * 根据wtid修改问题的是否主责任人
+     */
     void updateZrdb(@Param("wtxxVos") List<WtxxVo> wtxxVos);
+
+    /**
+     * 修改责任人表的数据
+     */
+    void updateZRDBData(@Param("zrdb") ZrrVO zrrVO);
 }

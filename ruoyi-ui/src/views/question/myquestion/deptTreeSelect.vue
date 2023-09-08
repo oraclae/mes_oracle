@@ -164,17 +164,17 @@ export default {
     //选中责任人确定按钮
     submitButten() {
       if (this.text.indexOf('责任人') !== -1) {
-        if (this.handleChangeData.length === 1) {
-          this.userSelectTableData.forEach(item => {
+        if (this.userSelectTableData.length > 0) {
+          /*this.userSelectTableData.forEach(item => {
             if (item.userId === this.handleChangeData[0].userId) {
               item.sfzzrr = 'true'
             } else {
               item.sfzzrr = ''
             }
-          });
+          });*/
           this.$emit('selectDialogSubmit', this.userSelectTableData, '责任人')
         } else {
-          this.$message.error("请选择一条为主责任人")
+          this.$message.error("请选择责任人")
         }
       } else {
         if (this.userSelectTableData.length <= 0) {

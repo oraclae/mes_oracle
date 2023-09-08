@@ -3,11 +3,12 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.project.question.mapper.WtglSjzrzdMapper">
-    
-    <resultMap type="WtglSjzrzd" id="WtglSjzrzdResult">
+
+    <resultMap type="com.ruoyi.project.question.domain.WtglSjzrzd" id="WtglSjzrzdResult">
         <result property="xh"    column="xh"    />
         <result property="zrbm"    column="zrbm"    />
-        <result property="zrks"    column="zrks"    />
+        <result property="yjjb"    column="yjjb"    />
+        <result property="dqjb"    column="dqjb"    />
         <result property="yjzrr"    column="yjzrr"    />
         <result property="ejzrr"    column="ejzrr"    />
         <result property="sjzrr"    column="sjzrr"    />
@@ -19,14 +20,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectWtglSjzrzdVo">
-        select xh, zrbm, zrks, yjzrr, ejzrr, sjzrr, yjzrrid, ejzrrid, sjzrrid, dqzer, dqzerid from wtgl_sjzrzd
+        select xh, zrbm, yjjb,dqjb, yjzrr, ejzrr, sjzrr, yjzrrid, ejzrrid, sjzrrid, dqzer, dqzerid from wtgl_sjzrzd
     </sql>
 
     <select id="selectWtglSjzrzdList" parameterType="WtglSjzrzd" resultMap="WtglSjzrzdResult">
         <include refid="selectWtglSjzrzdVo"/>
-        <where>  
+        <where>
             <if test="zrbm != null  and zrbm != ''"> and zrbm = #{zrbm}</if>
-            <if test="zrks != null  and zrks != ''"> and zrks = #{zrks}</if>
+            <if test="yjjb != null  and yjjb != ''"> and yjjb = #{yjjb}</if>
+            <if test="dqjb != null  and dqjb != ''"> and dqjb = #{dqjb}</if>
             <if test="yjzrr != null  and yjzrr != ''"> and yjzrr = #{yjzrr}</if>
             <if test="ejzrr != null  and ejzrr != ''"> and ejzrr = #{ejzrr}</if>
             <if test="sjzrr != null  and sjzrr != ''"> and sjzrr = #{sjzrr}</if>
@@ -37,18 +39,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="dqzerid != null  and dqzerid != ''"> and dqzerid = #{dqzerid}</if>
         </where>
     </select>
-    
+
     <select id="selectWtglSjzrzdByXh" parameterType="String" resultMap="WtglSjzrzdResult">
         <include refid="selectWtglSjzrzdVo"/>
         where xh = #{xh}
     </select>
-        
+    <select id="selectWtglSjzrzdByZrrid" resultType="com.ruoyi.project.question.domain.WtglSjzrzd">
+        <include refid="selectWtglSjzrzdVo"/>
+        where DQZERID=#{zrrid}
+    </select>
+
     <insert id="insertWtglSjzrzd" parameterType="WtglSjzrzd">
         insert into wtgl_sjzrzd
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="xh != null">xh,</if>
             <if test="zrbm != null">zrbm,</if>
-            <if test="zrks != null">zrks,</if>
+            <if test="dqjb != null">dqjb,</if>
+            <if test="yjjb != null">yjjb,</if>
             <if test="yjzrr != null">yjzrr,</if>
             <if test="ejzrr != null">ejzrr,</if>
             <if test="sjzrr != null">sjzrr,</if>
@@ -61,7 +68,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="xh != null">#{xh},</if>
             <if test="zrbm != null">#{zrbm},</if>
-            <if test="zrks != null">#{zrks},</if>
+            <if test="dqjb != null">#{dqjb},</if>
+            <if test="yjjb != null">#{yjjb},</if>
             <if test="yjzrr != null">#{yjzrr},</if>
             <if test="ejzrr != null">#{ejzrr},</if>
             <if test="sjzrr != null">#{sjzrr},</if>
@@ -77,7 +85,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update wtgl_sjzrzd
         <trim prefix="SET" suffixOverrides=",">
             <if test="zrbm != null">zrbm = #{zrbm},</if>
-            <if test="zrks != null">zrks = #{zrks},</if>
+            <if test="dqjb != null">dqjb = #{dqjb},</if>
+            <if test="yjjb != null">yjjb = #{yjjb},</if>
             <if test="yjzrr != null">yjzrr = #{yjzrr},</if>
             <if test="ejzrr != null">ejzrr = #{ejzrr},</if>
             <if test="sjzrr != null">sjzrr = #{sjzrr},</if>
@@ -95,7 +104,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteWtglSjzrzdByXhs" parameterType="String">
-        delete from wtgl_sjzrzd where xh in 
+        delete from wtgl_sjzrzd where xh in
         <foreach item="xh" collection="array" open="(" separator="," close=")">
             #{xh}
         </foreach>

@@ -41,6 +41,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     /**
      * 我的问题查询数据（通过单选框的判断）
+     *
      * @param wtxxDTO 包含单选框的值
      * @return 表格的数据集合
      */
@@ -70,7 +71,7 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public List<WtxxVo> getQuestionList(WtxxDTO wtxxDTO) {
         Long userId = SecurityUtils.getUserId();
-        wtxxDTO.setZRRID(userId+"");
+        wtxxDTO.setZRRID(userId + "");
         if ("待办".equals(wtxxDTO.getRadios())) {
             wtxxDTO.setWTZT("提交");
             return questionMapper.selectWtxxData2(wtxxDTO);
@@ -87,6 +88,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     /**
      * 批量删除数据
+     *
      * @param ids 删除数据的集合
      */
     @Override
@@ -110,12 +112,29 @@ public class QuestionServiceImpl implements QuestionService {
      */
     @Override
     public void updateMyDoListStatus(List<WtxxDTO> wtxxDTO) {
-        questionMapper.updateQuestionsStatus(wtxxDTO);
         for (WtxxDTO dto : wtxxDTO) {
             dto.setValue("申请已完成");
             dto.setZRRID(SecurityUtils.getUserId() + "");
         }
         questionMapper.updateMyDoListStatus(wtxxDTO);
+        List<WtxxDTO> wtxxDTOS = new ArrayList<>();
+        for (WtxxDTO dto : wtxxDTO) {
+            int num = 0;
+            List<ZrrVO> list = questionMapper.getzerData(dto.getID());
+            for (ZrrVO zrrVO : list) {
+                String zrrzt = zrrVO.getZRRZT();
+                if ("申请已完成".equals(zrrzt)) {
+                    num++;
+                }
+            }
+            if (num == list.size()) {
+                dto.setValue("待关闭");
+                wtxxDTOS.add(dto);
+            }
+        }
+        if (wtxxDTOS.size() > 0) {
+            questionMapper.updateQuestionsStatus(wtxxDTOS);
+        }
     }
 
     /**
@@ -184,9 +203,9 @@ public class QuestionServiceImpl implements QuestionService {
     //获取问题细类数据的方法
     @Override
     public List<String> getwtxlMethod(String wtlb) {
-        if (wtlb!=null) {
+        if (wtlb != null) {
             return questionMapper.getwtxlMethod(wtlb);
-        }else {
+        } else {
             return new ArrayList<>();
         }
     }
@@ -211,7 +230,7 @@ public class QuestionServiceImpl implements QuestionService {
         SysDept sysDept = sysDeptMapper.selectDeptById(SecurityUtils.getDeptId());
         wtxxDTO.setCJBM(sysDept.getDeptName());
         List<ZrrVO> zrrVOList = wtxxDTO.getZRRVOLIST();
-        if (zrrVOList.size()!=0) {
+        if (zrrVOList.size() != 0) {
             for (ZrrVO zrrVO : zrrVOList) {
                 if ("true".equals(zrrVO.getSFZZRR())) {
                     wtxxDTO.setDQZRR(zrrVO.getZRR());
@@ -260,8 +279,8 @@ public class QuestionServiceImpl implements QuestionService {
         sjjh.setWTZRR(sysUser.getNickName());
         sjjh.setHFR(sysUser.getNickName());
         List<WtxxDTO> wtxxDTOS = new ArrayList<>();
-        if (sjjh.getXH() != null&&!sjjh.getXH().isEmpty()&&!"领导批示".equals(sjjh.getJHZT())) {
-            if ("接收".equals(sjjh.getValue())&&sjjh.getUserName()!=null) {
+        if (sjjh.getXH() != null && !sjjh.getXH().isEmpty() && !"领导批示".equals(sjjh.getJHZT())) {
+            if ("接收".equals(sjjh.getValue()) && sjjh.getUserName() != null) {
                 WtxxDTO wtxxDTO = new WtxxDTO();
                 wtxxDTO.setID(sjjh.getWTID());
                 wtxxDTO.setValue("反馈");
@@ -271,9 +290,9 @@ public class QuestionServiceImpl implements QuestionService {
             String ejhfppyj = UUID.randomUUID() + "";
             Sjjh sjjh1 = questionMapper.selectJhjlByid(sjjh.getXH(), sjjh.getJHZT());
             int updatejhjl = 0;
-            if (sjjh1.getEJHFPPYJ() == null||sjjh1.getEJHFPPYJ().isEmpty()) {
-                updatejhjl = questionMapper.updatejhjl(sjjh.getXH(),ejhfppyj);
-            }else {
+            if (sjjh1.getEJHFPPYJ() == null || sjjh1.getEJHFPPYJ().isEmpty()) {
+                updatejhjl = questionMapper.updatejhjl(sjjh.getXH(), ejhfppyj);
+            } else {
                 updatejhjl = questionMapper.updatejhjl(sjjh.getXH(), sjjh1.getEJHFPPYJ() + "," + ejhfppyj);
             }
             if (updatejhjl > 0) {
@@ -281,7 +300,7 @@ public class QuestionServiceImpl implements QuestionService {
                 questionMapper.saveJhjlList(sjjh);
             }
         } else if (!"领导批示".equals(sjjh.getJHZT())) {
-            if ("接收".equals(sjjh.getValue())&&sjjh.getUserName()!=null) {
+            if ("接收".equals(sjjh.getValue()) && sjjh.getUserName() != null) {
                 WtxxDTO wtxxDTO = new WtxxDTO();
                 wtxxDTO.setID(sjjh.getWTID());
                 wtxxDTO.setValue("反馈");
@@ -351,12 +370,12 @@ public class QuestionServiceImpl implements QuestionService {
      * 得到问题的回复数据
      */
     @Override
-    public List<Sjjh> getJhjl(String wtid,String jhzt) {
+    public List<Sjjh> getJhjl(String wtid, String jhzt) {
         if ("领导批示".equals(jhzt)) {
-            List<Sjjh> sjjhList = questionMapper.selectJhjlByWtid(wtid,jhzt);
+            List<Sjjh> sjjhList = questionMapper.selectJhjlByWtid(wtid, jhzt);
             return sjjhList;
         } else {
-            List<Sjjh> sjjhList = questionMapper.selectJhjlByWtid(wtid,jhzt);
+            List<Sjjh> sjjhList = questionMapper.selectJhjlByWtid(wtid, jhzt);
             List<Sjjh> sjjhResult = new ArrayList<>();
             for (Sjjh sjjh : sjjhList) {
                 if ("1".equals(sjjh.getJS())) {
@@ -372,24 +391,25 @@ public class QuestionServiceImpl implements QuestionService {
         }
 
     }
+
     /**
      * 得到领导批示的数据
      */
     @Override
-    public List<Sjjh> getLDPS(String wtid,String jhzt) {
-        List<Sjjh> sjjhList = questionMapper.selectldpsByWtid(wtid,jhzt);
+    public List<Sjjh> getLDPS(String wtid, String jhzt) {
+        List<Sjjh> sjjhList = questionMapper.selectldpsByWtid(wtid, jhzt);
         return sjjhList;
     }
 
     /**
      * 交互数据的递归
      */
-    private void zhengli(Sjjh sjjh,String jhzt,List<Sjjh> sjjhs) {
+    private void zhengli(Sjjh sjjh, String jhzt, List<Sjjh> sjjhs) {
         String[] split = sjjh.getEJHFPPYJ().split(",");
         for (String s : split) {
             Sjjh sj = null;
             for (Sjjh sjjh1 : sjjhs) {
-                if (sjjh1.getXH().equals(s)&&jhzt.equals(sjjh1.getJHZT())) {
+                if (sjjh1.getXH().equals(s) && jhzt.equals(sjjh1.getJHZT())) {
                     sj = sjjh1;
                 }
             }
@@ -441,7 +461,7 @@ public class QuestionServiceImpl implements QuestionService {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
         String format = simpleDateFormat.format(new Date());
         //获取数据库中问题编号最新的问题编号
-        String wtbh = questionMapper.selectMaxWtbh(format+"001");
+        String wtbh = questionMapper.selectMaxWtbh(format + "001");
         if (wtbh == null) {
             return format + "001";
         } else {
@@ -478,7 +498,7 @@ public class QuestionServiceImpl implements QuestionService {
                 Date parse = simpleDateFormat.parse(format);
                 Date parse1 = simpleDateFormat.parse(currentTime);
                 int i = differentDays(parse, parse1);
-                wtxxVo.setWWCTS(i+"");
+                wtxxVo.setWWCTS(i + "");
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -585,33 +605,43 @@ public class QuestionServiceImpl implements QuestionService {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String format = simpleDateFormat.format(new Date());
         //给当前问题修改为已关闭状态
-        questionMapper.updateQuestionStatusSJ(sjjh.get(0).getWTID(), "已关闭",format);
-            DaccVO daccVO = new DaccVO();
-            for (SjjhDTO sjjhDTO : sjjh) {
-                daccVO.setWTID(sjjhDTO.getWTID());
-                daccVO.setCJRID(sjjhDTO.getWTCJID());
-                daccVO.setCJR(sjjhDTO.getWTCJR());
-                daccVO.setWTMC(sjjhDTO.getWTBT());
-                daccVO.setGBSJ(format);
-                daccVO.setRD(0);
-                daccVO.setZRR(daccDTO.getZRR());
-                daccVO.setCPXH(daccDTO.getCPXH());
-                daccVO.setJH(daccDTO.getJH());
-                daccVO.setWTLB(daccDTO.getWTLB());
-                daccVO.setWTXL(daccDTO.getWTXL());
-                daccVO.setGXH(daccDTO.getGXH());
-                daccVO.setGXMC(daccDTO.getGXH());
-                daccVO.setWTMS(daccDTO.getWTMS());
-                daccVO.setDAXXID(UUID.randomUUID() + "");
-                if (daccVO.getDAXX() != null) {
-                    daccVO.setDAXX(daccVO.getDAXX() + "$$" + sjjhDTO.getHFXX());
-                } else {
-                    daccVO.setDAXX(sjjhDTO.getHFXX());
-                }
+        questionMapper.updateQuestionStatusSJ(sjjh.get(0).getWTID(), "已关闭", format);
+        DaccVO daccVO = new DaccVO();
+        for (SjjhDTO sjjhDTO : sjjh) {
+            daccVO.setWTID(sjjhDTO.getWTID());
+            daccVO.setCJRID(sjjhDTO.getWTCJID());
+            daccVO.setCJR(sjjhDTO.getWTCJR());
+            daccVO.setWTMC(sjjhDTO.getWTBT());
+            daccVO.setGBSJ(format);
+            daccVO.setRD(0);
+            daccVO.setZRR(daccDTO.getZRR());
+            daccVO.setCPXH(daccDTO.getCPXH());
+            daccVO.setJH(daccDTO.getJH());
+            daccVO.setWTLB(daccDTO.getWTLB());
+            daccVO.setWTXL(daccDTO.getWTXL());
+            daccVO.setGXH(daccDTO.getGXH());
+            daccVO.setGXMC(daccDTO.getGXH());
+            daccVO.setWTMS(daccDTO.getWTMS());
+            daccVO.setDAXXID(UUID.randomUUID() + "");
+            if (daccVO.getDAXX() != null) {
+                daccVO.setDAXX(daccVO.getDAXX() + "$$" + sjjhDTO.getHFXX());
+            } else {
+                daccVO.setDAXX(sjjhDTO.getHFXX());
             }
+        }
         if (daccVO.getWTID() != null) {
             daccVO.setDEPTID(SecurityUtils.getDeptId().toString());
             questionMapper.saveDaccList(daccVO);
+        }
+        //修改所有的责任人为确定已完成
+        //先找出wtid的数据
+        String wtid = sjjh.get(0).getWTID();
+        List<ZrrVO> zrrVOS = questionMapper.getzerData(wtid);
+        for (ZrrVO zrrVO : zrrVOS) {
+            if ("申请已完成".equals(zrrVO.getZRRZT())) {
+                zrrVO.setZRRZT("确定已完成");
+                questionMapper.updateZRDBData(zrrVO);
+            }
         }
     }
 
@@ -688,8 +718,8 @@ public class QuestionServiceImpl implements QuestionService {
      */
     @Override
     public List<WtxxVo> getQuestionYzrList(WtxxDTO wtxxDTO) {
-        wtxxDTO.setYZRID(SecurityUtils.getUserId()+"");
-        wtxxDTO.setYZRBMID(SecurityUtils.getDeptId()+"");
+        wtxxDTO.setYZRID(SecurityUtils.getUserId() + "");
+        wtxxDTO.setYZRBMID(SecurityUtils.getDeptId() + "");
         if ("待办".equals(wtxxDTO.getRadios())) {
             wtxxDTO.setWTZT("提交");
             return questionMapper.selectWtxxData1(wtxxDTO);
@@ -706,45 +736,42 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
 
-
     //用来计算两个日期之间的天数date1是小数值的，data2是大数值的
-    public static int differentDays(Date date1,Date date2){
+    public static int differentDays(Date date1, Date date2) {
         Calendar cal1 = Calendar.getInstance();
         cal1.setTime(date1);
 
         Calendar cal2 = Calendar.getInstance();
         cal2.setTime(date2);
-        int day1= cal1.get(Calendar.DAY_OF_YEAR);
+        int day1 = cal1.get(Calendar.DAY_OF_YEAR);
         int day2 = cal2.get(Calendar.DAY_OF_YEAR);
 
         int year1 = cal1.get(Calendar.YEAR);
         int year2 = cal2.get(Calendar.YEAR);
-        if(year1 != year2) //同一年
+        if (year1 != year2) //同一年
         {
-            int timeDistance = 0 ;
-            for(int i = year1 ; i < year2 ; i ++)
-            {
-                if(i%4==0 && i%100!=0 || i%400==0) //闰年
+            int timeDistance = 0;
+            for (int i = year1; i < year2; i++) {
+                if (i % 4 == 0 && i % 100 != 0 || i % 400 == 0) //闰年
                 {
                     timeDistance += 366;
-                }
-                else //不是闰年
+                } else //不是闰年
                 {
                     timeDistance += 365;
                 }
             }
-            System.out.println("判断day2 - day1 : " + (day2-day1));
-            return timeDistance + (day2-day1) ;
-        }
-        else //不同年
+            System.out.println("判断day2 - day1 : " + (day2 - day1));
+            return timeDistance + (day2 - day1);
+        } else //不同年
         {
-            System.out.println("判断day2 - day1 : " + (day2-day1));
-            return day2-day1;
+            System.out.println("判断day2 - day1 : " + (day2 - day1));
+            return day2 - day1;
         }
     }
 
     @Autowired
     private WtglSjzrzdServiceImpl wtglSjzrzdService;
+
     /**
      * 升级责任人的定时任务的执行方法
      */
@@ -752,50 +779,64 @@ public class QuestionServiceImpl implements QuestionService {
     public void shengjizrr() {
         //先获得我的问题表数据（数据中问题升级为true的数据选中出来）
         List<WtxxVo> wtxxVos = questionMapper.selectWtxxByWtsj();
-        if (wtxxVos.size() > 0) {
+        /*if (wtxxVos.size() > 0) {
             //获得该wtid的责任人变成没有主责任人
             questionMapper.updateZrdb(wtxxVos);
-        }
+        }*/
         for (WtxxVo wtxxVo : wtxxVos) {
-            //查询升级人字典表数据
-            WtglSjzrzd wtglSjzrzd = new WtglSjzrzd();
-            wtglSjzrzd.setDqzer(wtxxVo.getDQZRR());
-            List<WtglSjzrzd> wtglSjzrzds = wtglSjzrzdService.selectWtglSjzrzdList(wtglSjzrzd);
-            if (wtglSjzrzds.size() != 1) {
-                if (wtglSjzrzds.size() == 0) {
-                    System.out.println("这个数据没有升级人了，给这个数据将问题升级变成false");
-                    WtxxDTO wtxxDTO = new WtxxDTO();
-                    wtxxDTO.setID(wtxxVo.getID());
-                    wtxxDTO.setWTSJ("false");
-                    questionMapper.updateQuestion(wtxxDTO);
+            List<ZrrVO> list1 = questionMapper.getzerData(wtxxVo.getID());
+            Set<String> ids = new HashSet<>();
+            for (ZrrVO zrrVO : list1) {
+                String zrrid = zrrVO.getZRRID();
+                //查询升级人字典表数据
+                WtglSjzrzd wtglSjzrzd = new WtglSjzrzd();
+                wtglSjzrzd.setDqzerid(zrrid);
+                List<WtglSjzrzd> wtglSjzrzds = wtglSjzrzdService.selectWtglSjzrzdList(wtglSjzrzd);
+                if (wtglSjzrzds.size() != 1) {
+                    if (wtglSjzrzds.size() == 0) {
+                        System.out.println("这个数据没有下一级了，升级取消");
+                    } else {
+                        System.out.println("请联系管理员，查看字典数据，是否一个升级人的二级升级人为多个升级人");
+                    }
+                    continue;
                 }
-                if (wtglSjzrzds.size() > 1) {
-                    System.out.println("请联系管理员，查看字典数据，是否一个升级人的二级升级人为多个升级人");
-                }
-                continue;
+                String yjzrrid = wtglSjzrzds.get(0).getYjzrrid();
+                ids.add(yjzrrid);
             }
-            WtglSjzrzd wtglSjzrzdToOne = wtglSjzrzds.get(0);
-            //获取升级责任人的用户数据
-            SysUser sysUser = sysUserMapper.selectUserById(Long.parseLong(wtglSjzrzdToOne.getYjzrrid()));
-            SysDept sysDept = sysDeptMapper.selectDeptById(sysUser.getDeptId());
-            //插入新的责任人数据
-            List<ZrrVO> list = new ArrayList<>();
-            ZrrVO zrrVO = new ZrrVO();
-            zrrVO.setWTID(wtxxVo.getID());
-            zrrVO.setSFZZRR("true");
-            zrrVO.setXH(UUID.randomUUID().toString());
-            zrrVO.setZRR(sysUser.getNickName());
-            zrrVO.setZRRID(sysUser.getUserId() + "");
-            zrrVO.setZRBM(sysDept.getDeptName());
-            zrrVO.setZRBMID(sysUser.getDeptId() + "");
-            zrrVO.setZRRZT("未处理");
-            list.add(zrrVO);
-            questionMapper.createZRDB(list);
-            //修改我的问题的主责任人的名称变成升级责任人数据
-            WtxxDTO wtxxDTO = new WtxxDTO();
-            wtxxDTO.setID(wtxxVo.getID());
-            wtxxDTO.setDQZRR(sysUser.getNickName());
-            questionMapper.updateQuestion(wtxxDTO);
+            for (ZrrVO zrrVO : list1) {
+                Iterator<String> iterator = ids.iterator();
+                while (iterator.hasNext()) {
+                    String next = iterator.next();
+                    if (next.equals(zrrVO.getZRRID())) {
+                        iterator.remove();
+                    }
+                }
+            }
+            if (ids.size() == 0) {
+                WtxxDTO wtxxDTO = new WtxxDTO();
+                wtxxDTO.setID(wtxxVo.getID());
+                wtxxDTO.setWTSJ("false");
+                questionMapper.updateQuestion(wtxxDTO);
+            }
+            for (String id : ids) {
+                //获取升级责任人的用户数据
+                SysUser sysUser = sysUserMapper.selectUserById(Long.parseLong(id));
+                SysDept sysDept = sysDeptMapper.selectDeptById(sysUser.getDeptId());
+                //插入新的责任人数据
+                List<ZrrVO> list = new ArrayList<>();
+                ZrrVO zrrVO = new ZrrVO();
+                zrrVO.setWTID(wtxxVo.getID());
+                zrrVO.setSFZZRR("true");
+                zrrVO.setXH(UUID.randomUUID().toString());
+                zrrVO.setZRR(sysUser.getNickName());
+                zrrVO.setZRRID(sysUser.getUserId() + "");
+                zrrVO.setZRBM(sysDept.getDeptName());
+                zrrVO.setZRBMID(sysUser.getDeptId() + "");
+                zrrVO.setZRRZT("未处理");
+                list.add(zrrVO);
+                questionMapper.createZRDB(list);
+            }
+
         }
     }
 }

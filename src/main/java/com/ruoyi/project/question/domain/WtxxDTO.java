@@ -91,4 +91,6 @@ public class WtxxDTO {
    private String JHSJ;  //激活时间
    private List<ZrrVO> ZRRVOLIST;//责任人实体类列表
    private String JH;//件号
+   private String yjjb; //一级级别
+   private String yjzrrid;//一级级别id
 }

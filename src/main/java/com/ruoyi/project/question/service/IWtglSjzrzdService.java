@@ -1,6 +1,7 @@
 package com.ruoyi.project.question.service;
 
 import com.ruoyi.project.question.domain.WtglSjzrzd;
+import com.ruoyi.project.question.domain.WtxxDTO;
 
 import java.util.List;
 
@@ -58,4 +59,14 @@ public interface IWtglSjzrzdService {
      * @return 结果
      */
     public int deleteWtglSjzrzdByXh(String xh);
+
+    /**
+     * 通过责任人id查询整个升级人数据
+     */
+    WtglSjzrzd selectWtglSjzrzdByZrrid(String zrrid);
+
+    /**
+     * 问题升级的方法
+     */
+    int wtsjOneZrr(WtxxDTO wtxxDTO);
 }

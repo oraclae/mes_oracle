@@ -58,4 +58,9 @@ public interface WtglSjzrzdMapper {
      * @return 结果
      */
     public int deleteWtglSjzrzdByXhs(String[] xhs);
+
+    /**
+     * 通过责任人id查询整个升级人数据
+     */
+    WtglSjzrzd selectWtglSjzrzdByZrrid(String zrrid);
 }
