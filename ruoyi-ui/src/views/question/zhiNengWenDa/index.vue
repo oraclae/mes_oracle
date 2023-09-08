@@ -1,7 +1,7 @@
 <template>
   <div class="zhinengwendamain" @click="toInput" style="background-color: #e6ebf5">
+    <!--消息区-->
     <div class="xiaoxiqu" ref="xiaoxiqu">
-
       <div style="overflow: hidden;font-size: 20px;margin-bottom: 20px" v-for="(value,index) in texts" :key="index">
         <div class="robot-bubble" style="float: left" v-if="value.user === '机器人'">
           <img :src="require('@/assets/questionIcons/机器人.gif')" width="40px"
@@ -17,7 +17,41 @@
         </div>
       </div>
     </div>
-    <el-input ref="input_ref" class="input-box" v-model="inputValue" @input="handleInput"></el-input>
+    <!--按钮输入框区-->
+    <div style="width: 80%;min-width: 528px; max-width: 1000px; position: relative">
+      <el-button :type='isyuyin?"primary":"success"' plain :icon='this.isyuyin ? "el-icon-microphone" : "el-icon-mouse"' @click="updataIsyuyin" class="znwdButton">
+        {{this.isyuyin ? '语音模式' : '键鼠模式'}}
+      </el-button>
+      <el-input style="width: 100%" ref="input_ref" class="input-box" v-model="inputValue"
+                @keyup.enter.native="doSomethingAfterTwoSeconds" @input="handleInput"/>
+      <button v-show="isyuyin || !inputValue.trim()"
+              class="inputButton"
+              style="position: absolute;
+              top: 70px; right: 20px;
+              width: 40px;height: 40px;">
+        <svg width="25" height="25">
+          <g transform="rotate(90 12.5 12.5)">
+            <path d="M12.5,1 L24,24 H1 Z" fill="#CCCCCC" stroke="#CCCCCC" stroke-width="3"/>
+            <polygon points="7.5,25 12.5,15 17.5,25" fill="white"/>
+          </g>
+        </svg>
+      </button>
+      <button v-show="!isyuyin && inputValue.trim()"
+              @click="doSomethingAfterTwoSeconds"
+              class="inputButton showit"
+              style="position: absolute;
+              top: 70px; right: 20px;
+              width: 40px;height: 40px;">
+        <svg width="25" height="25">
+          <g transform="rotate(90 12.5 12.5)">
+            <path d="M12.5,1 L24,24 H1 Z" fill="#19c37f" stroke="#19c37f" stroke-width="3"/>
+            <polygon points="7.5,25 12.5,15 17.5,25" fill="white"/>
+          </g>
+        </svg>
+      </button>
+    </div>
+
+    <!--创建问题-->
     <el-dialog class="dialogRad" title="创建问题" width="700px" :close-on-click-modal="false"
                @close="createQuestionCloseButten"
                v-if="dialogTableVisible"
@@ -209,6 +243,7 @@
         </div>
       </div>
     </el-dialog>
+    <!--选择责任人-->
     <el-dialog class="dialogRad" :close-on-click-modal="false" :title="selectTitle" width="1200px"
                :visible.sync="treeVisual">
       <deptTreeSelect :selectZrrList="selectTitle==='选择责任人'?selectZrrList:selectYzrList"
@@ -219,6 +254,7 @@
       >
       </deptTreeSelect>
     </el-dialog>
+    <!--问题处理库-->
     <el-dialog class="dialogRad" :close-on-click-modal="false" title="启用问题处理库" width="1200px"
                :visible.sync="lishidaanDialog">
       <zdhf ref="cxda" @xiangxixinxi="xiangxixinxi" @dialogCreatedQuestion="dialogCreatedQuestion"
@@ -270,6 +306,7 @@ export default {
   },
   data() {
     return {
+      isyuyin: true,//语音状态
       dialogTableVisible: false,//创建问题弹窗
       form: {
         wtmc: '',   //问题名称
@@ -330,6 +367,7 @@ export default {
       wtlbList2: [],
       wtxlList2: [],
       inputValue: '',
+      text: '',
       queryParams: {
         wtms: null,
         wtmc: null,
@@ -364,7 +402,7 @@ export default {
         // newTexts 是texts的新值，oldTexts 是texts的旧值
         setTimeout(() => {
           this.scrollToBottom(); // 每当texts发生变化时，调用滚动到底部的方法
-        }, 1);
+        }, 5);
 
       },
       deep: true, // 深度监测，可监测对象或数组的变化
@@ -373,9 +411,15 @@ export default {
   methods: {
     //聚焦到输入框
     toInput() {
-      if (!this.dialogTableVisible) {
-        this.$refs.input_ref.focus();
+      if (this.dialogTableVisible || !this.isyuyin) {
+        return
       }
+      this.$refs.input_ref.focus();
+    },
+    //切换语音键盘模式
+    updataIsyuyin() {
+      this.isyuyin = !this.isyuyin;
+      this.$refs.input_ref.focus();
     },
     //问题类别的获得方法
     getwtlb() {
@@ -402,6 +446,9 @@ export default {
       if (this.manyiTime) {
         clearTimeout(this.manyiTime);
       }
+      if (!this.isyuyin) {
+        return
+      }
       // 停止输入**时间后执行
       this.timeoutId = setTimeout(() => {
         this.doSomethingAfterTwoSeconds();
@@ -421,7 +468,6 @@ export default {
       this.robotInputXiaoXi(str || '已退出当前提问，请输入 “提出问题” 重新开始提问。')
       this.jb = '提出问题'
       this.lowJb = '提出问题'
-      this.inputValue = ''
       this.queryParams = {
         wtms: null,
         wtmc: null,
@@ -436,24 +482,41 @@ export default {
     },
     //机器人输入
     robotInputXiaoXi(text) {
-      this.$refs.input_ref.blur()
       setTimeout(() => {
         this.texts.push({user: '机器人', text: text})
+      }, 500);
+    },
+    //延时聚焦输入框
+    toFocusInput() {
+      if (this.isyuyin) {
         setTimeout(() => {
           this.$refs.input_ref.focus()
         }, 500);
-      }, 500);
+      }
     },
     //停止输入后触发的方法
-    async doSomethingAfterTwoSeconds() {
-      if (this.inputValue.includes('退出')) {
-        this.texts.push({user: '用户', text: this.inputValue});
+    async doSomethingAfterTwoSeconds(str) {
+      if ((this.inputValue.trim() == null || this.inputValue.trim() === "") && str !== "调用") {
+        return
+      }
+      if (str !== "调用") {
+        this.text = this.inputValue;
+      }
+      this.inputValue = ''
+      //输入框失去焦点
+      if (this.jb !== "提出问题" && this.isyuyin) {
+        this.$refs.input_ref.blur();
+      }
+      if (this.text.includes('退出')) {
+        this.texts.push({user: '用户', text: this.text});
         this.out()
         return
       }
-      if (this.inputValue.includes('创建问题')) {
-        this.texts.push({user: '用户', text: this.inputValue});
-        this.inputValue = ''
+      if (this.text.includes('创建问题')) {
+        this.texts.push({user: '用户', text: this.text});
+        setTimeout(() => {
+          this.texts.push({user: '机器人', text: "正在打开创建窗口。。。"})
+        }, 100);
         setTimeout(() => {
           clearTimeout(this.manyiTime);
           this.createQuestion()
@@ -462,27 +525,28 @@ export default {
       }
       //开始
       if (this.jb === '提出问题') {
-        this.tichuwenti()
+        this.tichuwenti(str)
       }
       //输入完类别
       else if (this.jb === '类别') {
-        this.leibie()
+        await this.leibie(str)
       }
       //输入完细类
       else if (this.jb === '细类') {
-        this.xilei()
+        await this.xilei(str)
       }
       //查询完答案
       else if (this.jb === '满意') {
-        this.manyi()
+        await this.manyi()
       }
-      //未识别到指令不执行操作清空输入框
-      this.inputValue = ''
     },
     //输入提出问题
     tichuwenti() {
-      if (this.inputValue.includes('提出问题') || this.inputValue.includes("问问题")) {
-        this.texts.push({user: '用户', text: this.inputValue});
+      if (this.text.includes('提出问题') || this.text.includes("问问题")) {
+        if (this.isyuyin) {
+          this.$refs.input_ref.blur();
+        }
+        this.texts.push({user: '用户', text: this.text});
         this.jb = "类别";
         this.lowJb = "类别";
         let wtlbBrAll = '';
@@ -490,20 +554,21 @@ export default {
           const wtlbBr = wtlb + '<br/>'
           wtlbBrAll = wtlbBrAll + wtlbBr
         }
-        this.robotInputXiaoXi('查询到的问题类型如下，请选择');
+        this.robotInputXiaoXi('请在以下类别中选择问题类别，或提出关键字查询。');
         setTimeout(() => {
           this.robotInputXiaoXi(wtlbBrAll)
+          this.toFocusInput()//聚焦
         }, 500);
       }
     },
     //输入类别
-    async leibie() {
-      if (this.inputValue !== '') {
-        this.texts.push({user: '用户', text: this.inputValue});
+    async leibie(str) {
+      if (str !== "调用") {
+        this.texts.push({user: '用户', text: this.text});
       }
       let i = 0;
       for (let wtlb of this.wtlbList2) {
-        if (this.inputValue.includes(wtlb)) {
+        if (this.text.includes(wtlb)) {
           i = 1
           this.queryParams.wtlb = wtlb
           this.form.wtlb = wtlb
@@ -513,7 +578,6 @@ export default {
       if (i === 1) {
         this.jb = '细类'
         this.lowJb = '细类'
-        this.$refs.input_ref.blur()
         getwtxlMethod({wtlb: this.queryParams.wtlb}).then(res => {
           if (res.code === 200) {
             this.wtxlList2 = res.rows;
@@ -522,24 +586,24 @@ export default {
               const wtxlBr = this.wtxlList2[i] + '<br/>'
               wtxlBrAll = wtxlBrAll + wtxlBr
             }
-            this.robotInputXiaoXi('查询到的问题细类如下，请选择')
+            this.robotInputXiaoXi('请在以下细类中选择问题类别，或提出关键字查询。')
             setTimeout(() => {
               this.robotInputXiaoXi(wtxlBrAll)
+              this.toFocusInput()//聚焦
             }, 500);
           }
         })
       } else {
         this.isWtmsGet = true
-        this.queryParams.wtms = this.inputValue
-        if (this.inputValue !== '') {
+        if (str !== "调用" && this.text !== '') {
           setTimeout(() => {
             this.texts.push({user: '机器人', text: '正在搜索答案。。。'})
           }, 250);
           const str = await this.getAnswerByWtms();
           if (str != null) {
             return;
-          }else {
-            this.isWtmsGet = false
+          } else {
+            console.log("类别获取空")
           }
         }
         let wtlbBrAll = '';
@@ -547,27 +611,28 @@ export default {
           const wtlbBr = wtlb + '<br/>&nbsp;&nbsp;'
           wtlbBrAll = wtlbBrAll + wtlbBr
         }
-        this.robotInputXiaoXi('没有您要找的内容，请从下列类别中选择：<br/>&nbsp;&nbsp;' + wtlbBrAll)
+        this.queryParams.wtlb = ""
+        this.robotInputXiaoXi('没有您要找的内容，请从下列类别中选择，或提出关键字进行查询：<br/>&nbsp;&nbsp;' + wtlbBrAll)
+        this.toFocusInput()//聚焦
       }
     },
     //输入细类
-    async xilei() {
-      if (this.inputValue !== '') {
-        this.texts.push({user: '用户', text: this.inputValue});
+    async xilei(str) {
+      if (str !== "调用") {
+        this.texts.push({user: '用户', text: this.text});
       }
-      let i = 0;
+      let i = false;
       for (let wtxl of this.wtxlList2) {
-        if (this.inputValue.includes(wtxl) || this.inputValue.includes('新建质量问题')) {
-          i = 1
+        if (this.text.includes(wtxl) || this.text.includes('新建质量问题')) {
+          i = true
           this.queryParams.wtxl = wtxl
           this.form.wtxl = wtxl
           break
         }
       }
-      if (i === 1) {
+      if (i) {
         this.jb = '满意'
-        this.lowJb = '满意'
-        this.$refs.input_ref.blur()
+        this.lowJb = '细类'
         setTimeout(() => {
           this.texts.push({user: '机器人', text: '正在搜索答案。。。'})
           this.isWtmsGet = false
@@ -575,16 +640,15 @@ export default {
         }, 500);
       } else {
         this.isWtmsGet = true
-        this.queryParams.wtms = this.inputValue
-        if (this.inputValue !== '') {
+        if (str !== "调用" && this.text !== '') {
           setTimeout(() => {
             this.texts.push({user: '机器人', text: '正在搜索答案。。。'})
           }, 250);
           const str = await this.getAnswerByWtms();
           if (str != null) {
             return;
-          }else {
-            this.isWtmsGet = false
+          } else {
+            console.log("空了")
           }
         }
         let wtxlBrAll = ''
@@ -592,52 +656,64 @@ export default {
           const wtxlBr = this.wtxlList2[i] + '<br/>&nbsp;&nbsp;'
           wtxlBrAll = wtxlBrAll + wtxlBr
         }
+        this.queryParams.wtxl = ""
         this.robotInputXiaoXi('没有您要找的内容，请从下列细类中选择：<br/>&nbsp;&nbsp;' + wtxlBrAll)
+        this.toFocusInput()//聚焦
       }
     },
     //输入满意
-    manyi() {
-      this.texts.push({user: '用户', text: this.inputValue});
+    async manyi() {
+      this.texts.push({user: '用户', text: this.text});
       let not = [
         '不满意',
         '不要',
       ]
       let i = 0;
       for (let str of not) {
-        if (this.inputValue.includes(str)) {
+        if (this.text.includes(str)) {
           i = 1
           break
         }
       }
-      if (i === 1 || (this.inputValue.includes('不是') && this.inputValue.includes('要'))) {
-        this.$refs.input_ref.blur()
+      if (i === 1 || (this.text.includes('不是') && this.text.includes('要'))) {
         setTimeout(async () => {
           this.texts.push({user: '机器人', text: '不满意当前答案，正在搜索其他答案。。。'})
           //如果是问题描述查询
           if (this.isWtmsGet) {
+            setTimeout(() => {
+              this.texts.push({user: '机器人', text: '正在搜索答案。。。'})
+            }, 250);
             const str = await this.getAnswerByWtms();
             if (str == null) {
-              this.jb = this.lowJb
-              this.isWtmsGet = false
-              this.doSomethingAfterTwoSeconds()
+              await this.doSomethingAfterTwoSeconds("调用")
             }
           } else {
             this.getAnswer();
           }
         }, 500);
-      } else if (this.inputValue.includes('满意')) {
+      } else if (this.text.includes('满意')) {
         this.jb = '提出问题'
         this.lowJb = '提出问题'
         this.out('满意当前答案，已退出当前问题，您可以输入 “提出问题” 重新提问。')
       } else {
-        this.robotInputXiaoXi('无法识别您输入的文字，请问您对上条答案是否满意？')
+        setTimeout(() => {
+          this.texts.push({user: '机器人', text: '正在搜索答案。。。'})
+        }, 250);
+        const str = await this.getAnswerByWtms();
+        if (str == null) {
+          console.log("满意查空")
+          await this.doSomethingAfterTwoSeconds("调用")
+        }
+        this.toFocusInput()//聚焦
       }
     },
     //根据用户提供信息查询答案
     getAnswer() {
+      this.queryParams.wtms = ""
+      console.log("普通：", this.queryParams)
+      console.log("ids：", this.queryParams.ids)
+      console.log("ms：", this.queryParams.wtms)
       selectDataByNotId(this.queryParams).then(response => {
-        this.$refs.input_ref.blur()
-        this.queryParams.wtms = null
         setTimeout(() => {
           if (response.data != null) {
             this.texts.push({user: '机器人', text: response.data.daxx});
@@ -650,28 +726,26 @@ export default {
               const wtxlBr = this.wtxlList2[i] + '<br/>'
               wtxlBrAll = wtxlBrAll + wtxlBr
             }
-            this.robotInputXiaoXi('很抱歉没有查询到您想要的答案，您可以输入“退出”来退出当前提问或在以下细类中重新选择提问：')
+            this.robotInputXiaoXi('很抱歉没有查询到您想要的答案，您可以输入“退出”来退出当前提问，或在以下细类中重新选择提问：')
             setTimeout(() => {
               this.robotInputXiaoXi(wtxlBrAll)
+              this.toFocusInput()//聚焦
             }, 500);
           }
-          setTimeout(() => {
-            this.$refs.input_ref.focus()
-          }, 500);
+          this.toFocusInput()//聚焦
         }, 500);
       })
     },
     //根据用户提供信息查询答案通过问题描述
     async getAnswerByWtms() {
-      this.inputValue = ''
       return new Promise((resolve, reject) => {
         this.isWtmsGet = true;
+        this.queryParams.wtms = this.text
+        console.log("描述：", this.queryParams)
+        console.log("ids：", this.queryParams.ids)
+        console.log("ms：", this.queryParams.wtms)
         selectDataByNotId(this.queryParams).then(response => {
-          this.$refs.input_ref.blur(); // 失焦
           setTimeout(() => {
-            setTimeout(() => {
-              this.$refs.input_ref.focus(); // 聚焦
-            }, 500);
             if (response.data != null) {
               this.texts.push({user: '机器人', text: response.data.daxx});
               this.texts.push({user: '机器人', text: '请问答案是否满意'})
@@ -680,22 +754,22 @@ export default {
               resolve(1);
             } else {
               this.jb = this.lowJb;
+              this.isWtmsGet = false
+              this.queryParams.ids = []
               resolve(null);
             }
+            this.toFocusInput()//聚焦
           }, 500);
         });
       });
-    }
-    ,
+    },
 //滚动条到最下面
     scrollToBottom() {
       const container = this.$refs.xiaoxiqu;
       container.scrollTop = container.scrollHeight;
-    }
-    ,
+    },
 //创建问题按钮的方法
     createQuestion() {
-
       this.dialogTableVisible = true;
       //获得问题编号
       this.wtbhMethod();
@@ -709,8 +783,7 @@ export default {
       if (this.form.wtlb != null && this.form.wtlb !== '') {
         this.wtlbChange()
       }
-    }
-    ,
+    },
 //刷新创建问题的数据情况
     createQuestionShuaxin() {
       this.isQwfksj = true;
@@ -741,8 +814,7 @@ export default {
         lxfk: '',   //例行反馈
         qwfksj: '',   //期望反馈时间
       }
-    }
-    ,
+    },
 //问题编号获得方法
     wtbhMethod() {
       getwtbhMethod().then(res => {
@@ -750,8 +822,7 @@ export default {
           this.form.wtbh = res.msg;
         }
       })
-    }
-    ,
+    },
 //问题来源的获得方法
     wtlyMethod() {
       this.wtlyList = [];
@@ -763,8 +834,7 @@ export default {
           }
         }
       })
-    }
-    ,
+    },
 //问题类别的获得方法
     wtlbMethod() {
       this.wtlbList = [];
@@ -776,8 +846,7 @@ export default {
           }
         }
       })
-    }
-    ,
+    },
 //紧急程度的获得方法
     jjcdMethod() {
       this.jjcdList = [];
@@ -789,8 +858,7 @@ export default {
           }
         }
       })
-    }
-    ,
+    },
 
 //创建问题弹窗的取消按钮
     createQuestionCloseButten() {
@@ -800,8 +868,8 @@ export default {
       this.yzrstr = ''
       this.zrbmstr = ''
       this.dialogTableVisible = false
-    }
-    ,
+      this.robotInputXiaoXi("已关闭创建窗口")
+    },
 //现场配合问题的多选框的改变触发的方法
     xcphwtMethod() {
       if (this.form.xcphwt === true) {
@@ -813,8 +881,7 @@ export default {
       } else {
         this.isGzxtwt = false;
       }
-    }
-    ,
+    },
 //跟踪协同的多选框数据改变触发的方法
     gzxtwtMethod() {
       if (this.form.gzxt === true) {
@@ -841,8 +908,7 @@ export default {
           }
         }
       }
-    }
-    ,
+    },
 //问题类别改变后执行的方法
     wtlbChange() {
       this.wtxlMethod();
@@ -854,8 +920,7 @@ export default {
           }
         }
       }
-    }
-    ,
+    },
 //问题细类的获得方法
     wtxlMethod() {
       this.wtxlList = [];
@@ -867,8 +932,7 @@ export default {
           }
         }
       })
-    }
-    ,
+    },
 //例行反馈的数据改变触发的方法
     lxfkMethod() {
       if (this.form.lxfk === true) {
@@ -880,23 +944,16 @@ export default {
         this.isQwfksj = true;
         this.isWtsj = false;
       }
-    }
-    ,
+    },
 //判断问题升级，如果问题升级为true，那么希望解决时间变灰
     cancellationTime() {
-      if (this.form.wtsj === true) {
-        this.canceTime = true;
-      } else {
-        this.canceTime = false;
-      }
-    }
-    ,
+      this.canceTime = this.form.wtsj === true;
+    },
 //创建问题按钮
     dialogCreatedQuestion() {
       this.saveDataDialog()
       this.lishidaanDialog = false
-    }
-    ,
+    },
 //弹出框的确定并提交方法的执行方法
     saveDataDialog() {
       if (!this.isone) {
@@ -919,7 +976,7 @@ export default {
         return;
       }
       if (this.form.xcphwt === '' && this.form.gzxt === '' || this.form.xcphwt === false && this.form.gzxt === false) {
-        this.$message.error("请选择跟踪协同问题或者现场配合问题");
+        this.$message.error("请选择跟踪协同问题，或者现场配合问题");
         return;
       }
       if (this.form.xcphwt) {
@@ -1017,8 +1074,7 @@ export default {
       this.zrrstr = ''
       this.zrbmstr = ''
       this.yzrstr = ''
-    }
-    ,
+    },
     getxcphwtList() {
       this.xcphwtList = [];
       getUpButtons().then(response => {
@@ -1027,8 +1083,7 @@ export default {
           this.xcphwtList.push(item.butname)
         }
       })
-    }
-    ,
+    },
 //子组件确定按钮执行方法
     zrrSubmit(list, title) {
       if (title === '责任人') {
@@ -1050,13 +1105,11 @@ export default {
         this.yzrstr = yzrStr.join(",")
       }
       this.treeVisual = false
-    }
-    ,
+    },
 //历史记录的查寻的方法
     lishidaanchaxun() {
       this.lishidaanDialog = true;
-    }
-    ,
+    },
 //详细信息的方法
     xiangxixinxi(row) {
       this.daccid = row.daxxid;
@@ -1091,7 +1144,9 @@ export default {
 </script>
 
 <style>
+
 .zhinengwendamain {
+  overflow: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1099,10 +1154,11 @@ export default {
 }
 
 .xiaoxiqu {
-  height: calc(100% - 180px);
+  height: calc(100% - 230px);
   width: 80%;
+  min-width: 528px;
   max-width: 1000px;
-  margin: 10px 0 50px 0;
+  margin: 10px 0 40px 0;
   /* 添加样式以使内容滚动 */
   overflow-y: auto;
 }
@@ -1158,13 +1214,6 @@ export default {
   border-color: transparent #ffffff transparent transparent; /* 设置箭头颜色 */
 }
 
-
-.input-box {
-  width: 60%;
-  max-width: 780px;
-
-}
-
 .input-box .el-input__inner {
   height: 60px;
   border-radius: 10px;
@@ -1172,4 +1221,27 @@ export default {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+</style>
+<style scoped>
+.inputButton {
+  padding: 0;
+  background-color: transparent;
+  border: none;
+}
+
+.showit:hover {
+  cursor: pointer;
+}
+
+.showit:active {
+  transform: scale(0.9);
+}
+.znwdButton{
+  border-radius: 10px;
+  float: right;
+  margin-bottom: 10px ;
+  width: 200px;
+  height: 50px;
+  font-size: 18px
+}
 </style>

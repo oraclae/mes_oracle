@@ -25,7 +25,7 @@ public class ZhiNengWenDaServiceImpl implements IZhiNengWenDaService {
     @Override
     public ZhiNengWenDaSelectVO selectDataByNotId(ZhiNengWenDaDTO zhiNengWenDaDTO) {
         String wtms = zhiNengWenDaDTO.getWTMS();
-        if (wtms != null) {
+        if (wtms != null && !"".equals(wtms)) {
             List<String> gjzList = zhiNengWenDaMapper.selectGjz(wtms);
             if (gjzList.size() == 0) {
                 return null;

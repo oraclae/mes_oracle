@@ -1367,7 +1367,7 @@ export default {
     },
     // 解决方案按钮
     solve(row) {
-      if (row.bjrid !== this.userInfo.userId.toString()) {
+      if (row.jsrid !== this.userInfo.userId.toString()) {
         this.$message.error("您不是接收人，不能填写解决方案")
         return
       }

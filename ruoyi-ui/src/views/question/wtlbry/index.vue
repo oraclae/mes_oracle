@@ -79,6 +79,7 @@
       <el-table-column show-overflow-tooltip label="问题类别" align="center" width="150px" prop="wtlb"/>
       <el-table-column show-overflow-tooltip label="问题细类" align="center" width="150px" prop="wtxl"/>
       <el-table-column show-overflow-tooltip label="部门id" align="center" width="100px" prop="deptid"/>
+      <el-table-column show-overflow-tooltip label="部门" align="center" width="100px" prop="bjrbm"/>
       <el-table-column show-overflow-tooltip label="被叫人id" align="center" width="100px" prop="bjrid"/>
       <el-table-column show-overflow-tooltip label="被叫人姓名" align="center" width="100px" prop="bjrxm"/>
       <el-table-column show-overflow-tooltip label="接收人id" align="center" prop="jsrid"/>
@@ -134,6 +135,17 @@
               :value="item">
             </el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item v-hasPermi="['question:dept']" label="部门" prop="deptid">
+          <div @click="selectBjrbmDialog = true">
+            <el-tooltip effect="dark" :content="form.bjrbm" placement="top" :open-delay="500"
+                        :disabled="form.bjrbm == null || form.bjrbm === ''">
+              <div style="width: 217px;">
+                <el-input placeholder="请选择部门" style="pointer-events: none; width: 217px"
+                          :value="form.bjrbm"/>
+              </div>
+            </el-tooltip>
+          </div>
         </el-form-item>
         <el-form-item label="被叫人" prop="bjrxm">
           <el-select v-model="form.bjrxm" @change="setbjrxm" clearable
@@ -219,6 +231,21 @@
         </el-table>
       </div>
     </el-dialog>
+    <el-dialog class="jsrDialog" title="选择部门" :visible.sync="selectBjrbmDialog" width="1000px" append-to-body>
+      <div>
+        <el-tree
+          :data="deptOptions"
+          :props="defaultProps"
+          :expand-on-click-node="false"
+          :filter-node-method="filterNode"
+          ref="tree"
+          node-key="id"
+          default-expand-all
+          highlight-current
+          @node-click="handleNodeClick"
+        />
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -226,18 +253,25 @@
 import {listWtlbry, getWtlbry, delWtlbry, addWtlbry, updateWtlbry, getUserInfo} from "@/api/question/wtlbry";
 import {getUpButtons} from "@/api/question/upQuestion";
 import {getwtxlMethod} from "@/api/question/question";
-import {listUser} from "@/api/system/user";
+import {deptTreeSelect, listUser} from "@/api/system/user";
 
 export default {
   name: "Wtlbry",
   data() {
     return {
+      // 部门树选项
+      deptOptions: undefined,
+      defaultProps: {
+        children: "children",
+        label: "label"
+      },
       userInfo: {},//登录用户信息
       wtlbList: [],//问题类别列表
       wtxlList: [],//问题细类列表
       userList: [],//当前部门下人员列表
       userListOtherBy: [],//当前部门下人员列表
-      selectJsrDialog: false,
+      selectJsrDialog: false,//选择接收人弹窗
+      selectBjrbmDialog: false,//选择部门弹窗
 
       jsrDiaHandleSelect: [],//接收人选中数据
       jsrDiaSingle: true,
@@ -305,25 +339,59 @@ export default {
     this.getUserInfo()
     this.getList();
     this.getWtlbList()
+    this.getDeptTree()
   },
   methods: {
+    /** 查询部门下拉树结构 */
+    getDeptTree() {
+      deptTreeSelect().then(response => {
+        this.deptOptions = response.data;
+      });
+    },
+    // 筛选节点
+    filterNode(value, data) {
+      if (!value) return true;
+      return data.label.indexOf(value) !== -1;
+    },
+    // 节点单击事件
+    handleNodeClick(data) {
+      this.form = {
+        wtlb: this.form.wtlb,
+        wtxl: this.form.wtxl,
+        deptid: data.id,
+        bjrxm: null,
+        bjrid: null,
+        bjrzh: null,
+        bjrbm: data.label,
+        jsrxm: null,
+        jsrid: null,
+        jsrzh: null,
+        jsrbm: null
+      };
+      this.selectBjrbmDialog = false
+      this.getUserListByDeptId(data.id)
+      this.getUserListByDeptIdOtherBy(data.id)
+      this.jsrDiaUserSelectTableData = []
+    },
     //获取用户信息
     getUserInfo() {
       getUserInfo().then(response => {
         this.userInfo = response.data
-        this.getUserListByDeptId()
+        this.getUserListByDeptId(this.userInfo.deptId)
       })
     },
     //获取用户信息
-    getUserListByDeptId() {
-      listUser({pageNum: 1,pageSize: 10,deptId: this.userInfo.deptId}).then(response => {
+    getUserListByDeptId(deptId) {
+      listUser({pageNum: 1,pageSize: 10,deptId: deptId}).then(response => {
           this.userList = response.rows;
         }
       );
     },
     //获取用户信息
-    getUserListByDeptIdOtherBy() {
-      this.userQueryParams.deptId = this.userInfo.deptId
+    getUserListByDeptIdOtherBy(deptid) {
+      if (deptid != null && deptid.page == null) {
+        this.userQueryParams.deptId = deptid;
+      }
       listUser(this.userQueryParams).then(response => {
           this.userListOtherBy = response.rows;
           this.userTotal = response.total;
@@ -362,6 +430,7 @@ export default {
         if (user.userId === this.form.bjrxm) {
           this.form.bjrid = this.form.bjrxm
           this.form.bjrxm = user.nickName
+          this.form.bjrzh = user.userName
         }
       }
     },
@@ -408,15 +477,16 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.getUserListByDeptIdOtherBy()
+      this.getUserListByDeptIdOtherBy(this.userInfo.deptId)
       this.reset();
       this.wtxlList = []
       this.open = true;
+      this.handleNodeClick({id:this.userInfo.deptId, label: this.userInfo.user.dept.deptName})
       this.title = "添加问题类别人员对照";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.getUserListByDeptIdOtherBy()
+      this.getUserListByDeptIdOtherBy(row.deptid)
       this.reset();
       const xh = row.xh || this.ids
       const data = row || this.selectRows

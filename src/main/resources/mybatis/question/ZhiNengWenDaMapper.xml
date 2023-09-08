@@ -26,7 +26,10 @@
                 <foreach collection="GJZLIST" separator=" or " item="gjz">
                     (WTMC like '%' || #{gjz} || '%'
                     or WTMS like '%' || #{gjz} || '%'
-                    or DAXX like '%' || #{gjz} || '%')
+                    or DAXX like '%' || #{gjz} || '%'
+                    or CPXH = #{gjz}
+                    or GXH = #{gjz}
+                    or JH = #{gjz})
                 </foreach>
                 )
             </if>
@@ -52,7 +55,10 @@
                     <foreach collection="GJZLIST" separator=" or " item="gjz">
                         (WTMC like '%' || #{gjz} || '%'
                         or WTMS like '%' || #{gjz} || '%'
-                        or DAXX like '%' || #{gjz} || '%')
+                        or DAXX like '%' || #{gjz} || '%'
+                        or CPXH = #{gjz}
+                        or GXH = #{gjz}
+                        or JH = #{gjz})
                     </foreach>
                     )
                 </if>

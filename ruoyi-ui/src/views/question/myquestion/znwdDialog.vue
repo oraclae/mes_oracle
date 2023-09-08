@@ -297,7 +297,9 @@ export default {
         (this.queryParams.WTXL == null || this.queryParams.WTXL === '') &&
         (this.queryParams.KEYWORDS == null || this.queryParams.KEYWORDS === '')
       ) {
-        this.$message.error("请输入查询条件!")
+        setTimeout(() => {
+          this.$message.error("请输入查询条件!")
+        }, 10);
         return
       }
       this.loading = true;

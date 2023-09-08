@@ -40,7 +40,9 @@ public class WtlbRyServiceImpl implements IWtlbRyService {
      */
     @Override
     public List<WtlbRy> selectWtlbRyList(WtlbRy wtlbRy) {
-        wtlbRy.setDEPTID(SecurityUtils.getDeptId().toString());
+        if (SecurityUtils.getUserId() != 1) {
+            wtlbRy.setDEPTID(SecurityUtils.getDeptId().toString());
+        }
         return wtlbRyMapper.selectWtlbRyList(wtlbRy);
     }
 
