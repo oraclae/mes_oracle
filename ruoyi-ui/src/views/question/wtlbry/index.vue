@@ -478,6 +478,7 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.getUserListByDeptIdOtherBy(this.userInfo.deptId)
+      this.getUserListByDeptId(this.userInfo.deptId)
       this.reset();
       this.wtxlList = []
       this.open = true;
@@ -487,6 +488,7 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.getUserListByDeptIdOtherBy(row.deptid)
+      this.getUserListByDeptId(row.deptid)
       this.reset();
       const xh = row.xh || this.ids
       const data = row || this.selectRows
