@@ -2,7 +2,6 @@ package com.ruoyi.project.question.service.impl;
 
 import java.util.List;
 import java.util.UUID;
-
 import com.ruoyi.project.question.domain.Gjzzd;
 import com.ruoyi.project.question.mapper.GjzzdMapper;
 import com.ruoyi.project.question.service.IGjzzdService;
@@ -11,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * 关键字字典Service业务层处理
- * 
+ *
  * @author LiHai
  * @date 2023-08-25
  */
@@ -23,7 +22,7 @@ public class GjzzdServiceImpl implements IGjzzdService
 
     /**
      * 查询关键字字典
-     * 
+     *
      * @param xh 关键字字典主键
      * @return 关键字字典
      */
@@ -35,7 +34,7 @@ public class GjzzdServiceImpl implements IGjzzdService
 
     /**
      * 查询关键字字典列表
-     * 
+     *
      * @param gjzzd 关键字字典
      * @return 关键字字典
      */
@@ -47,7 +46,7 @@ public class GjzzdServiceImpl implements IGjzzdService
 
     /**
      * 新增关键字字典
-     * 
+     *
      * @param gjzzd 关键字字典
      * @return 结果
      */
@@ -63,7 +62,7 @@ public class GjzzdServiceImpl implements IGjzzdService
 
     /**
      * 修改关键字字典
-     * 
+     *
      * @param gjzzd 关键字字典
      * @return 结果
      */
@@ -75,7 +74,7 @@ public class GjzzdServiceImpl implements IGjzzdService
 
     /**
      * 批量删除关键字字典
-     * 
+     *
      * @param xhs 需要删除的关键字字典主键
      * @return 结果
      */
@@ -87,7 +86,7 @@ public class GjzzdServiceImpl implements IGjzzdService
 
     /**
      * 删除关键字字典信息
-     * 
+     *
      * @param xh 关键字字典主键
      * @return 结果
      */

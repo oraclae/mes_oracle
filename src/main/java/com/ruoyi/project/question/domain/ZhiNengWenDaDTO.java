@@ -1,7 +1,6 @@
 package com.ruoyi.project.question.domain;
 
 import lombok.Data;
-
 import java.util.List;
 
 /**

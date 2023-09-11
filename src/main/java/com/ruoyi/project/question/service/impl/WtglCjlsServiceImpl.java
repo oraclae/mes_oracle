@@ -10,16 +10,12 @@ import com.ruoyi.project.question.mapper.QuestionMapper;
 import com.ruoyi.project.question.mapper.WtglCjlsMapper;
 import com.ruoyi.project.question.mapper.WtlbRyMapper;
 import com.ruoyi.project.question.service.IWtglCjlsService;
-import com.ruoyi.project.question.service.QuestionService;
 import com.ruoyi.project.system.domain.SysDept;
 import com.ruoyi.project.system.domain.SysUser;
 import com.ruoyi.project.system.mapper.SysDeptMapper;
 import com.ruoyi.project.system.mapper.SysUserMapper;
-import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -28,11 +24,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.SimpleFormatter;
 
 /**
  * 提出问题Service业务层处理
- * 
+ *
  * @author LiHai
  * @date 2023-06-19
  */

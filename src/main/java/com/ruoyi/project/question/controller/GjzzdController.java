@@ -2,7 +2,6 @@ package com.ruoyi.project.question.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
-
 import com.ruoyi.project.question.domain.Gjzzd;
 import com.ruoyi.project.question.service.IGjzzdService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,7 @@ import com.ruoyi.framework.web.page.TableDataInfo;
 
 /**
  * 关键字字典Controller
- * 
+ *
  * @author LiHai
  * @date 2023-08-25
  */

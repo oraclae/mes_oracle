@@ -6,7 +6,6 @@ import com.ruoyi.project.question.mapper.ZhiNengWenDaMapper;
 import com.ruoyi.project.question.service.IZhiNengWenDaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 /**

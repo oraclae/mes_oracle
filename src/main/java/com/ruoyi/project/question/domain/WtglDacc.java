@@ -2,13 +2,8 @@ package com.ruoyi.project.question.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
-
 import java.util.HashMap;
 import java.util.Map;
-
-/**
- import com.ruoyi.common.annotation.Excel;
- import com.ruoyi.common.core.domain.BaseEntity;
 
  /**
  * 【请填写功能名称】对象 wtgl_dacc

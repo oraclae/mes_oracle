@@ -3,7 +3,6 @@ package com.ruoyi.project.question.mapper;
 import com.ruoyi.project.question.domain.SjjhDTO;
 import com.ruoyi.project.question.domain.WtxxDTO;
 import com.ruoyi.project.question.domain.vo.*;
-import com.ruoyi.project.system.domain.SysUser;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 

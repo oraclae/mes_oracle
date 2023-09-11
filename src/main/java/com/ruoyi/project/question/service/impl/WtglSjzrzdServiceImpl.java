@@ -3,7 +3,6 @@ package com.ruoyi.project.question.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
 import com.ruoyi.project.question.domain.WtglSjzrzd;
 import com.ruoyi.project.question.domain.WtxxDTO;
 import com.ruoyi.project.question.domain.vo.ZrrVO;
@@ -11,7 +10,6 @@ import com.ruoyi.project.question.mapper.QuestionMapper;
 import com.ruoyi.project.question.mapper.WtglSjzrzdMapper;
 import com.ruoyi.project.question.service.IWtglSjzrzdService;
 import com.ruoyi.project.system.domain.SysUser;
-import com.ruoyi.project.system.mapper.SysDeptMapper;
 import com.ruoyi.project.system.mapper.SysUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

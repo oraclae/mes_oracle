@@ -4,14 +4,13 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.ruoyi.framework.web.domain.BaseEntity;
 import lombok.Data;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * 提出问题对象 wtgl_cjls
- * 
+ *
  * @author LiHai
  * @date 2023-06-19
  */

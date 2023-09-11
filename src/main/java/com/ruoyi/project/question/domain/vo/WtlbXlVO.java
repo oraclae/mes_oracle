@@ -1,8 +1,6 @@
 package com.ruoyi.project.question.domain.vo;
 
 import lombok.Data;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**

@@ -1,7 +1,6 @@
 package com.ruoyi.project.question.mapper;
 
 import java.util.List;
-
 import com.ruoyi.project.question.domain.WtglSjzrzd;
 
 /**

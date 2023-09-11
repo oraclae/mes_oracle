@@ -3,8 +3,6 @@ package com.ruoyi.project.question.domain;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.framework.aspectj.lang.annotation.Excel;
 import com.ruoyi.framework.web.domain.BaseEntity;
 
@@ -13,7 +11,7 @@ import java.util.Map;
 
 /**
  * 问题类别人员对照对象 wtgl_wtlb_ry
- * 
+ *
  * @author ruoyi
  * @date 2023-08-25
  */
