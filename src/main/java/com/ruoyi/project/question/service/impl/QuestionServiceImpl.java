@@ -229,9 +229,6 @@ public class QuestionServiceImpl implements QuestionService {
         List<ZrrVO> zrrVOList = wtxxDTO.getZRRVOLIST();
         if (zrrVOList.size() != 0) {
             for (ZrrVO zrrVO : zrrVOList) {
-                if ("true".equals(zrrVO.getSFZZRR())) {
-                    wtxxDTO.setDQZRR(zrrVO.getZRR());
-                }
                 zrrVO.setWTID(id);
                 zrrVO.setXH(UUID.randomUUID().toString());
             }
