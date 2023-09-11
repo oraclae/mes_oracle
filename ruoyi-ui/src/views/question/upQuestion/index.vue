@@ -909,6 +909,7 @@ export default {
 /*按钮鼠标悬浮效果*/
 .addWtlbButton:hover {
   transform: scale(1.1);
+  cursor: pointer;
 }
 
 /*问题类别问题细类过度动画*/

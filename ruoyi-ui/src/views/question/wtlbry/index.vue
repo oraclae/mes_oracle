@@ -162,10 +162,8 @@
           <div @click="selectJsrDialog = true">
             <el-tooltip effect="dark" :content="form.jsrxm" placement="top" :open-delay="500"
                         :disabled="form.jsrxm == null || form.jsrxm === ''">
-              <div style="width: 217px;">
                 <el-input placeholder="请选择接收人" style="pointer-events: none; width: 217px"
                           :value="form.jsrxm"/>
-              </div>
             </el-tooltip>
           </div>
         </el-form-item>
@@ -329,8 +327,11 @@ export default {
         wtxl: [
           {required: true, message: '请选择问题细类', trigger: 'blur'}
         ],
-        ryid: [
-          {required: true, message: '请选择人员', trigger: 'blur'}
+        bjrxm: [
+          {required: true, message: '请选择被叫人', trigger: 'blur'}
+        ],
+        jsrid: [
+          {required: true, message: '请选择接收人', trigger: 'blur'}
         ],
       }
     };

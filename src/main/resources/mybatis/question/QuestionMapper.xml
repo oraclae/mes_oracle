@@ -211,7 +211,7 @@
     </insert>
     <insert id="createZRDB">
         insert into WTGL_ZRDB
-        (XH, ZRRID, WTID, ZRRZT, ZRBM, ZRR, ZRBMID, SFZZRR)
+        (XH, ZRRID, WTID, ZRRZT, ZRBM, ZRR, ZRBMID)
         <foreach collection="list" separator=" UNION ALL" item="zrr">
             SELECT
             #{zrr.XH},
@@ -220,8 +220,7 @@
             #{zrr.ZRRZT},
             #{zrr.ZRBM},
             #{zrr.ZRR},
-            #{zrr.ZRBMID},
-            #{zrr.SFZZRR}
+            #{zrr.ZRBMID}
             FROM DUAL
         </foreach>
     </insert>

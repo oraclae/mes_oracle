@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.question.mapper.SyMapper">
+    <select id="getDbsl" resultType="java.lang.Integer">
+        select
+        COUNT(*)
+        from WTGL_YWCJ wy
+        right join wtgl_zrdb wz on wy.ID=wz.WTID
+        where
+        wy.WTZT = '提交' and wz.ZRRID=#{userId}
+    </select>
+    <select id="getHjsl" resultType="java.lang.Integer">
+        select COUNT(*)
+        from WTGL_CJLS
+        where BJZRKS = #{bm} and BJRID = #{userId} and WTZT = '提交'
+    </select>
+    <select id="getJssl" resultType="java.lang.Integer">
+        select COUNT(*)
+        from WTGL_CJLS
+        where BJZRKS = #{bm} and JSRID = #{userId} and WTZT = '接收'
+    </select>
+</mapper>

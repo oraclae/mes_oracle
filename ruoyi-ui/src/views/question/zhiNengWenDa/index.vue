@@ -52,7 +52,7 @@
     </div>
 
     <!--创建问题-->
-    <el-dialog class="dialogRad" title="创建问题" width="700px" :close-on-click-modal="false"
+    <el-dialog append-to-body class="zdwdDialog" title="创建问题" width="700px" :close-on-click-modal="false"
                @close="createQuestionCloseButten"
                v-if="dialogTableVisible"
                :visible.sync="dialogTableVisible">
@@ -235,7 +235,7 @@
           </div>
         </div>
       </div>
-      <div style="height: 10px;margin-top: 15px;margin-bottom: 5px">
+      <div style="height: 28px;margin-top: 15px;margin-bottom: 5px">
         <div style="float: right">
           <el-button type="danger" size="mini" @click="lishidaanchaxun">启用问题处理库</el-button>
           <el-button type="primary" size="mini" @click="createQuestionCloseButten">取 消</el-button>
@@ -244,7 +244,7 @@
       </div>
     </el-dialog>
     <!--选择责任人-->
-    <el-dialog class="dialogRad" :close-on-click-modal="false" :title="selectTitle" width="1200px"
+    <el-dialog append-to-body class="zdwdDialog" :close-on-click-modal="false" :title="selectTitle" width="1200px"
                :visible.sync="treeVisual">
       <deptTreeSelect :selectZrrList="selectTitle==='选择责任人'?selectZrrList:selectYzrList"
                       :text="selectTitle"
@@ -255,19 +255,18 @@
       </deptTreeSelect>
     </el-dialog>
     <!--问题处理库-->
-    <el-dialog class="dialogRad" :close-on-click-modal="false" title="启用问题处理库" width="1200px"
+    <el-dialog append-to-body class="zdwdDialog" :close-on-click-modal="false" title="启用问题处理库" width="1200px"
                :visible.sync="lishidaanDialog">
       <zdhf ref="cxda" @xiangxixinxi="xiangxixinxi" @dialogCreatedQuestion="dialogCreatedQuestion"
             v-if="lishidaanDialog" :form="form"></zdhf>
     </el-dialog>
     <!--详细信息弹窗-->
-    <el-dialog class="zdhfDialog" :close-on-click-modal="false" @close="shifoumanyi" title="详细信息"
+    <el-dialog append-to-body class="zdhfDialog" :close-on-click-modal="false" @close="shifoumanyi" title="详细信息"
                :visible.sync="xiangxiDialog">
       <xiangxixinxi v-if="xiangxiDialog" :jhsj-list="jhsjList" :form="form"></xiangxixinxi>
     </el-dialog>
     <!--是否满意-->
-    <el-dialog
-      :close-on-click-modal="false"
+    <el-dialog append-to-body :close-on-click-modal="false"
       class="zdhfButDialog"
       title
       center
@@ -1220,7 +1219,25 @@ export default {
   font-size: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
+.zdwdDialog .el-dialog:not(.is-fullscreen) {
+  margin-top: 10% !important;
+}
 
+.zdwdDialog .el-dialog__body {
+  padding: 10px 20px;
+}
+
+.zdwdDialog .el-dialog {
+  border-radius: 10px;
+}
+
+.zdwdDialog .el-dialog__close {
+  font-size: 30px;
+}
+
+.zdwdDialog .el-dialog__headerbtn .el-dialog__close {
+  color: red;
+}
 </style>
 <style scoped>
 .inputButton {
