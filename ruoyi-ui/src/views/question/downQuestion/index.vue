@@ -1807,10 +1807,6 @@ export default {
   margin-right: 50px !important;
 }
 
-.downcontainer .el-pagination__total, .el-pagination__jump {
-  color: white;
-}
-
 /* 隐藏垂直滚动条 */
 .downcontainer ::-webkit-scrollbar {
   width: 8px; /* 设置滚动条的宽度 */
