@@ -51,7 +51,7 @@
 
 <script>
 import zndy from "@/views/question/zhiNengWenDa/index"
-import {getSL} from "@/api/question/sy";
+import {getSl} from "@/api/question/sy";
 
 export default {
   components: {
@@ -68,7 +68,7 @@ export default {
   },
   methods: {
     getSl() {
-      getSL().then(response => {
+      getSl().then(response => {
         this.sl = response.data
       })
     },
@@ -149,7 +149,7 @@ export default {
 
 </style>
 <style>
-.el-card__body{
+.symain .el-card__body{
   padding: 0;
   height: 100%;
 }
