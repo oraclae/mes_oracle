@@ -1146,7 +1146,7 @@ export default {
         }
       });
     },
-    /** 5分钟一次循环读，如果没读完就顺延5分钟 */
+    /** 5分钟一次循环读，如果没读完就顺延5分钟（原10分钟） */
     tenMinutesSpeech() {
       this.speechTimer = setInterval(() => {
         // 如果语音合成引擎正在朗读
@@ -1165,20 +1165,21 @@ export default {
             }
           })
         }
-      }, 3 * 60 * 1000); // 3分钟
+      }, 5 * 60 * 1000); // 5分钟
     },
-    /** 5分钟定时获取现场配合问题列表并朗读新数据 */
+    /** 2分钟定时获取现场配合问题列表并朗读新数据 */
     intervalGetxcphList() {
       this.threeTimer = setInterval(() => {
         this.getNewxcphListAllAndSpeech()
         this.getxcphList()
-      }, 3 * 60 * 1000); // 3分钟
+      }, 2 * 60 * 1000); // 2分钟
     },
     //获取新数据并朗读，如果有新数据则重置10分钟定时器
     getNewxcphListAllAndSpeech() {
       //获取列表并将老数据删掉
       speechListCjls().then(response => {
-        let data = []
+        let data;
+        data = [];
         this.newDownQuestionList = response.rows;
         const val = this.oldDownQuestionList
         const list = data.concat(this.newDownQuestionList)
@@ -1201,7 +1202,7 @@ export default {
               }
             }
           })
-          //重置10分钟读数据的定时器
+          //重置读数据的定时器
           clearInterval(this.speechTimer);
           this.tenMinutesSpeech();
         }
