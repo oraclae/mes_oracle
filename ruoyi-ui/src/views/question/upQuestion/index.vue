@@ -136,9 +136,8 @@
     </div>
     <!--选择问题细类弹框-->
     <el-dialog title="请选择问题细类" :close-on-click-modal="false" :visible.sync="selectWtxlDialog" width="600px"
-               class="selectWtxlDialog"
-               append-to-body>
-      <el-table border v-loading="wtxlLoading" v-if="wtxlLoading" height="618px" :data="this.wtlbXlList[wtlbIndex].wtxl"
+               class="selectWtxlDialog">
+      <el-table border v-loading="wtxlLoading" height="618px" :data="wtlbXlList[wtlbIndex].wtxl"
                 @row-click="wtxlClick">
         <el-table-column label-class-name="wtxlLable" label="序号" align="center" type="index" width="80"/>
         <el-table-column label-class-name="wtxlLable" show-overflow-tooltip label="问题细类">
@@ -516,6 +515,7 @@ export default {
       this.reset()
     },
     selectWtxl() {
+      console.log(this.wtlbXlList[this.wtlbIndex])
       this.selectWtxlDialog = true
     },
     //获取问题类别细类列表
@@ -1074,10 +1074,6 @@ export default {
   color: black;
 }
 
-.selectDialog .el-dialog {
-  border-radius: 30px;
-}
-
 .butDialog .el-dialog {
   border-radius: 30px;
 }
@@ -1095,17 +1091,20 @@ export default {
   margin-top: 15% !important;
 }
 
-.selectDialog .el-dialog__close {
+.selectWtxlDialog .el-dialog {
+  border-radius: 30px;
+}
+
+.selectWtxlDialog .el-dialog__close {
   font-size: 30px; /* 调整按钮大小 */
 }
 
-
-.selectDialog .el-dialog__headerbtn .el-dialog__close {
+.selectWtxlDialog .el-dialog__headerbtn .el-dialog__close {
   color: red;
 }
 
-.selectDialog .el-dialog__body {
-  padding: 0 20px;
+.selectWtxlDialog .el-dialog__body {
+  padding-top: 0
 }
 
 .selectWtxlDialog .wtxlLable {
