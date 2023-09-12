@@ -337,8 +337,7 @@ public class QuestionServiceImpl implements QuestionService {
             wtxxDTO.setWTZT1("接收");
             wtxxDTO.setWTZT2("反馈");
             wtxxDTO.setWTZT3("待关闭");
-            List<WtxxVo> myProblemList = questionMapper.getMyProblemList(wtxxDTO);
-            return myProblemList;
+            return questionMapper.getMyProblemList(wtxxDTO);
         } else {
             wtxxDTO.setWTZT("已关闭");
             return questionMapper.getMyProblemList(wtxxDTO);
