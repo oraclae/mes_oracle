@@ -448,7 +448,6 @@ export default {
       xiangxiDialog: false,//详细信息是否弹出框
       jhsjList: [],//交互数据的数据集合
       lishidaanDialog: false,
-      backgroundImageUrl: require('@/assets/questionIcons/背景.png'),
       loading: false,//遮罩层
       // 选中数组
       ids: [],
