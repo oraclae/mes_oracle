@@ -263,4 +263,9 @@ public interface QuestionMapper {
      * 修改责任人表的数据
      */
     void updateZRDBData(@Param("zrdb") ZrrVO zrrVO);
+
+    /**
+     * 修改是否当周反馈
+     */
+    int updateSfdzfk(String id);
 }

@@ -96,6 +96,15 @@
                 />
               </template>
             </el-table-column>
+            <el-table-column align="center" prop="wtdb" label="反馈预警" show-overflow-tooltip>
+              <template slot-scope="scope">
+                <img
+                style="width: 30px"
+                v-if="getFkyjText(scope.row)==='红'&&scope.row.lxfk!=='例行反馈'"
+                :src="require('@/assets/questionIcons/红警告.png')"
+                />
+              </template>
+            </el-table-column>
             <el-table-column prop="wtdb" label="我的问题待办数量" show-overflow-tooltip>
               <template slot-scope="scope">
                 <!--              <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'wtdb'"-->
@@ -1142,12 +1151,7 @@ export default {
     //判断是否反馈预警
     getFkyjText() {
       return function (row) {
-        if (row.qwfksj === undefined || row.qwfksj === null || row.qwfksj === '') {
-          return;
-        }
         if (row.sfdzfk === 0 || row.sfdzfk === '0') {
-          const date = new Date();
-          const week = date.getDay();
           return '红';
         }
 

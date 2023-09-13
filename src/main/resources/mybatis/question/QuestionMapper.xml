@@ -436,6 +436,9 @@
         </set>
         where XH=#{zrdb.XH}
     </update>
+    <update id="updateSfdzfk">
+        update WTGL_YWCJ set SFDZFK = 1 where ID = #{id}
+    </update>
     <delete id="deleteQuestions">
         delete from WTGL_YWCJ where ID in (
         <foreach collection="ids" item="id" separator=",">

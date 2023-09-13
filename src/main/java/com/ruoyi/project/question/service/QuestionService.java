@@ -219,4 +219,9 @@ public interface QuestionService {
      * 升级责任人的定时任务
      */
     void shengjizrr();
+
+    /**
+     * 修改是否当周反馈
+     */
+    int updateSfdzfk(String id);
 }

@@ -1,6 +1,14 @@
 import request from '@/utils/request'
 
 //根据待办或者待关闭等来查询表数据
+export function updateSfdzfk(id) {
+  return request({
+    url: '/myquestion/updateSfdzfk/'+id,
+    method: 'post'
+  })
+}
+
+//根据待办或者待关闭等来查询表数据
 export function selectWtxxData(data) {
   return request({
     url: '/myquestion/selectWtxxData',

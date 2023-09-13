@@ -449,6 +449,14 @@ public class QuestionController extends BaseController {
         return AjaxResult.success("修改成功");
     }
 
+    /**
+     * 修改是否当周反馈
+     */
+    @PostMapping("/myquestion/updateSfdzfk/{id}")
+    public AjaxResult updateSfdzfk(@PathVariable String id) {
+        return toAjax(questionService.updateSfdzfk(id));
+    }
+
     @PostMapping("/myquestion/upload")
     public AjaxResult upload(@RequestParam("image") MultipartFile multipartFile) {
         try {

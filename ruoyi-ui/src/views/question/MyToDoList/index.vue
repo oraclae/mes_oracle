@@ -732,13 +732,10 @@ import {
   updateMyDoListStatus, getQuestionList, getJhjl,
   getLDPS, getzerData, saveJhjlList, updateWtztEnd,
   savegzwtList, deleteJhjlByXh, updateQuestionWDWTToZero,
-  updateQuestionWdwt
+  updateQuestionWdwt,updateSfdzfk
 } from "@/api/question/question";
 import {getFjByIds, listById} from "@/api/fj/fj";
 import fj from "@/views/fj/fj";
-import deptTreeSelect from "@/views/question/myquestion/deptTreeSelect";
-import zdhf from "@/views/question/WTGL_ZDHF";
-import xiangxixinxi from "@/views/question/myquestion/xiangxixinxi";
 import {getSjzrzdByZrrid, wtsjOneZrr} from "@/api/question/sjzrzd";
 
 export default {
@@ -1179,43 +1176,45 @@ export default {
         });
         return;
       }
-      if (id === null || id === '') {
-        saveJhjlList(sjjh).then(res => {
-          if (res.code === 200) {
-            this.$message.success("回复成功");
-            this.huifuDialog = false;
-            this.lingdaopishiDialog = false;
-            this.lixingfankuiDialog = false;
-            //再此查询交互记录
-            if (this.islxfk) {
-              this.loadJhjlList('例行反馈');
+      updateSfdzfk(this.closureID.id).then(()=>{
+        if (id === null || id === '') {
+          saveJhjlList(sjjh).then(res => {
+            if (res.code === 200) {
+              this.$message.success("回复成功");
+              this.huifuDialog = false;
+              this.lingdaopishiDialog = false;
+              this.lixingfankuiDialog = false;
+              //再此查询交互记录
+              if (this.islxfk) {
+                this.loadJhjlList('例行反馈');
+              } else {
+                this.loadJhjlList('回复');
+              }
             } else {
-              this.loadJhjlList('回复');
+              this.$message.error("回复失败，请查看是否服务器错误，或者重复提交");
             }
-          } else {
-            this.$message.error("回复失败，请查看是否服务器错误，或者重复提交");
-          }
-        });
-      } else {
-        sjjh.xh = id;
-        sjjh.js = '';
-        saveJhjlList(sjjh).then(res => {
-          if (res.code === 200) {
-            this.$message.success("回复成功");
-            this.huifuDialog = false;
-            this.lingdaopishiDialog = false;
-            this.lixingfankuiDialog = false;
-            if (this.islxfk) {
-              this.loadJhjlList('例行反馈');
+          });
+        } else {
+          sjjh.xh = id;
+          sjjh.js = '';
+          saveJhjlList(sjjh).then(res => {
+            if (res.code === 200) {
+              this.$message.success("回复成功");
+              this.huifuDialog = false;
+              this.lingdaopishiDialog = false;
+              this.lixingfankuiDialog = false;
+              if (this.islxfk) {
+                this.loadJhjlList('例行反馈');
+              } else {
+                this.loadJhjlList('回复');
+              }
+              //再此查询交互记录
             } else {
-              this.loadJhjlList('回复');
+              this.$message.error("回复失败，请查看是否服务器错误，或者重复提交");
             }
-            //再此查询交互记录
-          } else {
-            this.$message.error("回复失败，请查看是否服务器错误，或者重复提交");
-          }
-        });
-      }
+          });
+        }
+      })
       updateQuestionWdwt(sjjh).then(res => {
         if (res.code === 200) {
           this.load();

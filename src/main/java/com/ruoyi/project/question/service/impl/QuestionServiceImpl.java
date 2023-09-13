@@ -832,4 +832,12 @@ public class QuestionServiceImpl implements QuestionService {
 
         }
     }
+
+    /**
+     * 修改是否当周反馈
+     */
+    @Override
+    public int updateSfdzfk(String id) {
+        return questionMapper.updateSfdzfk(id);
+    }
 }
