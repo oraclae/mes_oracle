@@ -43,7 +43,7 @@
             size="medium"
             @cell-dblclick="cellClick"
             @selection-change="handleSelectionChange"
-            :highlight-current-row="highLight"
+            highlight-current-row
             row-key="id"
             ref="multipleTable"
             border

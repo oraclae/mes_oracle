@@ -37,7 +37,7 @@
             :show-overflow-tooltip="true"
             size="medium"
             @selection-change="handleSelectionChange"
-            :highlight-current-row="highLight"
+            highlight-current-row
             row-key="id"
             ref="multipleTable"
             border

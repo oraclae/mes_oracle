@@ -31,7 +31,7 @@
             size="medium"
             height="calc(100vh - 220px)"
             @selection-change="handleSelectionChange"
-            :highlight-current-row="highLight"
+            highlight-current-row
             row-key="id"
             ref="multipleTable"
             @cell-dblclick="cellClick"

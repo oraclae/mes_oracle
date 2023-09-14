@@ -67,7 +67,7 @@
           <b style="color: #4f4f4f;font-size: 28px;">现场配合问题</b>
         </div>
         <el-table border v-loading="loading" height="calc(100vh - 200px)" :data="cjlsList"
-                  @selection-change="handleSelectionChange">
+                  highlight-current-row @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="55" align="center"/>
           <el-table-column label="操作" width="120px" align="center" class-name="small-padding fixed-width">
             <template slot-scope="scope">

@@ -35,7 +35,7 @@
             :cell-class-name=tableRowClassName
             size="medium"
             @selection-change="handleSelectionChange"
-            :highlight-current-row="highLight"
+            highlight-current-row
             row-key="xh"
             ref="multipleTable"
             border

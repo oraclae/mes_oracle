@@ -51,7 +51,7 @@
       </div>
       <div class="r-tworow" style="height: calc((100% - 36px - 36px - 30px)*0.5)">
         <el-table border v-loading="downQuestionLoading" height="calc(50vh - 150px)" :data="downQuestionList"
-                  @row-dblclick="jswtOrJjfa">
+                  highlight-current-row @row-dblclick="jswtOrJjfa">
           <!--          <el-table-column type="selection" width="55" align="center"/>-->
           <el-table-column label="操作" width="100px" align="center" class-name="small-padding fixed-width">
             <template slot-scope="scope">
@@ -147,7 +147,7 @@
       </div>
       <div class="r-fourrow" style="height: calc((100% - 36px - 36px - 30px)*0.5)">
         <el-table border v-loading="ywcjQuestionLoading" height="calc(50vh - 150px)" :data="ywcjList"
-                  @row-dblclick="questionDetails">
+                  highlight-current-row @row-dblclick="questionDetails">
           <el-table-column label="操作" width="100px" align="center" class-name="small-padding fixed-width">
             <template slot-scope="scope">
               <el-button
@@ -893,6 +893,12 @@ export default {
     };
   },
   created() {
+
+  },
+  mounted() {
+    this.histogram()
+    document.addEventListener('click', this.handlePageClick);
+    this.getUserInfo()
     //查询问题接收列表
     this.getxcphList()
     //查询所有问题接收列表并喊话
@@ -901,11 +907,6 @@ export default {
     this.getYWCJList();
     //定时获取现场配合问题列表
     this.intervalGetxcphList();
-  },
-  mounted() {
-    this.histogram()
-    document.addEventListener('click', this.handlePageClick);
-    this.getUserInfo()
   },
   beforeDestroy() {
     document.removeEventListener('click', this.handlePageClick);
