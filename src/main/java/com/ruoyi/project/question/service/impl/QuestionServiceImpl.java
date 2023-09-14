@@ -607,7 +607,6 @@ public class QuestionServiceImpl implements QuestionService {
             daccVO.setWTMC(sjjhDTO.getWTBT());
             daccVO.setGBSJ(format);
             daccVO.setRD(0);
-            daccVO.setZRR(daccDTO.getZRR());
             daccVO.setCPXH(daccDTO.getCPXH());
             daccVO.setJH(daccDTO.getJH());
             daccVO.setWTLB(daccDTO.getWTLB());
@@ -623,6 +622,20 @@ public class QuestionServiceImpl implements QuestionService {
             }
         }
         if (daccVO.getWTID() != null) {
+            List<ZrrVO> zrrVOS = questionMapper.getzerData(daccVO.getWTID());
+            String zrr = "";
+            String zrrId = "";
+            for (ZrrVO zrrVO : zrrVOS) {
+                if ("".equals(zrr)) {
+                    zrr = zrrVO.getZRR();
+                    zrrId = zrrVO.getZRRID();
+                }else {
+                    zrr = zrr + "," +zrrVO.getZRR();
+                    zrrId = zrrId + "," +zrrVO.getZRRID();
+                }
+            }
+            daccVO.setZRR(zrr);
+            daccVO.setZRRID(zrrId);
             daccVO.setDEPTID(SecurityUtils.getDeptId().toString());
             questionMapper.saveDaccList(daccVO);
         }

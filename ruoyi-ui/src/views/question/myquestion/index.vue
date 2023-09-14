@@ -108,7 +108,7 @@
               <template slot-scope="scope">
                 <img
                 style="width: 30px"
-                v-if="getFkyjText(scope.row)==='红'&&scope.row.lxfk!=='例行反馈'"
+                v-if="getFkyjText(scope.row)==='红'"
                 :src="require('@/assets/questionIcons/红警告.png')"
                 />
               </template>
@@ -1159,10 +1159,9 @@ export default {
     //判断是否反馈预警
     getFkyjText() {
       return function (row) {
-        if (row.sfdzfk === 0 || row.sfdzfk === '0') {
+        if ((row.sfdzfk === 0 || row.sfdzfk === '0') && row.lxfk === '例行反馈') {
           return '红';
         }
-
       };
     }
   },
@@ -1473,8 +1472,7 @@ export default {
           gxh: row.gxh,
           wtms: row.wtms,
           jh: row.jh,
-          cpxh: row.cpxh,
-          zrr: row.dqzrr,
+          cpxh: row.cpxh
         }).then(res => {
           if (res.code === 200) {
             this.$message.success("答案保存并且关闭成功");
@@ -1761,10 +1759,7 @@ export default {
           }
         });
       }
-      updateQuestionWddb(sjjh).then(res => {
-        if (res.code === 200) {
-        }
-      });
+      updateQuestionWddb(sjjh)
     },
     //回复按钮的执行方法
     huifuDialogMethod() {

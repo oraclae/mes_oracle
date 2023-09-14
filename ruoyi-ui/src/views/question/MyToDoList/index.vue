@@ -299,7 +299,7 @@
     </el-row>
 
     <!-- 1090   1390-->
-    <el-dialog class="dialog dialogRad" :visible.sync="open" :width="withd"
+    <el-dialog class="dialog dialogRad" :visible.sync="open" :width="withd" @close="shuaxin"
                style="padding-top: 0;padding-bottom: 0;margin-top:1px;" append-to-body>
       <div class="app-container indexHeight">
         <el-card shadow="always" class="box-card" style="background: linear-gradient(to bottom, rgba(7, 129, 230,0.52), rgba(7, 129, 230,1));width: 100%;border-radius: 30px">
@@ -1215,11 +1215,7 @@ export default {
           });
         }
       })
-      updateQuestionWdwt(sjjh).then(res => {
-        if (res.code === 200) {
-          this.load();
-        }
-      });
+      updateQuestionWdwt(sjjh)
     },
     //回复按钮的执行方法
     huifuDialogMethod() {
