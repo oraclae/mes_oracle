@@ -79,21 +79,29 @@
               show-overflow-tooltip
             >
               <template slot-scope="scope">
-                <img
-                  style="width: 30px"
-                  v-if="getTimeText(scope.row.xwjjsj)==='超出'&&scope.row.wtzt!=='已关闭'"
-                  :src="require('@/assets/questionIcons/红灯.png')"
-                />
-                <img
-                  style="width: 30px"
-                  v-if="getTimeText(scope.row.xwjjsj)==='警告'&&scope.row.wtzt!=='已关闭'"
-                  :src="require('@/assets/questionIcons/黄灯.png')"
-                />
-                <img
-                  style="width: 30px"
-                  v-if="getTimeText(scope.row.xwjjsj)==='正常'&&scope.row.wtzt!=='已关闭'"
-                  :src="require('@/assets/questionIcons/绿灯.png')"
-                />
+                <div style="padding-top: 3px;height: 37px;" v-if="scope.row.xwjjsj !== '' && scope.row.xwjjsj != null">
+                  <img
+                    style="width: 30px"
+                    v-if="getTimeText(scope.row.xwjjsj)==='超出'&&scope.row.wtzt!=='已关闭'"
+                    :src="require('@/assets/questionIcons/红灯.png')"
+                  />
+                  <img
+                    style="width: 30px"
+                    v-if="getTimeText(scope.row.xwjjsj)==='警告'&&scope.row.wtzt!=='已关闭'"
+                    :src="require('@/assets/questionIcons/黄灯.png')"
+                  />
+                  <img
+                    style="width: 30px"
+                    v-if="getTimeText(scope.row.xwjjsj)==='正常'&&scope.row.wtzt!=='已关闭'"
+                    :src="require('@/assets/questionIcons/绿灯.png')"
+                  />
+                </div>
+                <div style="padding-top: 3px;height: 37px;" v-else>
+                  <img
+                    style="width: 30px"
+                    :src="require('@/assets/questionIcons/问题升级.png')"
+                  />
+                </div>
               </template>
             </el-table-column>
             <el-table-column align="center" prop="wtdb" label="反馈预警" show-overflow-tooltip>
