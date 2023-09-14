@@ -114,7 +114,7 @@
 
     <!-- 添加或修改问题类别人员对照对话框 -->
     <el-dialog class="wtlbRyAddDialog" :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="问题类别" prop="wtlb">
           <el-select v-model="form.wtlb" @change="getWtxlList" clearable
                      placeholder="请选择问题类别">
@@ -216,6 +216,7 @@
           ref="refUserTable1"
           height="400px"
           :data="jsrDiaUserSelectTableData"
+          @row-dblclick="jsrDeleteData"
           @selection-change="jsrDiaHandleChange"
           highlight-current-row
           row-key="id"
@@ -560,7 +561,7 @@ export default {
       this.jsrDiaSingleTwo = val.length !== 1;
       this.jsrDiaMultipleTwo = !val.length;
     },
-    //查询数据
+    //双击添加
     jsrDiaSelectData(row) {
       var isSelect = false;
       if (this.jsrDiaUserSelectTableData.length > 0) {
@@ -573,6 +574,15 @@ export default {
       if (!isSelect) {
         this.jsrDiaUserSelectTableData.unshift(row);
       }
+    },
+    //双击删除
+    jsrDeleteData(row) {
+      this.$refs.refUserTable1.setCurrentRow(null);
+      this.jsrDiaUserSelectTableData.forEach((v, i) => {
+        if (row.userId === v.userId) {
+          this.jsrDiaUserSelectTableData.splice(i, 1)
+        }
+      })
     },
     //上面选中的数据放到下面的表格中
     jsrDiaAddUserData() {
@@ -636,11 +646,10 @@ export default {
   margin-top: 0;
 }
 .wtlbRyAddDialog .el-dialog {
-  border-radius: 30px;
+  border-radius: 10px;
 }
 
 .wtlbRyAddDialog .el-dialog__close {
-
   font-size: 30px; /* 调整按钮大小 */
 }
 
@@ -652,8 +661,17 @@ export default {
   margin-top: 10% !important;
 }
 
+.wtlbRyAddDialog .el-dialog__body {
+  padding-top: 10px;
+  padding-bottom: 20px;
+}
+
+.wtlbRyAddDialog input {
+  width: 280px;
+}
+
 .jsrDialog .el-dialog {
-  border-radius: 30px;
+  border-radius: 10px;
 }
 
 .jsrDialog .el-dialog__close {

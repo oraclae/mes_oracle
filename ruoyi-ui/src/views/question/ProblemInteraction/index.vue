@@ -775,7 +775,7 @@
       </span>
     </el-dialog>
 
-    <el-dialog class="dialogRad" title="修改数据" v-if="openUpdate" :visible.sync="openUpdate" width="500px" append-to-body>
+    <el-dialog class="problemInteractionXg" title="修改数据" v-if="openUpdate" :visible.sync="openUpdate" width="500px" append-to-body>
       <el-form ref="form" :model="formUpdate" label-width="120px">
         <el-form-item label="问题名称" prop="WTMC">
           <el-input v-model="formUpdate.wtmc" style="width: 80%" placeholder="请输入问题名称" />
@@ -1603,7 +1603,7 @@ export default {
 }
 
 .dialogRad .el-dialog {
-  border-radius: 30px;
+  border-radius: 10px;
 }
 
 .dialogRad .el-aside {
@@ -1656,6 +1656,27 @@ export default {
 }
 .dialogRad .el-checkbox__input.is-checked + .el-checkbox__label{
   color: black;
+}
+
+.problemInteractionXg .el-dialog {
+  border-radius: 10px;
+}
+
+.problemInteractionXg .el-dialog__close {
+  font-size: 30px; /* 调整按钮大小 */
+}
+
+.problemInteractionXg .el-dialog__headerbtn .el-dialog__close {
+  color: red;
+}
+
+.problemInteractionXg .el-dialog:not(.is-fullscreen) {
+  margin-top: 10% !important;
+}
+
+.problemInteractionXg .el-dialog__body {
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 </style>
 <style scoped lang="scss">

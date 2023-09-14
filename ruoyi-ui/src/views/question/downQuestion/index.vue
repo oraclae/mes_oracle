@@ -896,7 +896,6 @@ export default {
 
   },
   mounted() {
-    this.histogram()
     document.addEventListener('click', this.handlePageClick);
     this.getUserInfo()
     //查询问题接收列表
@@ -1229,7 +1228,7 @@ export default {
         this.total = response.total;
         this.downQuestionLoading = false
       });
-      //获取问题数量
+      //获取问题数量和饼形图
       this.getwcsl()
       //获取条形图数据
       this.gethistogramData()
@@ -1242,10 +1241,6 @@ export default {
         this.ywcjtotal = res.total;
         this.ywcjQuestionLoading = false
       });
-      //获取问题数量
-      this.getwcsl()
-      //获取条形图数据
-      this.gethistogramData()
     },
     //获取完成数量
     getwcsl() {
@@ -1824,7 +1819,7 @@ export default {
 }
 
 .buttonDialog .el-dialog {
-  border-radius: 30px;
+  border-radius: 10px;
 }
 
 .buttonDialog .el-dialog:not(.is-fullscreen) {
@@ -1833,6 +1828,11 @@ export default {
 
 .buttonDialog .el-input__inner {
   font-size: 18px;
+}
+
+.buttonDialog .el-dialog__body {
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 
@@ -1862,7 +1862,7 @@ export default {
 }
 
 .dialog .el-dialog {
-  border-radius: 30px;
+  border-radius: 10px;
 }
 
 .dialog .el-aside {

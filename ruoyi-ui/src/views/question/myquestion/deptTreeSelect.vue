@@ -60,6 +60,7 @@
             max-height="400px"
             :data="userSelectTableData"
             @selection-change="handleChange"
+            @row-dblclick="deleteData"
             highlight-current-row
             row-key="id"
             border
@@ -90,7 +91,7 @@ export default {
         children: "children",
         label: "label"
       },
-      userList:[],
+      userList: [],
       single: true,
       singleTwo: true,
       multiple: true,
@@ -188,7 +189,7 @@ export default {
     cancelButten() {
       this.$emit('selectDialogCancel')
     },
-    //查询数据
+    //双击添加
     selectData(row) {
       var isSelect = false;
       if (this.userSelectTableData.length > 0) {
@@ -201,6 +202,15 @@ export default {
       if (!isSelect) {
         this.userSelectTableData.unshift(row);
       }
+    },
+    //双击删除
+    deleteData(row) {
+      this.$refs.refUserTable1.setCurrentRow(null);
+      this.userSelectTableData.forEach((v, i) => {
+        if (row.userId === v.userId) {
+          this.userSelectTableData.splice(i, 1)
+        }
+      })
     },
     //上面选中的数据放到下面的表格中
     addUserData() {

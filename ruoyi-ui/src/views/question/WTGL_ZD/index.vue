@@ -70,7 +70,7 @@
     />
 
     <!-- 添加或修改字典对话框 -->
-    <el-dialog class="butDialog" :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog class="wtglZdAddDialog" :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-form-item label="主节点(父)" prop="zjd">
           <el-input v-model="form.zjd" placeholder="请输入主节点(父)" />
@@ -235,19 +235,22 @@ export default {
 };
 </script>
 <style>
-.butDialog .el-dialog {
-  border-radius: 30px;
+.wtglZdAddDialog .el-dialog {
+  border-radius: 10px;
 }
 
-.butDialog .el-dialog__close {
+.wtglZdAddDialog .el-dialog__close {
   font-size: 30px; /* 调整按钮大小 */
 }
 
-.butDialog .el-dialog__headerbtn .el-dialog__close {
+.wtglZdAddDialog .el-dialog__headerbtn .el-dialog__close {
   color: red;
 }
 
-.butDialog .el-dialog:not(.is-fullscreen) {
+.wtglZdAddDialog .el-dialog:not(.is-fullscreen) {
   margin-top: 15% !important;
+}
+.wtglZdAddDialog .el-input{
+  width: 85%;
 }
 </style>

@@ -270,7 +270,7 @@ export default {
 </script>
 <style>
 .addDialog .el-dialog {
-  border-radius: 30px;
+  border-radius: 10px;
 }
 
 .addDialog .el-dialog__close {
@@ -283,5 +283,15 @@ export default {
 
 .addDialog .el-dialog:not(.is-fullscreen) {
   margin-top: 3% !important;
+}
+.addDialog .el-dialog__body {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.addDialog .el-input {
+  width: 85%;
+}
+.addDialog .el-textarea {
+  width: 85%;
 }
 </style>

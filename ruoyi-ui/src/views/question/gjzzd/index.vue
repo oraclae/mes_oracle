@@ -88,7 +88,7 @@
     />
 
     <!-- 添加或修改关键字字典对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog class="gjzzdAddDialog" :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="关键字" prop="gjz">
           <el-input v-model="form.gjz" placeholder="请输入关键字" />
@@ -237,3 +237,29 @@ export default {
   }
 };
 </script>
+<style>
+.gjzzdAddDialog .el-dialog {
+  border-radius: 10px;
+}
+
+.gjzzdAddDialog .el-dialog__close {
+  font-size: 30px; /* 调整按钮大小 */
+}
+
+.gjzzdAddDialog .el-dialog__headerbtn .el-dialog__close {
+  color: red;
+}
+
+.gjzzdAddDialog .el-dialog:not(.is-fullscreen) {
+  margin-top: 10% !important;
+}
+
+.gjzzdAddDialog .el-dialog__body {
+  padding-top: 20px;
+  padding-bottom: 10px;
+}
+
+.gjzzdAddDialog .el-input {
+  width: 85%;
+}
+</style>

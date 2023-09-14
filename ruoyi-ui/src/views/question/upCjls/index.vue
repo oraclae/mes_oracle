@@ -305,8 +305,8 @@
     />
 
     <!-- 添加或修改创建流水对话框 -->
-    <el-dialog title="修改" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+    <el-dialog class="upCjlsAddDialog" title="修改" :visible.sync="open" width="500px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="110px">
         <el-form-item label="问题名称" prop="wtmc">
           <el-input style="width: 90%" v-model="form.wtmc" placeholder="请输入问题名称" />
         </el-form-item>
@@ -504,5 +504,28 @@ export default {
 };
 </script>
 <style>
+.upCjlsAddDialog .el-dialog {
+  border-radius: 10px;
+}
 
+.upCjlsAddDialog .el-dialog__close {
+  font-size: 30px; /* 调整按钮大小 */
+}
+
+.upCjlsAddDialog .el-dialog__headerbtn .el-dialog__close {
+  color: red;
+}
+
+.upCjlsAddDialog .el-dialog:not(.is-fullscreen) {
+  margin-top: 10% !important;
+}
+
+.upCjlsAddDialog .el-dialog__body {
+  padding-top: 20px;
+  padding-bottom: 10px;
+}
+
+.upCjlsAddDialog .el-input {
+  width: 85%;
+}
 </style>

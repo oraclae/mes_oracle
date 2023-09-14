@@ -1046,7 +1046,7 @@ export default {
 }
 
 .addDialog .el-dialog {
-  border-radius: 30px;
+  border-radius: 10px;
 }
 
 .addDialog .el-dialog__close {
@@ -1075,7 +1075,7 @@ export default {
 }
 
 .butDialog .el-dialog {
-  border-radius: 30px;
+  border-radius: 10px;
 }
 
 .butDialog .el-dialog__close {
@@ -1092,7 +1092,7 @@ export default {
 }
 
 .selectWtxlDialog .el-dialog {
-  border-radius: 30px;
+  border-radius: 10px;
 }
 
 .selectWtxlDialog .el-dialog__close {

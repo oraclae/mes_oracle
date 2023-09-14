@@ -24,6 +24,7 @@
       <el-col :span="24" :xs="24">
         <div class="ReadingPeopleTable">
           <el-table
+            border
             :header-cell-style="styleFunc"
             :data="tableData"
             v-loading="loading"
@@ -1360,7 +1361,7 @@ export default {
 }
 
 .dialogRad .el-dialog {
-  border-radius: 30px;
+  border-radius: 10px;
 }
 
 .dialogRad .el-aside {

@@ -95,8 +95,8 @@
     />
 
     <!-- 添加或修改sjzrzd对话框 -->
-    <el-dialog :close-on-click-modal="false" :title="title" :visible.sync="open" width="500px" append-to-body>
-      <div style="height: 300px;overflow-y: auto">
+    <el-dialog class="sjzrzdAddDialog" :close-on-click-modal="false" :title="title" :visible.sync="open" width="500px" append-to-body>
+      <div style="max-height: 300px;overflow-y: auto">
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
 <!--        <el-form-item label="责任部门ID" prop="zrbmid">
           <el-input v-model="form.zrbmid" placeholder="请输入责任部门ID" />
@@ -311,3 +311,29 @@ export default {
   }
 };
 </script>
+<style>
+.sjzrzdAddDialog .el-dialog {
+  border-radius: 10px;
+}
+
+.sjzrzdAddDialog .el-dialog__close {
+  font-size: 30px; /* 调整按钮大小 */
+}
+
+.sjzrzdAddDialog .el-dialog__headerbtn .el-dialog__close {
+  color: red;
+}
+
+.sjzrzdAddDialog .el-dialog:not(.is-fullscreen) {
+  margin-top: 10% !important;
+}
+
+.sjzrzdAddDialog .el-dialog__body {
+  padding-top: 20px;
+  padding-bottom: 10px;
+}
+
+.sjzrzdAddDialog .el-input {
+  width: 85%;
+}
+</style>

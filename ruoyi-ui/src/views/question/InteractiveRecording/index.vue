@@ -175,7 +175,7 @@
     </el-row>
 
     <!-- 添加或修改【请填写功能名称】对话框 -->
-    <el-dialog class="dialogRad" title="交互数据删除" :visible.sync="openUpdate" width="500px" append-to-body>
+    <el-dialog class="interactiveRecordingAddDialog" title="修改交互数据" :visible.sync="openUpdate" width="500px" append-to-body>
       <el-form ref="form" :model="formUpdate" label-width="120px">
         <el-form-item label="回复信息" prop="hfxx">
           <el-input v-model="formUpdate.hfxx" placeholder="请输入回复信息" />
@@ -386,53 +386,12 @@ export default {
   font-size: 16px;
 }
 
-.dialogRad .el-dialog__close {
-  font-size: 30px; /* 调整按钮大小 */
-}
-
-.dialogRad .el-dialog__headerbtn .el-dialog__close {
-  color: red;
-}
-
-.dialogRad .el-tooltip__popper {
-  font-size: 18px; /* 调整字体大小为你需要的大小 */
-}
-
 .cards .el-card__body {
-  padding: 0;
-}
-
-.dialogRad .el-dialog__body {
-  padding-top: 0;
-  padding-bottom: 20px;
-}
-
-.dialogRad .el-dialog {
-  border-radius: 30px;
-}
-
-.dialogRad .el-aside {
-  padding: 0;
-}
-
-.dialogRad .el-main {
   padding: 0;
 }
 
 .card .el-card__body {
   padding: 0;
-}
-
-.dialogRad .dialog .el-dialog__header {
-  padding: 0;
-}
-
-.dialogRad .dialog .el-dialog__body {
-  padding: 0;
-}
-
-.dialogRad .el-aside {
-  margin-bottom: 0;
 }
 
 .el-textarea.is-disabled .el-textarea__inner {
@@ -444,6 +403,31 @@ export default {
 }
 .InteractiveRecordingTable .el-table--medium .el-table__cell{
   padding: 0;
+}
+
+.interactiveRecordingAddDialog .el-dialog {
+  border-radius: 10px;
+}
+
+.interactiveRecordingAddDialog .el-dialog__close {
+  font-size: 30px; /* 调整按钮大小 */
+}
+
+.interactiveRecordingAddDialog .el-dialog__headerbtn .el-dialog__close {
+  color: red;
+}
+
+.interactiveRecordingAddDialog .el-dialog:not(.is-fullscreen) {
+  margin-top: 10% !important;
+}
+
+.interactiveRecordingAddDialog .el-dialog__body {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.interactiveRecordingAddDialog .el-input {
+  width: 85%;
 }
 </style>
 <style scoped lang="scss">

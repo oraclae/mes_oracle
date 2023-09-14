@@ -1582,7 +1582,7 @@ export default {
 }
 
 .dialogRad .el-dialog {
-  border-radius: 30px;
+  border-radius: 10px;
 }
 
 .dialogRad .el-aside {
