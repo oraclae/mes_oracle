@@ -135,7 +135,7 @@
       </div>
     </div>
     <!--选择问题细类弹框-->
-    <el-dialog title="请选择问题细类" :close-on-click-modal="false" :visible.sync="selectWtxlDialog" width="600px"
+    <el-dialog v-if="selectWtxlDialog" title="请选择问题细类" :close-on-click-modal="false" :visible.sync="selectWtxlDialog" width="600px"
                class="selectWtxlDialog">
       <el-table border v-loading="wtxlLoading" height="618px" :data="wtlbXlList[wtlbIndex].wtxl"
                 @row-click="wtxlClick">

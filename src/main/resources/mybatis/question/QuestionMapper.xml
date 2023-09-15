@@ -229,6 +229,7 @@
             update WTGL_YWCJ
             <set>
                 WTZT=#{item.value},
+                SFDZFK=1,
                 <if test="item.WTDB !=null">
                     WTDB=WTDB+#{item.WTDB},
                 </if>

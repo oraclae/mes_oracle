@@ -1029,6 +1029,9 @@ export default {
     // 饼形图
     piechart() {
       var chartDom = document.getElementById('piechart');
+      if (chartDom == null) {
+        return
+      }
       var myChart = echarts.init(chartDom);
       var option;
       option = {
@@ -1082,6 +1085,9 @@ export default {
     // 柱状图
     histogram() {
       var chartDom = document.getElementById('histogram');
+      if (chartDom == null) {
+        return
+      }
       var myChart = echarts.init(chartDom);
       var option;
       option = {
