@@ -38,7 +38,7 @@ public class ScheduledTasks extends BaseController {
         log.debug("计算问题天数结束");
     }
 
-    @Scheduled(cron = "0 0 23 ? * 0") //每天凌晨12点开始执行
+    @Scheduled(cron = "0 0 23 ? * 1") //每周日23开始执行
     //@PostConstruct
     private void clearFeedbackRecord() throws Exception {
         log.debug("清空反馈记录开始");

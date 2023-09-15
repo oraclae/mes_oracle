@@ -386,7 +386,7 @@
     <update id="updateQuestionSFDZFK">
         update WTGL_YWCJ
         set SFDZFK=0
-        where SFDZFK = 1
+        where SFDZFK = 1 and WTZT &lt;&gt; '已关闭'
     </update>
     <update id="updateQuestion" parameterType="com.ruoyi.project.question.domain.WtxxDTO">
         update WTGL_YWCJ
