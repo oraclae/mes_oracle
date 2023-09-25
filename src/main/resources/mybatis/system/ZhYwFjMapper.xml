@@ -39,6 +39,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             )
         </where>
     </select>
+    <select id="selectQtbxhByXh" resultType="java.lang.String">
+        select ID from ZH_YW_FJ where XH = #{xh}
+    </select>
+    <select id="countByXhs" resultType="java.lang.Integer">
+        select COUNT(*) from ZH_YW_FJ where ID = #{qtbxh}
+    </select>
+    <select id="selectFjListByIds" resultType="com.ruoyi.project.system.domain.ZhYwFj">
+        select * from ZH_YW_FJ where ID in(
+            <foreach collection="array" separator="," item="id">
+                #{id}
+            </foreach>
+            )
+    </select>
 
     <insert id="insertZhYwFj" parameterType="ZhYwFj">
         insert into ZH_YW_FJ
@@ -49,6 +62,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="scsj != null">scsj,</if>
             <if test="lj != null">lj,</if>
             <if test="cjr != null">cjr,</if>
+            <if test="cjrid != null">cjrid,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="xh != null and xh != ''">#{xh},</if>
@@ -57,6 +71,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="scsj != null">#{scsj},</if>
             <if test="lj != null">#{lj},</if>
             <if test="cjr != null">#{cjr},</if>
+            <if test="cjrid != null">#{cjrid},</if>
          </trim>
     </insert>
 

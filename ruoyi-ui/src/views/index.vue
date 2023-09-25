@@ -33,13 +33,13 @@
               </div>
             </el-col>
             <el-col :span="24" style="margin-top: 200px;">
-              <div style="margin-bottom: 50px" @click="toMyToDoList">
-                <b @click="toDownQuestion" class="wttitle">跟踪协同问题</b>
+              <div style="margin-bottom: 50px">
+                <b @click="toMyToDoList" class="wttitle">跟踪协同问题</b>
               </div>
-              <div style="width: 80%" @click="toMyToDoList">
-                <b @click="toDownQuestion" class="wtsl">{{ this.sl.dbsl }}</b>
+              <div style="width: 80%">
+                <b @click="toMyToDoList" class="wtsl">{{ this.sl.dbsl }}</b>
                 <br>
-                <div class="wtmc"><b @click="toDownQuestion">待办数量</b></div>
+                <div class="wtmc"><b @click="toMyToDoList">待办数量</b></div>
               </div>
             </el-col>
           </el-row>

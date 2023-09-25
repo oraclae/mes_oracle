@@ -61,7 +61,17 @@ export default {
       fileListTable: this.fileList,
     }
   },
+  mounted() {
+    if (this.fileList == null || this.fileList.length === 0) {
+      this.load()
+    }
+  },
   methods: {
+    load() {
+      listById({id: this.row.xh || this.row.id}).then(res => {
+        this.fileListTable = res.rows;
+      });
+    },
     //下载文件
     handleDownLoad(row) {
       var name = row.wjmc;
@@ -94,23 +104,22 @@ export default {
         }
         this.fujianshuaxin();
       })
-
     },
     // 文件提交处理
     submitUpload() {
       this.$refs.upload.submit();
     },
     // 文件上传中处理
-    handleFileUploadProgress(event, file, fileList) {
+    handleFileUploadProgress(event, file, wtFjylList) {
       this.upload.isUploading = true;
     },
     // 文件上传成功处理
-    handleFileSuccess(response, file, fileList) {
+    handleFileSuccess(response, file, wtFjylList) {
       this.upload.isUploading = false;
       // this.form.filePath = response.url;
       this.$message.success(response.msg);
       let FileNam = file.name;
-      let fj = {id:this.row.xh || this.row.id,wjmc:file.name, lj: response.url};
+      let fj = {id:this.row.xh || this.row.id,wjmc:file.name, lj: response.url, type: this.row.type};
       addFj(fj).then(res => {
         this.fujianshuaxin();
       });

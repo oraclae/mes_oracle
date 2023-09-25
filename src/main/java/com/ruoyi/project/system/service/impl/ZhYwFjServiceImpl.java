@@ -2,6 +2,7 @@ package com.ruoyi.project.system.service.impl;
 
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.framework.config.RuoYiConfig;
+import com.ruoyi.project.question.mapper.QuestionMapper;
 import com.ruoyi.project.system.domain.SysUser;
 import com.ruoyi.project.system.domain.ZhYwFj;
 import com.ruoyi.project.system.mapper.SysUserMapper;
@@ -28,6 +29,9 @@ public class ZhYwFjServiceImpl implements IZhYwFjService {
 
     @Autowired
     private SysUserMapper sysUserMapper;
+
+    @Autowired
+    private QuestionMapper questionMapper;
 
     /**
      * 查询附件
@@ -61,8 +65,12 @@ public class ZhYwFjServiceImpl implements IZhYwFjService {
     public int insertZhYwFj(ZhYwFj zhYwFj) {
         SysUser sysUser = sysUserMapper.selectUserById(SecurityUtils.getUserId());
         zhYwFj.setXh(UUID.randomUUID().toString());
+        if ("回复数据".equals(zhYwFj.getType())) {
+            questionMapper.updatejhjlToHFFJ(zhYwFj.getId(),"是");
+        }
         zhYwFj.setScsj(new Date());
         zhYwFj.setCjr(sysUser.getNickName());
+        zhYwFj.setCjrid(sysUser.getUserId().toString());
         return zhYwFjMapper.insertZhYwFj(zhYwFj);
     }
 
@@ -94,7 +102,13 @@ public class ZhYwFjServiceImpl implements IZhYwFjService {
             if (file.isFile()) {
                 boolean delete = file.delete();
                 if (delete) {
+                    //修改交互记录  删除附件
+                    String qtbxh = zhYwFjMapper.selectQtbxhByXh(xhs[0]);
                     zhYwFjMapper.deleteZhYwFjByXhs(xhs);
+                    int num = zhYwFjMapper.countByXhs(qtbxh);
+                    if (num < 1) {
+                        questionMapper.updatejhjlToHFFJ(qtbxh, "否");
+                    }
                     return 1;
                 } else {
                     return 500;
@@ -131,5 +145,13 @@ public class ZhYwFjServiceImpl implements IZhYwFjService {
     @Override
     public List<ZhYwFj> selectZhYwFjListByIds(List<ZhYwFj> zhYwFjs) {
         return zhYwFjMapper.selectZhYwFjListByIds(zhYwFjs);
+    }
+
+    /**
+     * 根据其他表id查询附件列表
+     */
+    @Override
+    public List<ZhYwFj> selectFjListByIds(String[] qtbxhs) {
+        return zhYwFjMapper.selectFjListByIds(qtbxhs);
     }
 }

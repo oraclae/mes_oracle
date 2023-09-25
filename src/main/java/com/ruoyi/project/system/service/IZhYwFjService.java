@@ -65,4 +65,9 @@ public interface IZhYwFjService
      * 根据id列表获取附件列表
      */
     List<ZhYwFj> selectZhYwFjListByIds(List<ZhYwFj> zhYwFjs);
+
+    /**
+     * 根据其他表id查询附件列表
+     */
+    List<ZhYwFj> selectFjListByIds(String[] qtbxhs);
 }

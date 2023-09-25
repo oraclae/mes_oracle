@@ -1,5 +1,14 @@
 import request from '@/utils/request'
 
+export function selectFjListByIds(ids) {
+  return request({
+    url: '/system/fj/selectFjListByIds',
+    method: 'post',
+    data: ids
+  })
+}
+
+
 // 查询附件列表
 export function listFj(query) {
   return request({

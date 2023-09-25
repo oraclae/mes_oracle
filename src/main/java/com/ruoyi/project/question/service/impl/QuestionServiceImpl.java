@@ -524,16 +524,18 @@ public class QuestionServiceImpl implements QuestionService {
         } else {
             for (Sjjh sjjh : sjjhs) {
                 String[] split = sjjh.getEJHFPPYJ().split(",");
-                for (String s : split) {
-                    if (id.equals(s)) {
-                        if (split.length > 1) {
-                            questionMapper.updatejhjlToAll(sjjh.getXH(), sjjh.getEJHFPPYJ().replaceAll("," + id, ""));
-                        } else {
-                            questionMapper.updatejhjlToAll(sjjh.getXH(), null);
+                if (split.length > 1) {
+                    StringJoiner newEjhfppyj = new StringJoiner(",");
+                    for (String s1 : split) {
+                        if (!s1.equals(id)) {
+                            newEjhfppyj.add(s1);
                         }
-                        break;
                     }
+                    questionMapper.updatejhjlToAll(sjjh.getXH(), newEjhfppyj.toString());
+                } else {
+                    questionMapper.updatejhjlToAll(sjjh.getXH(), null);
                 }
+                break;
             }
         }
         questionMapper.deleteJhjlByXh(id);

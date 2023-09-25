@@ -10,7 +10,7 @@
           <el-radio label="已关闭" class="el_radios_position">已关闭</el-radio>
         </el-radio-group>
         <el-button type="success" size="small" @click="createQuestion">创建问题</el-button>
-        <el-button type="success" size="small" :disabled="single" @click="handleAdd">回复/预览</el-button>
+        <el-button type="success" size="small" :disabled="single" @click="openDialog">回复/预览</el-button>
         <el-button type="primary" style="background-color: red" :disabled="single"
                    v-if="queryParams.radios!=='已关闭'&&queryParams.radios!=='待关闭'" size="small" @click="closeQuestion">关闭
         </el-button>
@@ -107,9 +107,9 @@
             <el-table-column align="center" prop="wtdb" label="反馈预警" show-overflow-tooltip>
               <template slot-scope="scope">
                 <img
-                style="width: 30px"
-                v-if="getFkyjText(scope.row)==='红'"
-                :src="require('@/assets/questionIcons/红警告.png')"
+                  style="width: 30px"
+                  v-if="getFkyjText(scope.row)==='红'"
+                  :src="require('@/assets/questionIcons/红警告.png')"
                 />
               </template>
             </el-table-column>
@@ -628,435 +628,14 @@
       </div>
     </el-dialog>
     <!-- 1090   1390-->
-    <el-dialog class="dialog dialogRad" @close="shuaxin" :visible.sync="open" :width="withd"
+    <el-dialog class="dialog dialogRad" @close="shuaxin" :visible.sync="open" :width="width"
                style="padding-top: 0;padding-bottom: 0;margin-top:1px;" append-to-body>
-      <div class="app-container indexHeight">
-        <el-card shadow="always" class="box-card"
-                 style="background: linear-gradient(to bottom, rgba(7, 129, 230,0.52), rgba(7, 129, 230,1));width: 100%;border-radius: 30px">
-          <div style="line-height: 15px;">
-            <label style="font-size: 18px">回复/预览</label>
-            <el-button style="margin-left: 10px" type="warning" size="small" @click="open=false">退出</el-button>
-            <el-button style="margin-left: 10px" size="small" @click="dialogReload">刷新</el-button>
-            <el-button style="background-color: red" v-if="queryParams.radios==='待关闭'" type="warning" size="small"
-                       @click="applyForClosure(closureID)">关闭
-            </el-button>
-            <div style="display: inline-block;text-align: center;margin-left: 240px;font-size: 15px">
-              <div><label>未完成天数</label></div>
-              <div><label>{{ wwcts === 'NAN天' ? '0天' : wwcts }}</label></div>
-            </div>
-            <div style="display: inline-block;text-align: center;margin-left: 120px;font-size: 15px">
-              <div><label>超期天数</label></div>
-              <div><label>{{ cqts === 'NAN天' ? '0天' : cqts }}</label></div>
-            </div>
-            <div style="display: inline-block;text-align: center;margin-left: 140px;font-size: 15px">
-              <div><label>完成天数</label></div>
-              <div><label>{{ wcts === 'NAN天' ? '0天' : wcts }}</label></div>
-            </div>
-          </div>
-        </el-card>
-        <el-container>
-          <el-aside width="300px">
-            <div>
-              <el-card shadow="always" class="box-card"
-                       style="background: linear-gradient(to bottom, #0781E6, #7ED4D9);width: 300px;border-radius: 20px">
-                <div>
-                  <div>
-                    <label>创建部门:</label>
-                    <span style="margin-left: 15px" v-text="closureID.cjbm"></span>
-                  </div>
-                  <div>
-                    <label>创建科室:</label>
-                    <span style="margin-left: 15px" v-text="closureID.cjks"></span>
-                  </div>
-                  <div>
-                    <label>创建人:</label>
-                    <span style="margin-left: 15px" v-text="closureID.cjr"></span>
-                  </div>
-                  <div>
-                    <label>创建时间:</label>
-                    <span style="margin-left: 15px" v-text="closureID.cjsj"></span>
-                  </div>
-                  <div>
-                    <label>零组件号:</label>
-                    <span style="margin-left: 15px" v-text="closureID.cpxh"></span>
-                  </div>
-                  <div>
-                    <label>生产订单号:</label>
-                    <span style="margin-left: 15px" v-text="closureID.scddh"></span>
-                  </div>
-                  <div>
-                    <label>问题来源:</label>
-                    <span style="margin-left: 15px" v-text="closureID.wtly"></span>
-                  </div>
-                  <div>
-                    <label>问题细类:</label>
-                    <span style="margin-left: 15px" v-text="closureID.wtxl"></span>
-                  </div>
-                </div>
-              </el-card>
-            </div>
-            <div>
-              <el-card shadow="always" class="box-card"
-                       style="background: linear-gradient(to bottom, #0781E6, #7ED4D9);width: 300px;border-radius: 20px">
-                <div>
-                  <div>
-                    <label>紧急程度:</label>
-                    <span style="margin-left: 15px" v-text="closureID.zycd"></span>
-                  </div>
-                  <div>
-                    <label>影响程度:</label>
-                    <span style="margin-left: 15px" v-text="closureID.yxcd"></span>
-                  </div>
-                </div>
-
-              </el-card>
-            </div>
-            <div>
-              <el-card shadow="always" class="box-card card tablec"
-                       style="background: linear-gradient(to bottom, rgba(7, 129, 230,1), #93bec1);width: 300px;border-radius: 20px;border-radius: 20px">
-                <el-table
-                  :data="zrrList"
-                  height="300px"
-                  max-height="300px"
-                  border
-                  size="mini"
-                  style="background: linear-gradient(to bottom, #0781E6, #7ED4D9);width: 100%">
-                  <el-table-column width="150px" label="操作" v-if="queryParams.radios!=='已关闭'">
-                    <template slot-scope="scope">
-                      <el-button @click="bihuanButton(scope.row)" style="font-size: 13px;background-color: #ffba00"
-                                 size="small">闭环
-                      </el-button>
-                      <el-button @click="jihuoButton(scope.row)" size="small"
-                                 style="font-size: 13px;background-color: #ffba00">激活
-                      </el-button>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    prop="zrrzt"
-                    label="责任人状态"
-                    width="100px"
-                    show-overflow-tooltip
-                  >
-                  </el-table-column>
-                  <el-table-column
-                    prop="zrr"
-                    label="责任人"
-                    show-overflow-tooltip
-                  >
-                  </el-table-column>
-                  <el-table-column
-                    prop="zrbm"
-                    label="责任部门"
-                    show-overflow-tooltip
-                  >
-                  </el-table-column>
-                </el-table>
-              </el-card>
-            </div>
-          </el-aside>
-          <el-main>
-            <div style="display: inline-block;float: left">
-              <el-card shadow="always" class="box-card"
-                       style="background: linear-gradient(to bottom, #0781E6, #7ED4D9);width: 750px;border-radius: 20px">
-                <div style="margin-bottom: 8px">
-                  <label style="font-size: 18px">问题名称:</label>
-                  <label style="font-size: 18px">{{ closureID.wtmc }}</label>
-                </div>
-                <div>
-                  <label style="font-size: 18px">问题描述:</label>
-                  <el-input
-                    type="textarea"
-                    :autosize="{ minRows: 4, maxRows: 4}"
-                    style="margin-top: 1px;"
-                    placeholder="请输入内容"
-                    v-model="wtms"
-                    :disabled="true">
-                  </el-input>
-                </div>
-              </el-card>
-              <el-card shadow="always" class="box-card"
-                       style="background: linear-gradient(to bottom, #0781E6, #7ED4D9);width: 750px;border-radius: 20px">
-                <label style="font-size: 16px;background-image: linear-gradient(90deg, #ff1515, #021fd6);
-                  -webkit-background-clip: text; -webkit-text-fill-color: transparent"
-                       v-if="this.closureID.lxfk==='例行反馈'">例行反馈</label>
-                <label style="font-size: 16px;background-image: linear-gradient(90deg, #ff1515, #021fd6);
-                  -webkit-background-clip: text; -webkit-text-fill-color: transparent" v-else>业务交互</label>
-                <el-checkbox class="fj fjyl" v-model="fujian" @change="fujianyulan"
-                             style="margin-left: 25px;color: white">
-                  附件预览
-                </el-checkbox>
-                <el-button style="margin-left: 25px;background-color: #15f901" size="mini" @click="handleUpload('弹窗')">
-                  上传附件
-                </el-button>
-                <el-button v-if="this.closureID.lxfk==='例行反馈'" style="margin-left: 25px;background-color: #ffba00"
-                           size="mini"
-                           @click="lixingfankuiDialogMethod">例行反馈
-                </el-button>
-                <el-button v-else style="margin-left: 25px;background-color: #ffba00" size="mini"
-                           @click="huifuDialogMethod">回复
-                </el-button>
-                <!--                <el-button style="margin-left: 55px" @click="lingdaopishiDialogMethod" size="mini" type="danger">领导批示</el-button>-->
-              </el-card>
-              <el-card shadow="always" class="box-card"
-                       style="width: 750px;height:400px;overflow-y: auto;white-space:normal;overflow-x: scroll; border-radius: 20px">
-                <div style="width: 1000px" v-for="item in jhsjList" :key="item.xh">
-                  <div style="display: inline-block" v-if="item.hffj">
-                    <i class="el-icon-upload"></i>
-                  </div>
-                  <div class="chatName" v-text="item.hfr"></div>
-                  <div style="vertical-align: top;display: inline-block">
-                    <div @contextmenu="showContextMenu($event,item)" @click="huifuyangshione(item.xh)"
-                         :class="{ 'clicked': currentDivIndex === item.xh }"
-                         @dblclick="huifuyangshi(item.ejhfppyj,item.xh,islxfk)" class="chatBox chatBox-left"
-                         style="word-wrap: break-word;max-width: 375px;white-space: normal;"
-                         v-text="item.hfxx"></div>
-                    <div class="chatTime"><span
-                      style="font-size: 14px;vertical-align: bottom;margin-left: 3px">{{ item.wtcjsj }}</span></div>
-                  </div>
-                  <div v-if="item.sjjhs.length>0">
-                    <div style="margin-left: 60px" v-for="item in item.sjjhs" :key="item.xh">
-                      <div style="display: inline-block" v-if="item.hffj">
-                        <i class="el-icon-upload"></i>
-                      </div>
-                      <div class="chatName" v-text="item.hfr"></div>
-                      <div style="vertical-align: top;display: inline-block">
-                        <div @contextmenu="showContextMenu($event,item)" @click="huifuyangshione(item.xh)"
-                             :class="{ 'clicked': currentDivIndex === item.xh }"
-                             @dblclick="huifuyangshi(item.ejhfppyj,item.xh,islxfk)" class="chatBox chatBox-left"
-                             style="word-wrap: break-word;max-width: 375px;white-space: normal;"
-                             v-text="item.hfxx"></div>
-                        <div class="chatTime"><span
-                          style="font-size: 14px;vertical-align: bottom;margin-left: 3px">{{ item.wtcjsj }}</span></div>
-                      </div>
-                      <div v-if="item.sjjhs.length>0">
-                        <div style="margin-left: 60px" v-for="item in item.sjjhs" :key="item.xh">
-                          <div style="display: inline-block" v-if="item.hffj">
-                            <i class="el-icon-upload"></i>
-                          </div>
-                          <div class="chatName" v-text="item.hfr"></div>
-                          <div style="vertical-align: top;display: inline-block">
-                            <div @contextmenu="showContextMenu($event,item)" @click="huifuyangshione(item.xh)"
-                                 :class="{ 'clicked': currentDivIndex === item.xh }"
-                                 @dblclick="huifuyangshi(item.ejhfppyj,item.xh,islxfk)" class="chatBox chatBox-left"
-                                 style="word-wrap: break-word;max-width: 375px;white-space: normal;"
-                                 v-text="item.hfxx"></div>
-                            <div class="chatTime"><span style="font-size: 14px;vertical-align: bottom;margin-left: 3px">{{
-                                item.wtcjsj
-                              }}</span></div>
-                          </div>
-                          <div v-if="item.sjjhs.length>0">
-                            <div style="margin-left: 60px" v-for="item in item.sjjhs" :key="item.xh">
-                              <div style="display: inline-block" v-if="item.hffj">
-                                <i class="el-icon-upload"></i>
-                              </div>
-                              <div class="chatName" v-text="item.hfr"></div>
-                              <div style="vertical-align: top;display: inline-block">
-                                <div @contextmenu="showContextMenu($event,item)" @click="huifuyangshione(item.xh)"
-                                     :class="{ 'clicked': currentDivIndex === item.xh }"
-                                     @dblclick="huifuyangshi(item.ejhfppyj,item.xh,islxfk)" class="chatBox chatBox-left"
-                                     style="word-wrap: break-word;max-width: 375px;white-space: normal;"
-                                     v-text="item.hfxx"></div>
-                                <div class="chatTime"><span
-                                  style="font-size: 14px;vertical-align: bottom;margin-left: 3px">{{
-                                    item.wtcjsj
-                                  }}</span></div>
-                              </div>
-                              <div v-if="item.sjjhs.length>0">
-                                <div style="margin-left: 60px" v-for="item in item.sjjhs" :key="item.xh">
-                                  <div style="display: inline-block" v-if="item.hffj">
-                                    <i class="el-icon-upload"></i>
-                                  </div>
-                                  <div class="chatName" v-text="item.hfr"></div>
-                                  <div style="vertical-align: top;display: inline-block">
-                                    <div @contextmenu="showContextMenu($event,item)" @click="huifuyangshione(item.xh)"
-                                         :class="{ 'clicked': currentDivIndex === item.xh }"
-                                         class="chatBox chatBox-left"
-                                         style="word-wrap: break-word;max-width: 375px;white-space: normal;"
-                                         v-text="item.hfxx"></div>
-                                    <div class="chatTime"><span
-                                      style="font-size: 14px;vertical-align: bottom;margin-left: 3px">{{
-                                        item.wtcjsj
-                                      }}</span></div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </el-card>
-              <div v-show="isContextMenuVisible" class="context-menu"
-                   :style="{ top: contextMenuPosition.y + 'px', left: contextMenuPosition.x + 'px' }">
-                <!-- 菜单内容 -->
-                <div class="menu-item" @click="handleUpload('弹窗',itemJhjl)">上传附件</div>
-                <div class="menu-item" @click="deleteJhjl">删除</div>
-              </div>
-            </div>
-            <div v-show="isShow" style="display: inline-block;float: right;">
-              <el-card v-show="isShow" shadow="always" class="box-card cards"
-                       style="width: 300px;height: 695px;border-radius: 20px">
-                <el-card v-show="isShow" shadow="always" class="box-card cards tablec"
-                         style="background: linear-gradient(to bottom, #0781E6, #7ED4D9);width: 300px;height: 345px;border-radius: 20px">
-                  <div style="margin-top: 16px">
-                    <label style="margin-left: 100px;font-size: 18px;">问题附件预览</label>
-                  </div>
-                  <el-table
-                    :data="fileList"
-                    @row-dblclick="downLoadFile"
-                    border
-                    size="mini"
-                    max-height="250px"
-                    style="width: 100%;margin-top: 26px;">
-                    <el-table-column
-                      prop="cjr"
-                      label="人员"
-                      show-overflow-tooltip
-                    >
-                    </el-table-column>
-                    <el-table-column
-                      prop="wjmc"
-                      label="文件名称"
-                      show-overflow-tooltip
-                    >
-                    </el-table-column>
-                    <el-table-column
-                      prop="scsj"
-                      label="上传时间"
-                      show-overflow-tooltip
-                    >
-                    </el-table-column>
-                  </el-table>
-                </el-card>
-
-                <el-card v-show="isShow" shadow="always" class="box-card cards tablec"
-                         style="background: linear-gradient(to bottom, #0781E6, #7ED4D9);width: 300px;height: 345px;border-radius: 20px">
-                  <div style="margin-top: 10px">
-                    <label style="margin-left: 100px;font-size: 18px;">回复附件预览</label>
-                  </div>
-                  <el-table
-                    :data="jhjlFileList"
-                    border
-                    size="mini"
-                    max-height="250px"
-                    @row-dblclick="downLoadFile"
-                    style="width: 100%;margin-top: 26px">
-                    <el-table-column
-                      prop="cjr"
-                      label="人员"
-                      show-overflow-tooltip
-                    >
-                    </el-table-column>
-                    <el-table-column
-                      prop="wjmc"
-                      label="文件名称"
-                      show-overflow-tooltip
-                    >
-                    </el-table-column>
-                    <el-table-column
-                      prop="scsj"
-                      label="上传时间"
-                      show-overflow-tooltip
-                    >
-                    </el-table-column>
-                  </el-table>
-                </el-card>
-              </el-card>
-            </div>
-            <div v-show="isShowLdps" style="width: 300px;display: inline-block;float: right;">
-              <el-card v-show="isShowLdps" shadow="always" class="box-card cards tablec"
-                       style="white-space:nowrap;overflow-x: scroll;height: 695px;overflow-y: auto;background: linear-gradient(to bottom, #0781E6, #7ED4D9);width: 300px;border-radius: 20px">
-                <div style="margin-top: 20px;margin-bottom: 20px">
-                  <label style="margin-left: 115px;font-size: 18px;">领导批示</label>
-                </div>
-                <div v-for="item in ldpiList">
-                  <div class="chatName" v-text="item.hfr"></div>
-                  <div style="vertical-align: top;display: inline-block">
-                    <div
-                         @click="huifuyangshione(item.xh)"
-                         :class="{ 'clicked': currentDivIndex === item.xh }"
-                         class="chatBox chatBox-left"
-                         v-text="item.hfxx"
-                         style="word-wrap: break-word;max-width: 200px;white-space: normal"></div>
-                    <div class="chatTime"><span
-                      style="font-size: 14px;vertical-align: bottom;margin-left: 3px">{{ item.wtcjsj }}</span></div>
-                  </div>
-                </div>
-              </el-card>
-            </div>
-          </el-main>
-        </el-container>
-      </div>
+      <huifuyulan ref="huifuyulan" v-if="open" style="height: 800px"
+                  :closureID="closureID" :radios="queryParams.radios" :authority="authority"
+                  @closeXzxi="closeXzxi"
+                  @closeDia="open = false" @changeWidth="changeDialogWidth"/>
     </el-dialog>
-    <!--  回复按钮的弹出框  -->
-    <el-dialog
-      class="buttonDialog dialogRad"
-      title="回复"
-      @open="dialogOpened"
-      v-if="huifuDialog"
-      :visible.sync="huifuDialog"
-      @close="huifuId = ''"
-      width="30%"
-    >
-      <el-input
-        ref="huifuInput"
-        type="textarea"
-        :rows="5"
-        style="margin-top: 5px"
-        placeholder="请输入内容"
-        v-model="huifuTest">
-      </el-input>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="huifuDialog=false,huifuId = ''">取 消</el-button>
-        <el-button type="primary" @click.once="huifuSubmit(ejhfppyj,huifuId,'回复','1')">确 定</el-button>
-      </span>
-    </el-dialog>
-    <!--  例行反馈的按钮的弹出框  -->
-    <el-dialog
-      class="buttonDialog dialogRad"
-      @open="dialogLXFKOpened"
-      style="margin-top: 150px"
-      title="例行反馈"
-      v-if="lixingfankuiDialog"
-      :visible.sync="lixingfankuiDialog"
-      @close="huifuId = ''"
-      width="30%">
-      <el-input
-        ref="lixingfankuiInput"
-        type="textarea"
-        :rows="5"
-        placeholder="请输入内容"
-        v-model="huifuTest">
-      </el-input>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="lixingfankuiDialog = false,huifuId = ''">取 消</el-button>
-        <el-button type="primary" @click.once="huifuSubmit(ejhfppyj,huifuId,'例行反馈','1')">确 定</el-button>
-      </span>
-    </el-dialog>
-    <el-dialog
-      @open="dialogLDPSOpened"
-      class="buttonDialog dialogRad"
-      title="领导批示"
-      v-if="lingdaopishiDialog"
-      :visible.sync="lingdaopishiDialog"
-      @close="huifuId = ''"
-      width="30%">
-      <el-input
-        ref="lingdaoInput"
-        type="textarea"
-        :rows="5"
-        style="margin-top: 5px;"
-        placeholder="请输入内容"
-        v-model="huifuTest">
-      </el-input>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="lingdaopishiDialog = false,huifuId = ''">取 消</el-button>
-        <el-button type="primary" @click.once="huifuSubmit(ejhfppyj,huifuId,'领导批示','1')">确 定</el-button>
-      </span>
-    </el-dialog>
-
+    <!--  选择答案弹窗  -->
     <el-dialog class="dialogRad" title="选择答案" v-if="xuanzedaan" :visible.sync="xuanzedaan" @open="clearSelect">
       <el-table
         ref="daanTable"
@@ -1074,6 +653,7 @@
         <el-button type="primary" @click="confirmAnswer(closureID)">确 定</el-button>
       </span>
     </el-dialog>
+    <!--  选择责任人弹窗  -->
     <el-dialog class="dialogRad" :close-on-click-modal="false" :title="selectTitle" width="1200px"
                :visible.sync="treeVisual">
       <deptTreeSelect :selectZrrList="selectTitle==='选择责任人'?selectZrrList:selectYzrList"
@@ -1085,9 +665,11 @@
 
       </deptTreeSelect>
     </el-dialog>
+    <!--  启用问题处理库弹窗  -->
     <el-dialog class="dialogRad" :close-on-click-modal="false" title="启用问题处理库" width="1200px"
                :visible.sync="lishidaanDialog">
-      <zdhf ref="cxda" @xiangxixinxi="xiangxixinxi" @dialogCreatedQuestion="dialogCreatedQuestion" v-if="lishidaanDialog" :form="form"></zdhf>
+      <zdhf ref="cxda" @xiangxixinxi="xiangxixinxi" @dialogCreatedQuestion="dialogCreatedQuestion"
+            v-if="lishidaanDialog" :form="form"></zdhf>
     </el-dialog>
     <!--详细信息弹窗-->
     <el-dialog class="zdhfDialog" :close-on-click-modal="false" @close="shifoumanyi" title="详细信息"
@@ -1123,22 +705,20 @@ import {
   getwtbhMethod, getjjcdMethod, getwtxlMethod,
   getwtlyMethod, getwtlbMethod, selectWtxxData,
   createQuestion, deleteQuestions, updateQuestions,
-  updateQuestionsStatus, getJhjl, getLDPS,
-  selectJhjlList, answerSelectOff, updateQuestionStatus,
-  getzerData, saveJhjlList, closedLoop, activate,
-  deleteJhjlByXh, updateQuestionWTDBToZero, updateQuestionWddb, getJhjlByWtid,
+  updateQuestionsStatus, answerSelectOff, getJhjlByWtid,
 } from "@/api/question/question";
 import {addCjls, getUpButtons, updateDaccToRd} from "@/api/question/upQuestion";
 import deptTreeSelect from "@/views/question/myquestion/deptTreeSelect"
 import zdhf from "@/views/question/myquestion/znwdDialog";
 import xiangxixinxi from "@/views/question/myquestion/xiangxixinxi";
-import {listById, getFjByIds} from "@/api/fj/fj";
+import huifuyulan from "@/views/question/huifuyulan";
+import {listById} from "@/api/fj/fj";
 import fj from "@/views/fj/fj";
 
 export default {
   name: 'Myquestion',
   components: {
-    deptTreeSelect, zdhf, xiangxixinxi, fj
+    deptTreeSelect, zdhf, xiangxixinxi, fj, huifuyulan
   },
   computed: {
     getTimeText() {
@@ -1167,6 +747,15 @@ export default {
   },
   data() {
     return {
+      //权限
+      authority: {
+        shangchuangfujian: true,//上传附件
+        ldps: false,//领导批示
+        controls: true,//操作
+        recover: true,//回复
+        shenqingguanbi: false,//申请关闭
+        close: true//关闭
+      },
       fileList: [],//文件的集合
       jhjlFileList: [],//交互记录文件
       openScfj: false,//是否打开上传附件弹出框
@@ -1187,7 +776,7 @@ export default {
       selectTitle: '',//选择责任人或阅知人弹出框的标题
       treeVisual: false,//弹出选择责任人和阅知人的弹窗
 
-      xcphwtList:[],//现场配合问题
+      xcphwtList: [],//现场配合问题
       isone: true,
       updateIds: [],//存储需要修改的id值
       openUpdate: false,//修改的弹出框
@@ -1211,7 +800,7 @@ export default {
       islxfk: false,//是否是例行反馈
       isShowLdps: false,//判断是否有领导批示
       isShow: false,//判断附件预览是否展示
-      withd: '1090px',//回复预览弹出框的大小1390
+      width: '1090px',//回复预览弹出框的大小1390
       fujian: false,//附件多选框是否确定
       zrrList: [],//回复预览页面的责任人数据集合
       title: "",
@@ -1310,6 +899,14 @@ export default {
     }
   },
   methods: {
+    //关闭选择信息确认
+    closeXzxi() {
+      this.open = false
+      this.load()
+    },
+    changeDialogWidth(data) {
+      this.width = data
+    },
     //下载文件
     downLoadFile(row) {
       var name = row.wjmc;
@@ -1360,7 +957,7 @@ export default {
     //创建问题按钮
     dialogCreatedQuestion() {
       this.saveDataDialog()
-      this.lishidaanDialog =false
+      this.lishidaanDialog = false
     },
     //满意的按钮执行方法
     closeitOK() {
@@ -1485,359 +1082,18 @@ export default {
       this.open = false;
     },
     //实现双击弹出回复预览弹出框
-    openDialog(row) {
-      if (this.editingProperty === 'wtmc' || this.editingProperty === 'wtms') {
-        this.computTime(row);
-        this.isLdps = false;
-        this.isShowLdps = false;
-        this.isShow = false;
-        this.withd = '1090px';
-        this.currentDivIndex = '';
-        this.jhsjList = [];
-        this.wtms = '';
-        this.fujian = false;
-        this.islxfk = false;
-        this.closureID = row;
-        this.wtms = row.wtms;
-        if (this.closureID.lxfk === '例行反馈') {
-          this.loadJhjlList('例行反馈');
-          this.islxfk = true;
-        } else {
-          this.loadJhjlList('回复');
-          this.islxfk = false;
+    openDialog(row, column) {
+      if (column != null) {
+        if (this.editingProperty !== 'wtmc' && this.editingProperty !== 'wtms') {
+          return
         }
-        this.loadJhjlList('领导批示');
-        this.open = true;
-        this.title = "回复/预览";
-        this.loadzerData();
-        updateQuestionWTDBToZero({id: this.closureID.id}).then(res => {
-          if (res.code === 200) {
-          }
-        });
+        this.closureID = row
+      }else {
+        this.closureID = this.handleSelect[0]
       }
-
-    },
-    //实现右键菜单
-    showContextMenu(event, item) {
-      event.preventDefault(); // 阻止默认的右键菜单显示
-      this.isContextMenuVisible = true;
-      this.contextMenuPosition.x = event.clientX;
-      this.contextMenuPosition.y = event.clientY;
-
-      this.itemJhjl = item;
-      // 点击其他地方时隐藏右键菜单
-      document.addEventListener('click', this.hideContextMenu);
-    },
-    hideContextMenu() {
-      this.isContextMenuVisible = false;
-      document.removeEventListener('click', this.hideContextMenu);
-    },
-    uploadAttachment() {
-      // 处理菜单项点击事件
-    },
-    //处理菜单项目的删除事件
-    deleteJhjl() {
-      // 处理菜单项点击事件
-      let ejhfppyj = this.itemJhjl.ejhfppyj;
-      if (this.itemJhjl.hffj) {
-        this.$message.error("该回复下面有附件不能删除");
-        return
-      }
-      //先判断当前登录的用户是否管理员，如果是那么可以删除，如果不是下级有数据不能删除
-      if (ejhfppyj !== null && ejhfppyj.length > 0) {
-        this.$message.error("该回复下面有回复不能删除");
-      } else {
-        deleteJhjlByXh(this.itemJhjl.xh).then(res => {
-          if (res.code === 200) {
-            this.$message.success("删除成功");
-            if (this.closureID.lxfk === '例行反馈') {
-              this.loadJhjlList('例行反馈');
-            } else {
-              this.loadJhjlList('回复');
-            }
-          } else {
-            this.$message.error("删除失败");
-          }
-        });
-      }
-    },
-    //回复数据的单击事件
-    huifuyangshione(index) {
-      this.currentDivIndex = index;
-    },
-    //回复页面的责任人的闭环和激活按钮
-    //闭环按钮
-    bihuanButton(row) {
-      let data = {xh: row.xh, wtid: row.wtid};
-      closedLoop(data).then(res => {
-        if (res.code === 200) {
-          this.$message.success("责任人闭环成功");
-          this.loadzerData();
-        } else {
-          this.$message.error("责任人闭环失败");
-        }
-      });
-    },
-    //激活
-    jihuoButton(row) {
-      let data = {xh: row.xh, wtid: row.wtid};
-      activate(data).then(res => {
-        if (res.code === 200) {
-          this.$message.success("责任人激活成功");
-          updateQuestionStatus({id: row.wtid, value: '反馈'}).then(res => {
-            if (res.code === 200) {
-              this.load();
-            }
-          });
-          this.loadzerData();
-        } else {
-          this.$message.error("责任人激活失败");
-        }
-      });
-    },
-    //判断是否使例行反馈还是回复的数据
-    huifuyangshi(ejhfppyj, xh, islxfk) {
-      this.huifuTest = '';
-      this.huifuId = '';
-      if (islxfk) {
-        this.lixingfankuiDialog = true;
-      } else {
-        this.huifuDialog = true;
-      }
-      this.huifuId = xh;
-      this.ejhfppyj = ejhfppyj;
-    },
-    //获得交互记录的数据
-    loadJhjlList(jhzt, str) {
-      if (jhzt === '领导批示') {
-        getLDPS({WTID: this.closureID.id, JHZT: jhzt}).then(res => {
-          if (res.code === 200) {
-            this.ldpiList = res.rows;
-            if (str !== '刷新') {
-              if (this.ldpiList.length > 0) {
-                this.withd = '1390px';
-                this.isShowLdps = true;
-                this.isShow = false;
-              } else {
-                this.withd = '1090px';
-                this.isShowLdps = false;
-                this.isShow = false;
-              }
-            }
-          }
-        });
-      } else {
-        getJhjl({WTID: this.closureID.id, JHZT: jhzt}).then(res => {
-          if (res.code === 200) {
-            this.jhsjList = res.rows;
-            let xhs = [{id: this.closureID.id}]
-            for (let j1 of this.jhsjList) {
-              xhs.push({id: j1.xh})
-              for (let j2 of j1.sjjhs) {
-                xhs.push({id: j2.xh})
-                for (let j3 of j2.sjjhs) {
-                  xhs.push({id: j3.xh})
-                  for (let j4 of j3.sjjhs) {
-                    xhs.push({id: j4.xh})
-                    for (let j5 of j4.sjjhs) {
-                      xhs.push({id: j5.xh})
-                    }
-                  }
-                }
-              }
-            }
-            getFjByIds(xhs).then(res => {
-              let fjs = []
-              fjs = res.rows
-              this.fileList = []
-              this.jhjlFileList = []
-              for (let fjsdata of fjs) {
-                if (fjsdata.id === this.closureID.id) {
-                  this.fileList.push(fjsdata)
-                } else {
-                  this.jhjlFileList.push(fjsdata)
-                  for (let j1 of this.jhsjList) {
-                    if (fjsdata.id === j1.xh) {
-                      j1.hffj = true
-                    }
-                    for (let j2 of j1.sjjhs) {
-                      if (fjsdata.id === j2.xh) {
-                        j2.hffj = true
-                      }
-                      for (let j3 of j2.sjjhs) {
-                        if (fjsdata.id === j3.xh) {
-                          j3.hffj = true
-                        }
-                        for (let j4 of j3.sjjhs) {
-                          if (fjsdata.id === j4.xh) {
-                            j4.hffj = true
-                          }
-                          for (let j5 of j4.sjjhs) {
-                            if (fjsdata.id === j5.xh) {
-                              j5.hffj = true
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            })
-          }
-        });
-      }
-    },
-    //回复按钮的取消方法
-    huifuCancel(id, type) {
-      this.huifuDialog = false;
-    },
-    //回复按钮的确定方法
-    huifuSubmit(ejhfppyj, id, type, js) {
-      this.huifuDialog = false;
-      let sjjh = {
-        value: this.closureID.wtzt,
-        hfxx: this.huifuTest,
-        wtbt: this.closureID.wtmc,
-        wtid: this.closureID.id,
-        wtcjid: this.closureID.cjrid,
-        wtcjr: this.closureID.cjr,
-        wtcjbm: this.closureID.cjbm,
-        wtcjks: this.closureID.cjks,
-        jhzt: type,
-        js: js,
-        xh: '',
-      }
-      if (type === '领导批示') {
-        saveJhjlList(sjjh).then(res => {
-          if (res.code === 200) {
-            this.$message.success("回复成功");
-            this.huifuDialog = false;
-            this.lingdaopishiDialog = false;
-            this.lixingfankuiDialog = false;
-            this.loadJhjlList('领导批示');
-          } else {
-            this.$message.error("回复失败，请查看是否服务器错误，或者重复提交");
-          }
-        });
-        return;
-      }
-      if (id === null || id === '') {
-        saveJhjlList(sjjh).then(res => {
-          if (res.code === 200) {
-            this.$message.success("回复成功");
-            this.huifuDialog = false;
-            this.lingdaopishiDialog = false;
-            this.lixingfankuiDialog = false;
-            //再此查询交互记录
-            if (this.islxfk) {
-              this.loadJhjlList('例行反馈');
-            } else {
-              this.loadJhjlList('回复');
-            }
-          } else {
-            this.$message.error("回复失败，请查看是否服务器错误，或者重复提交");
-          }
-        });
-      } else {
-        sjjh.xh = id;
-        sjjh.js = '';
-        saveJhjlList(sjjh).then(res => {
-          if (res.code === 200) {
-            this.$message.success("回复成功");
-            this.huifuDialog = false;
-            this.lingdaopishiDialog = false;
-            this.lixingfankuiDialog = false;
-            if (this.islxfk) {
-              this.loadJhjlList('例行反馈');
-            } else {
-              this.loadJhjlList('回复');
-            }
-            //再此查询交互记录
-          } else {
-            this.$message.error("回复失败，请查看是否服务器错误，或者重复提交");
-          }
-        });
-      }
-      updateQuestionWddb(sjjh)
-    },
-    //回复按钮的执行方法
-    huifuDialogMethod() {
-      this.huifuTest = '';
-      if (this.queryParams.radios === '已关闭') {
-        this.$message.error("该问题已经关闭，不能回复数据");
-      } else {
-        this.huifuDialog = true;
-      }
-    },
-    //例行反馈按钮的执行方法
-    lixingfankuiDialogMethod() {
-      this.huifuTest = '';
-      if (this.queryParams.radios === '已关闭') {
-        this.$message.error("该问题已经关闭，不能回复数据");
-      } else {
-        this.lixingfankuiDialog = true;
-      }
-    },
-    //领导批示按钮的执行方法
-    lingdaopishiDialogMethod() {
-      this.huifuTest = '';
-      if (this.queryParams.radios === '已关闭') {
-        this.$message.error("该问题已经关闭，不能回复数据");
-      } else {
-        this.lingdaopishiDialog = true;
-      }
-    },
-    //回复预览页面的责任人的数据
-    loadzerData() {
-      this.zrrList = [];
-      getzerData({wtid: this.closureID.id}).then(res => {
-        if (res.code === 200) {
-          this.zrrList = res.rows;
-        }
-      })
-    },
-    //回复预览页面的附件预览多选框
-    fujianyulan() {
-      if (this.fujian) {
-        this.withd = '1390px';
-        this.isShow = true;
-        this.isShowLdps = false;
-      } else {
-        if (this.ldpiList.length > 0) {
-          //判断是否领导批示有值，如果有值那么就展示领导批示
-          this.withd = '1390px';
-          this.isShow = false;
-          this.isShowLdps = true;
-        } else {
-          this.withd = '1090px';
-          this.isShow = false;
-        }
-      }
-    },
-    //刷新附件
-    refreshAttachment() {
-
-    },
-    //回复预览页面的申请关闭按钮
-    applyForClosure(closureID) {
-      //查询交互记录的数据
-      selectJhjlList({ID: this.closureID.id}).then(res => {
-        if (res.code === 200) {
-          this.huifuxinxiList = res.rows;
-        } else {
-        }
-      });
-      //先弹出一个弹出框，并且选择答案。
-      this.xuanzedaan = true;
-    },
-    //判断问题升级，如果问题升级为true，那么希望解决时间变灰
-    cancellationTime() {
-      if (this.form.wtsj === true) {
-        this.canceTime = true;
-      } else {
-        this.canceTime = false;
-      }
+      this.width = '1090px';
+      this.title = "回复/预览";
+      this.open = true;
     },
     //问题类别改变后执行的方法
     wtlbChange() {
@@ -1899,14 +1155,6 @@ export default {
           }
         }
       })
-    },
-    //主责任人的获得方法
-    zcrrMethod() {
-
-    },
-    //阅知人的获得方法
-    yzrMethod() {
-
     },
     //问题编号获得方法
     wtbhMethod() {
@@ -1979,44 +1227,6 @@ export default {
           this.load();
         } else {
           this.$message.error("修改失败");
-        }
-      });
-    },
-    handleAdd() {
-      this.isLdps = false;
-      this.isShowLdps = false;
-      this.isShow = false;
-      this.withd = '1090px';
-      this.currentDivIndex = '';
-      this.jhsjList = [];
-      this.wtms = '';
-      this.fujian = false;
-      let number = this.handleSelect.length;
-      if (number <= 0) {
-        this.$message.error("请选择一条数据");
-        return
-      }
-      if (number > 1) {
-        this.$message.error("只能选择一条数据");
-        return;
-      }
-      this.islxfk = false;
-      this.closureID = this.handleSelect[0];
-      this.computTime(this.closureID);
-      this.wtms = this.handleSelect[0].wtms;
-      if (this.closureID.lxfk === '例行反馈') {
-        this.loadJhjlList('例行反馈');
-        this.islxfk = true;
-      } else {
-        this.loadJhjlList('回复');
-        this.islxfk = false;
-      }
-      this.loadJhjlList('领导批示');
-      this.open = true;
-      this.title = "回复/预览";
-      this.loadzerData();
-      updateQuestionWTDBToZero({id: this.closureID.id}).then(res => {
-        if (res.code === 200) {
         }
       });
     },
@@ -2350,7 +1560,7 @@ export default {
         this.$refs.lixingfankuiInput.focus();
       });
     },
-    getxcphwtList(){
+    getxcphwtList() {
       this.xcphwtList = [];
       getUpButtons().then(response => {
         const list = response.rows
@@ -2492,13 +1702,6 @@ export default {
   padding: 0;
 }
 
-.dialog .el-table .el-table__header-wrapper th, .el-table .el-table__fixed-header-wrapper th {
-  color: black;
-}
-
-.dialog .el-aside {
-  background-color: transparent;
-}
 
 .dialog .el-checkbox__input.is-checked + .el-checkbox__label {
   color: black;
@@ -2511,27 +1714,16 @@ export default {
 .dialogRad .el-checkbox__input.is-checked + .el-checkbox__label {
   color: black;
 }
+
+.dialogRad .el-dialog__headerbtn {
+  z-index: 100;
+}
 </style>
 <style scoped lang="scss">
 .el-table {
   color: black;
 }
 
-.context-menu {
-  position: fixed;
-  background-color: white;
-  padding: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
-
-.menu-item {
-  padding: 5px;
-  cursor: pointer;
-}
-
-.menu-item:hover {
-  background-color: lightblue;
-}
 
 .green-color {
   background-color: green;
@@ -2543,14 +1735,6 @@ export default {
 
 .red-color {
   background-color: red;
-}
-
-.clicked {
-  background-color: #ffba00 !important;
-}
-
-.clicked::before {
-  border-right-color: #ffba00 !important;
 }
 
 .app-container {
@@ -2573,71 +1757,8 @@ export default {
   margin-right: 10px;
 }
 
-.app-container {
-  padding-top: 10px;
-}
-
-/*高度为100% */
-.indexHeight {
-  height: 100%;
-}
-
-.chatBox {
-  font-size: 18px;
-  display: inline-block;
-  background-color: greenyellow;
-  padding: 2px 5px;
-  border-radius: 8px;
-  margin-left: 10px;
-  position: relative;
-  word-break: break-all;
-  border: 1px solid #989898;
-  cursor: default;
-  margin-bottom: 10px;
-}
-
-.chatBox-left::before {
-  content: '';
-  margin-top: 8px;
-  margin-left: -16px;
-  position: absolute;
-  border: 5px solid;
-  border-right-color: greenyellow;
-  border-left-color: transparent;
-  border-top-color: transparent;
-  border-bottom-color: transparent;
-}
-
-.chatName {
-  display: inline-block;
-  background-color: #c0d6f1;
-  border-radius: 30px;
-  padding: 5px;
-  font-size: 16px;
-}
-
-.chatTime {
-  display: inline-block;
-}
-
 .dialog {
   position: absolute;;
   z-index: 1;
-}
-
-.tablec ::v-deep .el-table {
-  background: rgba(0, 0, 0, 0);
-}
-
-.tablec ::v-deep .el-table tr {
-  background: rgba(0, 0, 0, 0);
-}
-
-.tablec ::v-deep .el-table .el-table__header-wrapper th, .el-table .el-table__fixed-header-wrapper th {
-  background-color: rgba(0, 0, 0, 0);
-}
-
-.tablec ::v-deep .el-table th.el-table__cell {
-  background-color: rgba(0, 0, 0, 0);
 }
 </style>

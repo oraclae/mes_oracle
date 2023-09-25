@@ -42,6 +42,7 @@ public class Sjjh {
    private String EJHFPPYJ;   //二级回复信息与一级回复信息匹配的
    private String JS;   //级数
    private String YYD;   //已阅读
+   private String HFFJ;   //回复附件
    private List<Sjjh> sjjhs = new ArrayList<>(); //存下一级的数据集合
 
    public void setSjjhs(Sjjh sjjh) {

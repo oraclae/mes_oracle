@@ -25,6 +25,15 @@ public class ZhYwFjController extends BaseController {
     private IZhYwFjService zhYwFjService;
 
     /**
+     * 根据其他表id查询附件列表
+     */
+    @PostMapping("/selectFjListByIds")
+    public TableDataInfo selectFjListByIds(@RequestBody String[] qtbxhs) {
+        List<ZhYwFj> list = zhYwFjService.selectFjListByIds(qtbxhs);
+        return getDataTable(list);
+    }
+
+    /**
      * 查询附件列表
      */
     @GetMapping("/list")

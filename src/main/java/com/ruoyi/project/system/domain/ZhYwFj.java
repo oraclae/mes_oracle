@@ -53,4 +53,14 @@ public class ZhYwFj extends BaseEntity {
      * 创建人
      */
     private String cjr;
+
+    /**
+     * 创建人id
+     */
+    private String cjrid;
+
+    /**
+     * 判断上传的数据是什么类型如回复数据问题的和问题的
+     */
+    private String type;
 }

@@ -349,7 +349,10 @@
     </update>
     <update id="updatejhjlToAll">
         update WTGL_JHJL
-        set EJHFPPYJ=#{replaceAll}
+        <set>
+            <if test="replaceAll != null and replaceAll != ''">EJHFPPYJ=#{replaceAll}</if>
+            <if test="replaceAll == null or replaceAll == ''">EJHFPPYJ=null</if>
+        </set>
         where xh = #{xh}
     </update>
     <update id="updateQuestionWddb" parameterType="com.ruoyi.project.question.domain.WtxxDTO">
@@ -439,6 +442,11 @@
     </update>
     <update id="updateSfdzfk">
         update WTGL_YWCJ set SFDZFK = 1 where ID = #{id}
+    </update>
+    <update id="updatejhjlToHFFJ">
+        update WTGL_JHJL
+        set HFFJ = #{hffj}
+        where xh = #{qtbxh}
     </update>
     <delete id="deleteQuestions">
         delete from WTGL_YWCJ where ID in (

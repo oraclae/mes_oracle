@@ -268,4 +268,9 @@ public interface QuestionMapper {
      * 修改是否当周反馈
      */
     int updateSfdzfk(String id);
+
+    /**
+     * 修改回复数据的
+     */
+    void updatejhjlToHFFJ(@Param("qtbxh") String qtbxh,@Param("hffj") String hffj);
 }

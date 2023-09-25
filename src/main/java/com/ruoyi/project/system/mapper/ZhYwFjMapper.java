@@ -63,4 +63,19 @@ public interface ZhYwFjMapper {
      * 根据id列表获取附件列表
      */
     List<ZhYwFj> selectZhYwFjListByIds(List<ZhYwFj> zhYwFjs);
+
+    /**
+     * 查询其他表序号
+     */
+    String selectQtbxhByXh(String xh);
+
+    /**
+     * 通过其他表id查询附件数量
+     */
+    int countByXhs(String qtbxh);
+
+    /**
+     * 根据其他表id查询附件列表
+     */
+    List<ZhYwFj> selectFjListByIds(String[] qtbxhs);
 }
