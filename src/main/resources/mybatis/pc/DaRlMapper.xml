@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.pc.mapper.DaRlMapper">
+
+    <resultMap type="com.ruoyi.project.pc.domain.DaRl" id="DaRlResult">
+        <result property="id"    column="id"    />
+        <result property="rq"    column="rq"    />
+        <result property="xq"    column="xq"    />
+        <result property="sfsb"    column="sfsb"    />
+        <result property="bz"    column="bz"    />
+    </resultMap>
+
+    <sql id="selectDaRlVo">
+        select id, "rq", "xq", "sfsb", "bz" from da_rl
+    </sql>
+
+    <select id="selectDaRlList" parameterType="com.ruoyi.project.pc.domain.DaRl" resultMap="DaRlResult">
+        <include refid="selectDaRlVo"/>
+        <where>
+            <if test="rq != null  and rq != ''"> and "rq" = #{rq}</if>
+            <if test="xq != null  and xq != ''"> and "xq" = #{xq}</if>
+            <if test="sfsb != null  and sfsb != ''"> and "sfsb" = #{sfsb}</if>
+            <if test="bz != null  and bz != ''"> and "bz" = #{bz}</if>
+        </where>
+        order by "rq"
+    </select>
+
+    <select id="selectDaRlById" parameterType="String" resultMap="DaRlResult">
+        <include refid="selectDaRlVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectByRq" resultType="java.lang.String">
+        select "sfsb"
+        from DA_RL
+        where "rq" = #{params}
+    </select>
+
+    <insert id="insertDaRl" parameterType="com.ruoyi.project.pc.domain.DaRl">
+        insert into da_rl
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="rq != null">"rq",</if>
+            <if test="xq != null">"xq",</if>
+            <if test="sfsb != null">"sfsb",</if>
+            <if test="bz != null">"bz",</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="rq != null">#{rq},</if>
+            <if test="xq != null">#{xq},</if>
+            <if test="sfsb != null">#{sfsb},</if>
+            <if test="bz != null">#{bz},</if>
+         </trim>
+    </insert>
+    <insert id="insertDaRls" parameterType="com.ruoyi.project.pc.domain.DaRl">
+        <foreach collection="daRls" item="da">
+            insert into da_rl
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="id != null">id,</if>
+                <if test="rq != null">"rq",</if>
+                <if test="xq != null">"xq",</if>
+                <if test="sfsb != null">"sfsb",</if>
+                <if test="bz != null">"bz",</if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="id != null">#{da.id},</if>
+                <if test="rq != null">#{da.rq},</if>
+                <if test="xq != null">#{da.xq},</if>
+                <if test="sfsb != null">#{da.sfsb},</if>
+                <if test="bz != null">#{da.bz},</if>
+            </trim>
+        </foreach>
+    </insert>
+
+    <update id="updateDaRl" parameterType="com.ruoyi.project.pc.domain.DaRl">
+        update da_rl
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="rq != null">"rq" = #{rq},</if>
+            <if test="xq != null">"xq" = #{xq},</if>
+            <if test="sfsb != null">"sfsb" = #{sfsb},</if>
+            <if test="bz != null">"bz" = #{bz},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDaRlById" parameterType="String">
+        delete from da_rl where id = #{id}
+    </delete>
+
+    <delete id="deleteDaRlByIds" parameterType="String">
+        delete from da_rl where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

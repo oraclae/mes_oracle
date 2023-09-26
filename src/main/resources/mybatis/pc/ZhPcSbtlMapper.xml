@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.pc.mapper.ZhPcSbtlMapper">
+
+    <resultMap type="com.ruoyi.project.pc.domain.ZhPcSbtl" id="ZhPcSbtlResult">
+        <result property="id"    column="id"    />
+        <result property="rq"    column="rq"    />
+        <result property="sbbc"    column="sbbc"    />
+        <result property="sbbh"    column="sbbh"    />
+        <result property="kg"    column="kg"    />
+        <result property="bz"    column="bz"    />
+        <result property="sbxh"    column="sbxh"    />
+    </resultMap>
+
+    <sql id="selectZhPcSbtlVo">
+        select id, "rq", "sbbc", "sbbh", "kg", "bz" from zh_pc_sbtl
+    </sql>
+
+    <select id="selectZhPcSbtlList" parameterType="com.ruoyi.project.pc.domain.ZhPcSbtl" resultMap="ZhPcSbtlResult">
+        <include refid="selectZhPcSbtlVo"/>
+        <where>
+            <if test="rq != null  and rq != ''"> and "rq" = #{rq}</if>
+            <if test="sbbc != null  and sbbc != ''"> and "sbbc" = #{sbbc}</if>
+            <if test="sbbh != null  and sbbh != ''"> and "sbbh" = #{sbbh}</if>
+            <if test="kg != null  and kg != ''"> and "kg" = #{kg}</if>
+            <if test="bz != null  and bz != ''"> and "bz" = #{bz}</if>
+            <if test="sbxh != null  and sbxh != ''"> and "sbxh" = #{sbxh}</if>
+        </where>
+    </select>
+
+    <select id="selectZhPcSbtlById" parameterType="String" resultMap="ZhPcSbtlResult">
+        <include refid="selectZhPcSbtlVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertZhPcSbtl" parameterType="com.ruoyi.project.pc.domain.ZhPcSbtl">
+        insert into zh_pc_sbtl
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">"id",</if>
+            <if test="rq != null">"rq",</if>
+            <if test="sbbc != null">"sbbc",</if>
+            <if test="sbbh != null">"sbbh",</if>
+            <if test="kg != null">"kg",</if>
+            <if test="bz != null">"bz",</if>
+            <if test="sbxh != null">"sbxh",</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="rq != null">#{rq},</if>
+            <if test="sbbc != null">#{sbbc},</if>
+            <if test="sbbh != null">#{sbbh},</if>
+            <if test="kg != null">#{kg},</if>
+            <if test="bz != null">#{bz},</if>
+            <if test="sbxh != null">#{sbxh},</if>
+         </trim>
+    </insert>
+
+    <update id="updateZhPcSbtl" parameterType="com.ruoyi.project.pc.domain.ZhPcSbtl">
+        update zh_pc_sbtl
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="rq != null">"rq" = #{rq},</if>
+            <if test="sbbc != null">"sbbc" = #{sbbc},</if>
+            <if test="sbbh != null">"sbbh" = #{sbbh},</if>
+            <if test="kg != null">"kg" = #{kg},</if>
+            <if test="bz != null">"bz" = #{bz},</if>
+            <if test="sbxh != null">"sbxh" = #{sbxh},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteZhPcSbtlById" parameterType="String">
+        delete from zh_pc_sbtl where id = #{id}
+    </delete>
+
+    <delete id="deleteZhPcSbtlByIds" parameterType="String">
+        delete from zh_pc_sbtl where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
