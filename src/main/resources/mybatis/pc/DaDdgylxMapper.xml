@@ -148,6 +148,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="fj != null  and fj != ''"> and "fj" = #{fj}</if>
             <if test="ddh != null  and ddh != ''"> and "ddh" = #{ddh}</if>
         </where>
+        order by "lzjxh","gxh"
     </select>
 
     <select id="selectDaDdgylxById" parameterType="String" resultMap="DaDdgylxResult">

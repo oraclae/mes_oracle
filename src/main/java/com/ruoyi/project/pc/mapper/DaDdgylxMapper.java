@@ -1,6 +1,7 @@
 package com.ruoyi.project.pc.mapper;
 
 import java.util.List;
+
 import com.ruoyi.project.pc.domain.DaDdgylx;
 import org.apache.ibatis.annotations.Param;
 
@@ -10,8 +11,7 @@ import org.apache.ibatis.annotations.Param;
  * @author qxd
  * @date 2023-09-22
  */
-public interface DaDdgylxMapper
-{
+public interface DaDdgylxMapper {
     /**
      * 查询订单工艺路线
      *

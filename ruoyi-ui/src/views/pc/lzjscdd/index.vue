@@ -79,7 +79,7 @@
 
     <el-table border v-loading="loading" :data="lzjscddList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column width="50" label="主键" align="center" type="index" />
+      <el-table-column width="50" label="序号" align="center" type="index" />
       <el-table-column width="120" label="零组件号" align="center" prop="lzjh" />
       <el-table-column width="120" label="零组件名称" align="center" prop="lzjmc" />
       <el-table-column width="120" label="生产订单号" align="center" prop="scddh" />

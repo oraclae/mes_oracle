@@ -1,19 +1,19 @@
 package com.ruoyi.project.pc.service;
 
 import java.util.List;
+
 import com.ruoyi.project.pc.domain.DaLzjscdd;
 
 /**
  * 零组件生产订单Service接口
- * 
+ *
  * @author qxd
  * @date 2023-09-22
  */
-public interface IDaLzjscddService 
-{
+public interface IDaLzjscddService {
     /**
      * 查询零组件生产订单
-     * 
+     *
      * @param id 零组件生产订单主键
      * @return 零组件生产订单
      */
@@ -21,7 +21,7 @@ public interface IDaLzjscddService
 
     /**
      * 查询零组件生产订单列表
-     * 
+     *
      * @param daLzjscdd 零组件生产订单
      * @return 零组件生产订单集合
      */
@@ -29,7 +29,7 @@ public interface IDaLzjscddService
 
     /**
      * 新增零组件生产订单
-     * 
+     *
      * @param daLzjscdd 零组件生产订单
      * @return 结果
      */
@@ -37,7 +37,7 @@ public interface IDaLzjscddService
 
     /**
      * 修改零组件生产订单
-     * 
+     *
      * @param daLzjscdd 零组件生产订单
      * @return 结果
      */
@@ -45,7 +45,7 @@ public interface IDaLzjscddService
 
     /**
      * 批量删除零组件生产订单
-     * 
+     *
      * @param ids 需要删除的零组件生产订单主键集合
      * @return 结果
      */
@@ -53,7 +53,7 @@ public interface IDaLzjscddService
 
     /**
      * 删除零组件生产订单信息
-     * 
+     *
      * @param id 零组件生产订单主键
      * @return 结果
      */

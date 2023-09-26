@@ -1,6 +1,7 @@
 package com.ruoyi.project.pc.service;
 
 import java.util.List;
+
 import com.ruoyi.project.pc.domain.DaRl;
 
 /**
@@ -9,8 +10,7 @@ import com.ruoyi.project.pc.domain.DaRl;
  * @author qxd
  * @date 2023-09-23
  */
-public interface IDaRlService
-{
+public interface IDaRlService {
     /**
      * 查询日期
      *

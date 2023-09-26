@@ -108,6 +108,10 @@ public class DaRlServiceImpl implements IDaRlService {
             DaRl da = new DaRl();
             da.setId(UUID.randomUUID().toString());
             String week = getWeek(s);
+            if (week == null) {
+                log.info("选择的日期出现错误");
+                return;
+            }
             da.setXq(week);
             if ("星期日".equals(week) || "星期六".equals(week)) {
                 da.setSfsb("否");

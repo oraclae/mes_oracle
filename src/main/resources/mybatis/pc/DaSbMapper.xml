@@ -5,7 +5,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.ruoyi.project.pc.mapper.DaSbMapper">
 
     <resultMap type="com.ruoyi.project.pc.domain.DaSb" id="DaSbResult">
-        <result property="id"    column="id"    />
+        <result property="id"    column="ID"    />
         <result property="sbbh"    column="sbbh"    />
         <result property="sbmc"    column="sbmc"    />
         <result property="sblb"    column="sblb"    />
@@ -19,7 +19,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectDaSbVo">
-        select id, "sbbh", "sbmc", "sblb", "ssbm", "sbbc", "sbys", "gttxscx", "zt", "bz", "sbbm" from da_sb
+        select "ID", "sbbh", "sbmc", "sblb", "ssbm", "sbbc", "sbys", "gttxscx", "zt", "bz", "sbbm" from da_sb
     </sql>
 
     <select id="selectDaSbList" parameterType="com.ruoyi.project.pc.domain.DaSb" resultMap="DaSbResult">
@@ -40,13 +40,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectDaSbById" parameterType="String" resultMap="DaSbResult">
         <include refid="selectDaSbVo"/>
-        where id = #{id}
+        where ID = #{id}
     </select>
 
     <insert id="insertDaSb" parameterType="com.ruoyi.project.pc.domain.DaSb">
         insert into da_sb
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">id,</if>
+            <if test="id != null">"ID",</if>
             <if test="sbbh != null">"sbbh",</if>
             <if test="sbmc != null">"sbmc",</if>
             <if test="sblb != null">"sblb",</if>
@@ -87,15 +87,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="bz != null">"bz" = #{bz},</if>
             <if test="sbbm != null">"sbbm" = #{sbbm},</if>
         </trim>
-        where id = #{id}
+        where ID = #{id}
     </update>
 
     <delete id="deleteDaSbById" parameterType="String">
-        delete from da_sb where id = #{id}
+        delete from da_sb where ID = #{id}
     </delete>
 
     <delete id="deleteDaSbByIds" parameterType="String">
-        delete from da_sb where id in
+        delete from da_sb where ID in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

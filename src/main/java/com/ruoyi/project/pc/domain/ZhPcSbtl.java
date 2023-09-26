@@ -15,34 +15,47 @@ import com.ruoyi.framework.web.domain.BaseEntity;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class ZhPcSbtl extends BaseEntity
-{
+public class ZhPcSbtl extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
-    /** 主键 */
+    /**
+     * 主键
+     */
     private String id;
 
-    /** 日期 */
+    /**
+     * 日期
+     */
     @Excel(name = "日期")
     private String rq;
 
-    /** 设备班次 */
+    /**
+     * 设备班次
+     */
     @Excel(name = "设备班次")
     private String sbbc;
 
-    /** 设备编号 */
+    /**
+     * 设备编号
+     */
     @Excel(name = "设备编号")
     private String sbbh;
 
-    /** 开/关 */
+    /**
+     * 开/关
+     */
     @Excel(name = "开/关")
     private String kg;
 
-    /** 备注 */
+    /**
+     * 备注
+     */
     @Excel(name = "备注")
     private String bz;
 
-    /** 设备型号 */
+    /**
+     * 设备型号
+     */
     @Excel(name = "设备型号")
     private String sbxh;
 }

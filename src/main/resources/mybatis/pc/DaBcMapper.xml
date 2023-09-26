@@ -5,7 +5,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.ruoyi.project.pc.mapper.DaBcMapper">
 
     <resultMap type="com.ruoyi.project.pc.domain.DaBc" id="DaBcResult">
-        <result property="id"    column="id"    />
+        <result property="id"    column="ID"    />
         <result property="bcmc"    column="bcmc"    />
         <result property="bcdh"    column="bcdh"    />
         <result property="kssj"    column="kssj"    />
@@ -14,7 +14,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectDaBcVo">
-        select id, "bcmc", "bcdh", "kssj", "jssj", "bz" from da_bc
+        select "ID", "bcmc", "bcdh", "kssj", "jssj", "bz" from da_bc
     </sql>
 
     <select id="selectDaBcList" parameterType="com.ruoyi.project.pc.domain.DaBc" resultMap="DaBcResult">
@@ -30,13 +30,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectDaBcById" parameterType="String" resultMap="DaBcResult">
         <include refid="selectDaBcVo"/>
-        where id = #{id}
+        where ID = #{id}
     </select>
 
     <insert id="insertDaBc" parameterType="com.ruoyi.project.pc.domain.DaBc">
         insert into da_bc
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">id,</if>
+            <if test="id != null">"ID",</if>
             <if test="bcmc != null">"bcmc",</if>
             <if test="bcdh != null">"bcdh",</if>
             <if test="kssj != null">"kssj",</if>
@@ -62,15 +62,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="jssj != null">"jssj" = #{jssj},</if>
             <if test="bz != null">"bz" = #{bz},</if>
         </trim>
-        where id = #{id}
+        where ID = #{id}
     </update>
 
     <delete id="deleteDaBcById" parameterType="String">
-        delete from da_bc where id = #{id}
+        delete from da_bc where ID = #{id}
     </delete>
 
     <delete id="deleteDaBcByIds" parameterType="String">
-        delete from da_bc where id in
+        delete from da_bc where DA_BC.ID in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

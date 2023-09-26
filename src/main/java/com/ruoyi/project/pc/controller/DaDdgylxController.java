@@ -2,6 +2,7 @@ package com.ruoyi.project.pc.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,8 +30,7 @@ import com.ruoyi.framework.web.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/pc/ddgylx")
-public class DaDdgylxController extends BaseController
-{
+public class DaDdgylxController extends BaseController {
     @Autowired
     private IDaDdgylxService daDdgylxService;
 
@@ -38,8 +38,7 @@ public class DaDdgylxController extends BaseController
      * 查询订单工艺路线列表
      */
     @GetMapping("/list")
-    public TableDataInfo list(DaDdgylx daDdgylx)
-    {
+    public TableDataInfo list(DaDdgylx daDdgylx) {
         startPage();
         List<DaDdgylx> list = daDdgylxService.selectDaDdgylxList(daDdgylx);
         return getDataTable(list);
@@ -50,8 +49,7 @@ public class DaDdgylxController extends BaseController
      */
     @Log(title = "订单工艺路线", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, DaDdgylx daDdgylx)
-    {
+    public void export(HttpServletResponse response, DaDdgylx daDdgylx) {
         List<DaDdgylx> list = daDdgylxService.selectDaDdgylxList(daDdgylx);
         ExcelUtil<DaDdgylx> util = new ExcelUtil<DaDdgylx>(DaDdgylx.class);
         util.exportExcel(response, list, "订单工艺路线数据");
@@ -61,8 +59,7 @@ public class DaDdgylxController extends BaseController
      * 获取订单工艺路线详细信息
      */
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") String id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") String id) {
         return success(daDdgylxService.selectDaDdgylxById(id));
     }
 
@@ -71,8 +68,7 @@ public class DaDdgylxController extends BaseController
      */
     @Log(title = "订单工艺路线", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody DaDdgylx daDdgylx)
-    {
+    public AjaxResult add(@RequestBody DaDdgylx daDdgylx) {
         return toAjax(daDdgylxService.insertDaDdgylx(daDdgylx));
     }
 
@@ -81,8 +77,7 @@ public class DaDdgylxController extends BaseController
      */
     @Log(title = "订单工艺路线", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody DaDdgylx daDdgylx)
-    {
+    public AjaxResult edit(@RequestBody DaDdgylx daDdgylx) {
         return toAjax(daDdgylxService.updateDaDdgylx(daDdgylx));
     }
 
@@ -90,9 +85,8 @@ public class DaDdgylxController extends BaseController
      * 删除订单工艺路线
      */
     @Log(title = "订单工艺路线", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable String[] ids)
-    {
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable String[] ids) {
         return toAjax(daDdgylxService.deleteDaDdgylxByIds(ids));
     }
 }

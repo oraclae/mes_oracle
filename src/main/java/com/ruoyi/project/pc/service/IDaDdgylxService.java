@@ -1,6 +1,7 @@
 package com.ruoyi.project.pc.service;
 
 import java.util.List;
+
 import com.ruoyi.project.pc.domain.DaDdgylx;
 
 /**
@@ -9,8 +10,7 @@ import com.ruoyi.project.pc.domain.DaDdgylx;
  * @author qxd
  * @date 2023-09-22
  */
-public interface IDaDdgylxService
-{
+public interface IDaDdgylxService {
     /**
      * 查询订单工艺路线
      *

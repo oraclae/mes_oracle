@@ -2,6 +2,7 @@ package com.ruoyi.project.pc.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,8 +30,7 @@ import com.ruoyi.framework.web.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/pc/lzjscdd")
-public class DaLzjscddController extends BaseController
-{
+public class DaLzjscddController extends BaseController {
     @Autowired
     private IDaLzjscddService daLzjscddService;
 
@@ -38,8 +38,7 @@ public class DaLzjscddController extends BaseController
      * 查询零组件生产订单列表
      */
     @GetMapping("/list")
-    public TableDataInfo list(DaLzjscdd daLzjscdd)
-    {
+    public TableDataInfo list(DaLzjscdd daLzjscdd) {
         startPage();
         List<DaLzjscdd> list = daLzjscddService.selectDaLzjscddList(daLzjscdd);
         return getDataTable(list);
@@ -50,8 +49,7 @@ public class DaLzjscddController extends BaseController
      */
     @Log(title = "零组件生产订单", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, DaLzjscdd daLzjscdd)
-    {
+    public void export(HttpServletResponse response, DaLzjscdd daLzjscdd) {
         List<DaLzjscdd> list = daLzjscddService.selectDaLzjscddList(daLzjscdd);
         ExcelUtil<DaLzjscdd> util = new ExcelUtil<DaLzjscdd>(DaLzjscdd.class);
         util.exportExcel(response, list, "零组件生产订单数据");
@@ -61,8 +59,7 @@ public class DaLzjscddController extends BaseController
      * 获取零组件生产订单详细信息
      */
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") String id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") String id) {
         return success(daLzjscddService.selectDaLzjscddById(id));
     }
 
@@ -71,8 +68,7 @@ public class DaLzjscddController extends BaseController
      */
     @Log(title = "零组件生产订单", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody DaLzjscdd daLzjscdd)
-    {
+    public AjaxResult add(@RequestBody DaLzjscdd daLzjscdd) {
         return toAjax(daLzjscddService.insertDaLzjscdd(daLzjscdd));
     }
 
@@ -81,8 +77,7 @@ public class DaLzjscddController extends BaseController
      */
     @Log(title = "零组件生产订单", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody DaLzjscdd daLzjscdd)
-    {
+    public AjaxResult edit(@RequestBody DaLzjscdd daLzjscdd) {
         return toAjax(daLzjscddService.updateDaLzjscdd(daLzjscdd));
     }
 
@@ -90,9 +85,8 @@ public class DaLzjscddController extends BaseController
      * 删除零组件生产订单
      */
     @Log(title = "零组件生产订单", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable String[] ids)
-    {
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable String[] ids) {
         return toAjax(daLzjscddService.deleteDaLzjscddByIds(ids));
     }
 }

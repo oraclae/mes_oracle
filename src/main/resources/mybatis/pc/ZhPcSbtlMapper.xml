@@ -5,7 +5,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.ruoyi.project.pc.mapper.ZhPcSbtlMapper">
 
     <resultMap type="com.ruoyi.project.pc.domain.ZhPcSbtl" id="ZhPcSbtlResult">
-        <result property="id"    column="id"    />
+        <result property="id"    column="ID"    />
         <result property="rq"    column="rq"    />
         <result property="sbbc"    column="sbbc"    />
         <result property="sbbh"    column="sbbh"    />
@@ -15,7 +15,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectZhPcSbtlVo">
-        select id, "rq", "sbbc", "sbbh", "kg", "bz" from zh_pc_sbtl
+        select "ID", "rq", "sbbc", "sbbh", "kg", "bz" from zh_pc_sbtl
     </sql>
 
     <select id="selectZhPcSbtlList" parameterType="com.ruoyi.project.pc.domain.ZhPcSbtl" resultMap="ZhPcSbtlResult">
@@ -32,7 +32,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectZhPcSbtlById" parameterType="String" resultMap="ZhPcSbtlResult">
         <include refid="selectZhPcSbtlVo"/>
-        where id = #{id}
+        where ID = #{id}
     </select>
 
     <insert id="insertZhPcSbtl" parameterType="com.ruoyi.project.pc.domain.ZhPcSbtl">
@@ -67,15 +67,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="bz != null">"bz" = #{bz},</if>
             <if test="sbxh != null">"sbxh" = #{sbxh},</if>
         </trim>
-        where id = #{id}
+        where ID = #{id}
     </update>
 
     <delete id="deleteZhPcSbtlById" parameterType="String">
-        delete from zh_pc_sbtl where id = #{id}
+        delete from zh_pc_sbtl where ID = #{id}
     </delete>
 
     <delete id="deleteZhPcSbtlByIds" parameterType="String">
-        delete from zh_pc_sbtl where id in
+        delete from zh_pc_sbtl where ID in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

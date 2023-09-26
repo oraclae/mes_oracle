@@ -5,7 +5,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.ruoyi.project.pc.mapper.DaLzjscddMapper">
 
     <resultMap type="com.ruoyi.project.pc.domain.DaLzjscdd" id="DaLzjscddResult">
-        <result property="id"    column="id"/>
+        <result property="id"    column="ID"/>
         <result property="lzjh"    column="lzjh"/>
         <result property="lzjmc"    column="lzjmc"/>
         <result property="scddh"    column="scddh"/>
@@ -22,7 +22,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectDaLzjscddVo">
-        select "id", "lzjh", "lzjmc", "scddh", "sfwx", "pc", "yqjfrq", "ddsl", "zzsl", "zzpzt", "yjwcsj", "wgsl", "sjwcsj", "cjrq" from da_lzjscdd
+        select "ID", "lzjh", "lzjmc", "scddh", "sfwx", "pc", "yqjfrq", "ddsl", "zzsl", "zzpzt", "yjwcsj", "wgsl", "sjwcsj", "cjrq" from da_lzjscdd
     </sql>
 
     <select id="selectDaLzjscddList" parameterType="com.ruoyi.project.pc.domain.DaLzjscdd" resultMap="DaLzjscddResult">
@@ -46,13 +46,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectDaLzjscddById" parameterType="String" resultMap="DaLzjscddResult">
         <include refid="selectDaLzjscddVo"/>
-        where id = #{id}
+        where ID = #{id}
     </select>
 
     <insert id="insertDaLzjscdd" parameterType="com.ruoyi.project.pc.domain.DaLzjscdd">
         insert into da_lzjscdd
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">"id",</if>
+            <if test="id != null">"ID",</if>
             <if test="lzjh != null">"lzjh",</if>
             <if test="lzjmc != null">"lzjmc",</if>
             <if test="scddh != null">"scddh",</if>
@@ -102,15 +102,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="sjwcsj != null">"sjwcsj" = #{sjwcsj},</if>
             <if test="cjrq != null">"cjrq" = #{cjrq},</if>
         </trim>
-        where id = #{id}
+        where ID = #{id}
     </update>
 
     <delete id="deleteDaLzjscddById" parameterType="String">
-        delete from da_lzjscdd where "id" = #{id}
+        delete from da_lzjscdd where "ID" = #{id}
     </delete>
 
     <delete id="deleteDaLzjscddByIds" parameterType="String">
-        delete from da_lzjscdd where "id" in
+        delete from da_lzjscdd where "ID" in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

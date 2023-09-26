@@ -93,13 +93,13 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="ddgylxList" @selection-change="handleSelectionChange">
+    <el-table border v-loading="loading" :data="ddgylxList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column width="60" label="序号" align="center" type="index" />
       <el-table-column label="产品型号" align="center" prop="cpxh" />
       <el-table-column label="产品名称" align="center" prop="cpmc" />
-      <el-table-column label="零组件型号" align="center" prop="lzjxh" />
-      <el-table-column label="零组件名称" align="center" prop="lzjmc" />
+      <el-table-column width="100" label="零组件型号" align="center" prop="lzjxh" />
+      <el-table-column width="100" label="零组件名称" align="center" prop="lzjmc" />
       <el-table-column label="阶段" align="center" prop="jd" />
       <el-table-column label="版次" align="center" prop="bc" />
       <el-table-column label="工序号" align="center" prop="gxh" />
@@ -119,30 +119,30 @@
       <el-table-column label="质量要求" align="center" prop="zlyq" />
       <el-table-column label="准备工时" align="center" prop="zbgs" />
       <el-table-column label="加工工时" align="center" prop="jggs" />
-      <el-table-column label="生产加工(天)" align="center" prop="scjg" />
-      <el-table-column label="生产加工时间" align="center" prop="scjgsj" />
+      <el-table-column width="100" label="生产加工(天)" align="center" prop="scjg" />
+      <el-table-column width="110" label="生产加工时间" align="center" prop="scjgsj" />
       <el-table-column label="核算工时" align="center" prop="hsgs" />
-      <el-table-column label="核算工时比率" align="center" prop="hsgsbl" />
+      <el-table-column width="110" label="核算工时比率" align="center" prop="hsgsbl" />
       <el-table-column label="存货编码" align="center" prop="chbm" />
       <el-table-column label="批次" align="center" prop="pc" />
       <el-table-column label="厂家" align="center" prop="cj" />
       <el-table-column label="临艺说明" align="center" prop="lysm" />
-      <el-table-column label="派工时间" align="center" prop="pgsj" width="180">
+      <el-table-column label="派工时间" align="center" prop="pgsj" width="160">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.pgsj, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="计划开始时间" align="center" prop="jhkssj" width="180">
+      <el-table-column label="计划开始时间" align="center" prop="jhkssj" width="160">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.jhkssj, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="计划完成时间" align="center" prop="jhwcsj" width="180">
+      <el-table-column label="计划完成时间" align="center" prop="jhwcsj" width="160">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.jhwcsj, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="实际完成时间" align="center" prop="sjwcsj" width="180">
+      <el-table-column label="实际完成时间" align="center" prop="sjwcsj" width="160">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.sjwcsj, '{y}-{m}-{d}') }}</span>
         </template>
@@ -154,7 +154,7 @@
       <el-table-column label="领料数量" align="center" prop="llsl" />
       <el-table-column label="缴库数量" align="center" prop="jksl" />
       <el-table-column label="拆批数量" align="center" prop="cpsl" />
-      <el-table-column label="返工返修数量" align="center" prop="fgfxsl" />
+      <el-table-column width="110" label="返工返修数量" align="center" prop="fgfxsl" />
       <el-table-column label="拆批说明" align="center" prop="cpsm" />
       <el-table-column label="创建时间" align="center" prop="cjsj" width="180">
         <template slot-scope="scope">
@@ -162,14 +162,14 @@
         </template>
       </el-table-column>
       <el-table-column label="检验数量" align="center" prop="jysl" />
-      <el-table-column label="不合格品数量" align="center" prop="bhgpsl" />
+      <el-table-column width="110" label="不合格品数量" align="center" prop="bhgpsl" />
       <el-table-column label="确认" align="center" prop="qr" />
       <el-table-column label="确认记录" align="center" prop="qrjl" />
       <el-table-column label="级数" align="center" prop="js" />
       <el-table-column label="系统控制" align="center" prop="xtkz" />
       <el-table-column label="订单状态" align="center" prop="ddzt" />
       <el-table-column label="是否业务" align="center" prop="sfyw" />
-      <el-table-column label="目录系统编码" align="center" prop="mlxtbm" />
+      <el-table-column width="110" label="目录系统编码" align="center" prop="mlxtbm" />
       <el-table-column label="人员编号" align="center" prop="rybh" />
       <el-table-column label="库位" align="center" prop="kw" />
       <el-table-column label="是否紧急" align="center" prop="sfjj">
@@ -183,13 +183,13 @@
       <el-table-column label="分厂" align="center" prop="fc" />
       <el-table-column label="超期状态" align="center" prop="cqzt" />
       <el-table-column label="计划类型" align="center" prop="jhlx" />
-      <el-table-column label="工序需使用时间" align="center" prop="gxxsysj" />
+      <el-table-column width="120" label="工序需使用时间" align="center" prop="gxxsysj" />
       <el-table-column label="加工单元" align="center" prop="jgdy" />
-      <el-table-column label="是否需要工装" align="center" prop="sfxygz" />
+      <el-table-column width="110" label="是否需要工装" align="center" prop="sfxygz" />
       <el-table-column label="设备编码" align="center" prop="sbbm" />
       <el-table-column label="工段" align="center" prop="gd" />
       <el-table-column label="附件" align="center" prop="fj" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column width="110" label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"

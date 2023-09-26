@@ -1,6 +1,7 @@
 package com.ruoyi.project.pc.mapper;
 
 import java.util.List;
+
 import com.ruoyi.project.pc.domain.DaRl;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.security.core.parameters.P;
@@ -11,8 +12,7 @@ import org.springframework.security.core.parameters.P;
  * @author qxd
  * @date 2023-09-23
  */
-public interface DaRlMapper
-{
+public interface DaRlMapper {
     /**
      * 查询日期
      *
@@ -36,6 +36,7 @@ public interface DaRlMapper
      * @return 结果
      */
     public int insertDaRl(DaRl daRl);
+
     public int insertDaRls(@Param("daRls") List<DaRl> daRls);
 
     /**

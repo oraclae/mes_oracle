@@ -69,9 +69,9 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="bcList" @selection-change="handleSelectionChange">
+    <el-table border v-loading="loading" :data="bcList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="主键" align="center" prop="id" />
+      <el-table-column label="序号" align="center" type="index" />
       <el-table-column label="班次名称" align="center" prop="bcmc" />
       <el-table-column label="班次代号" align="center" prop="bcdh" />
       <el-table-column label="开始时间" align="center" prop="kssj" />

@@ -5,7 +5,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.ruoyi.project.pc.mapper.DaRlMapper">
 
     <resultMap type="com.ruoyi.project.pc.domain.DaRl" id="DaRlResult">
-        <result property="id"    column="id"    />
+        <result property="id"    column="ID"    />
         <result property="rq"    column="rq"    />
         <result property="xq"    column="xq"    />
         <result property="sfsb"    column="sfsb"    />
@@ -13,7 +13,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectDaRlVo">
-        select id, "rq", "xq", "sfsb", "bz" from da_rl
+        select "ID", "rq", "xq", "sfsb", "bz" from da_rl
     </sql>
 
     <select id="selectDaRlList" parameterType="com.ruoyi.project.pc.domain.DaRl" resultMap="DaRlResult">
@@ -29,7 +29,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectDaRlById" parameterType="String" resultMap="DaRlResult">
         <include refid="selectDaRlVo"/>
-        where id = #{id}
+        where ID = #{id}
     </select>
     <select id="selectByRq" resultType="java.lang.String">
         select "sfsb"
@@ -40,7 +40,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertDaRl" parameterType="com.ruoyi.project.pc.domain.DaRl">
         insert into da_rl
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">id,</if>
+            <if test="id != null">"ID",</if>
             <if test="rq != null">"rq",</if>
             <if test="xq != null">"xq",</if>
             <if test="sfsb != null">"sfsb",</if>
@@ -58,7 +58,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <foreach collection="daRls" item="da">
             insert into da_rl
             <trim prefix="(" suffix=")" suffixOverrides=",">
-                <if test="id != null">id,</if>
+                <if test="id != null">"ID",</if>
                 <if test="rq != null">"rq",</if>
                 <if test="xq != null">"xq",</if>
                 <if test="sfsb != null">"sfsb",</if>
@@ -82,15 +82,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="sfsb != null">"sfsb" = #{sfsb},</if>
             <if test="bz != null">"bz" = #{bz},</if>
         </trim>
-        where id = #{id}
+        where ID = #{id}
     </update>
 
     <delete id="deleteDaRlById" parameterType="String">
-        delete from da_rl where id = #{id}
+        delete from da_rl where ID = #{id}
     </delete>
 
     <delete id="deleteDaRlByIds" parameterType="String">
-        delete from da_rl where id in
+        delete from da_rl where ID in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
