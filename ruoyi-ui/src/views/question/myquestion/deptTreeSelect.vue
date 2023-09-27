@@ -52,6 +52,8 @@
             :total="total"
             :page.sync="queryParams.current"
             :limit.sync="queryParams.size"
+            :page-sizes="50"
+            layout="total, prev, pager, next, jumper"
             @pagination="getList"/>
         </div>
         <div class="four-row">
@@ -104,11 +106,10 @@ export default {
       total: 0,
       // 查询参数
       queryParams: {
-        pageNum: 1,
-        pageSize: 10,
-        userName: undefined,
-        phonenumber: undefined,
-        status: undefined,
+        curren: 1,
+        size: 50,
+        account: null,
+        name: null,
         deptId: undefined
       },
       // 日期范围

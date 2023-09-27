@@ -407,6 +407,7 @@
             <if test="LDPS != null">LDPS = #{LDPS},</if>
             <if test="YXCD != null">YXCD = #{YXCD},</if>
             <if test="DQZRR != null">DQZRR = #{DQZRR},</if>
+            <if test="SCFJ != null">SCFJ = #{SCFJ},</if>
         </trim>
         where ID = #{ID}
     </update>
@@ -853,11 +854,14 @@
           and TO_DATE(TO_CHAR(SYSDATE - 1 / 12, 'YYYY-MM-DD HH24:MI:SS'), 'YYYY-MM-DD HH24:MI:SS') > CJSJ
     </select>
     <select id="selectJhjlByWtidsAndHffj" resultType="java.lang.String">
-        select xh from WTGL_JHJL where WTID in (
+        select xh from WTGL_JHJL where HFFJ = '是' and WTID in (
         <foreach collection="list" item="item" separator=",">
             #{item}
         </foreach>
         )
+    </select>
+    <select id="countQuestionById" resultType="java.lang.Integer">
+        select COUNT(*) from WTGL_YWCJ where ID = #{id}
     </select>
 
 </mapper>

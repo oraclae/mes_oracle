@@ -175,12 +175,13 @@
                            @click="fjylBut('but')"
                            size="mini">上传附件
                 </el-button>
-                <el-button v-if="this.closureID.lxfk==='例行反馈'"
+                <el-button v-if="this.closureID.lxfk==='例行反馈' && authority.recover"
                            style="margin-left: 25px;background-color: #ffba00"
                            size="mini"
                            @click="lixingfankuiDialogMethod">例行反馈
                 </el-button>
-                <el-button v-else style="margin-left: 25px;background-color: #ffba00" size="mini"
+                <el-button v-if="this.closureID.lxfk!=='例行反馈' && authority.recover"
+                           style="margin-left: 25px;background-color: #ffba00" size="mini"
                            @click="huifuDialogMethod">回复
                 </el-button>
                 <el-button v-if="authority.ldps"
@@ -922,9 +923,6 @@ export default {
 
     //例行反馈按钮的执行方法
     lixingfankuiDialogMethod() {
-      if (!this.authority.recover) {
-        return
-      }
       this.huifuTest = '';
       if (this.radios === '已关闭') {
         this.$message.error("该问题已经关闭，不能回复数据");
@@ -945,9 +943,6 @@ export default {
 
     //回复按钮的执行方法
     huifuDialogMethod() {
-      if (!this.authority.recover) {
-        return
-      }
       this.huifuTest = '';
       if (this.radios === '已关闭') {
         this.$message.error("该问题已经关闭，不能回复数据");

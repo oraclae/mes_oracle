@@ -293,4 +293,9 @@ public interface QuestionMapper {
      * 根据问题id删除交互记录
      */
     void deleteJhjlByWtids(List<String> ids);
+
+    /**
+     * 根据id查询问题书否存在
+     */
+    int countQuestionById(String id);
 }
