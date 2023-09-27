@@ -133,12 +133,12 @@
       />
     </div>
     <!--详细信息弹窗-->
-    <el-dialog class="zdhfDialog" :close-on-click-modal="false" @close="shifoumanyi" title="详细信息"
+    <el-dialog append-to-body class="zdhfDialog" :close-on-click-modal="false" @close="shifoumanyi" title="详细信息"
                :visible.sync="xiangxiDialog">
       <xiangxixinxi v-if="xiangxiDialog" :jhsj-list="jhsjList"></xiangxixinxi>
     </el-dialog>
     <!--是否满意-->
-    <el-dialog
+    <el-dialog append-to-body
       :close-on-click-modal="false"
       class="zdhfButDialog"
       title
@@ -227,10 +227,6 @@ export default {
     },
     //详细信息的方法
     xiangxixinxi(row) {
-      if (this.form != null) {
-        this.$emit('xiangxixinxi', row)
-        return
-      }
       this.daccid = row.daxxid;
       this.jhsjList = [];
       getJhjlByWtid({WTID: row.wtid}).then(res => {

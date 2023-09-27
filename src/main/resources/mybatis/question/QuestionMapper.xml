@@ -103,6 +103,7 @@
             <if test="sjjh.HFXX != null">HFXX,</if>
             <if test="sjjh.WTBT != null">WTBT,</if>
             <if test="sjjh.HFR != null">HFR,</if>
+            <if test="sjjh.HFRID != null">HFRID,</if>
             <if test="sjjh.WTCJID != null">WTCJID,</if>
             <if test="sjjh.WTCJR != null">WTCJR,</if>
             <if test="sjjh.WTCJBM != null">WTCJBM,</if>
@@ -121,6 +122,7 @@
             <if test="sjjh.HFXX != null">#{sjjh.HFXX},</if>
             <if test="sjjh.WTBT != null">#{sjjh.WTBT},</if>
             <if test="sjjh.HFR != null">#{sjjh.HFR},</if>
+            <if test="sjjh.HFRID != null">#{sjjh.HFRID},</if>
             <if test="sjjh.WTCJID != null">#{sjjh.WTCJID},</if>
             <if test="sjjh.WTCJR != null">#{sjjh.WTCJR},</if>
             <if test="sjjh.WTCJBM != null">#{sjjh.WTCJBM},</if>
@@ -307,6 +309,7 @@
                 <if test="item.WTBT  != null">WTBT= #{item.WTBT},</if>
                 <if test="item.WTID  != null">WTID= #{item.WTID},</if>
                 <if test="item.HFR  != null">HFR= #{item.HFR},</if>
+                <if test="item.HFRID  != null">HFRID= #{item.HFRID},</if>
                 <if test="item.WTCJID  != null">WTCJID= #{item.WTCJID},</if>
                 <if test="item.WTCJR  != null">WTCJR= #{item.WTCJR},</if>
                 <if test="item.WTCJBM  != null">WTCJBM= #{item.WTCJBM},</if>
@@ -382,14 +385,16 @@
     </update>
     <update id="updateQuestionStatusSJ">
         update WTGL_YWCJ
-        set WTZT = #{status},
+        set WTZT   = #{status},
+            SFDZFK = 1,
             GBSJ=to_date(#{format}, 'YYYY-MM-DD HH24:MI:SS')
         where ID = #{wtid}
     </update>
     <update id="updateQuestionSFDZFK">
         update WTGL_YWCJ
         set SFDZFK=0
-        where SFDZFK = 1 and WTZT &lt;&gt; '已关闭'
+        where SFDZFK = 1
+          and WTZT &lt;&gt; '已关闭'
     </update>
     <update id="updateQuestion" parameterType="com.ruoyi.project.question.domain.WtxxDTO">
         update WTGL_YWCJ
@@ -428,20 +433,22 @@
     <update id="updateZRDBData" parameterType="com.ruoyi.project.question.domain.vo.ZrrVO">
         update WTGL_ZRDB
         <set>
-            <if test="zrdb.ZRRID !=null" >ZRRID = #{zrdb.ZRRID}</if>
-            <if test="zrdb.WTID !=null" >WTID = #{zrdb.WTID}</if>
-            <if test="zrdb.ZRRZT !=null" >ZRRZT = #{zrdb.ZRRZT}</if>
-            <if test="zrdb.ZRBM !=null" >ZRBM = #{zrdb.ZRBM}</if>
-            <if test="zrdb.ZRKS !=null" >ZRKS = #{zrdb.ZRKS}</if>
-            <if test="zrdb.ZRR !=null" >ZRR = #{zrdb.ZRR}</if>
-            <if test="zrdb.ZRBMID !=null" >ZRBMID = #{zrdb.ZRBMID}</if>
-            <if test="zrdb.ZRKSID !=null" >ZRKSID = #{zrdb.ZRKSID}</if>
-            <if test="zrdb.SFZZRR !=null" >SFZZRR = #{zrdb.SFZZRR}</if>
+            <if test="zrdb.ZRRID !=null">ZRRID = #{zrdb.ZRRID},</if>
+            <if test="zrdb.WTID !=null">WTID = #{zrdb.WTID},</if>
+            <if test="zrdb.ZRRZT !=null">ZRRZT = #{zrdb.ZRRZT},</if>
+            <if test="zrdb.ZRBM !=null">ZRBM = #{zrdb.ZRBM},</if>
+            <if test="zrdb.ZRKS !=null">ZRKS = #{zrdb.ZRKS},</if>
+            <if test="zrdb.ZRR !=null">ZRR = #{zrdb.ZRR},</if>
+            <if test="zrdb.ZRBMID !=null">ZRBMID = #{zrdb.ZRBMID},</if>
+            <if test="zrdb.ZRKSID !=null">ZRKSID = #{zrdb.ZRKSID},</if>
+            <if test="zrdb.SFZZRR !=null">SFZZRR = #{zrdb.SFZZRR}</if>
         </set>
         where XH=#{zrdb.XH}
     </update>
     <update id="updateSfdzfk">
-        update WTGL_YWCJ set SFDZFK = 1 where ID = #{id}
+        update WTGL_YWCJ
+        set SFDZFK = 1
+        where ID = #{id}
     </update>
     <update id="updatejhjlToHFFJ">
         update WTGL_JHJL
@@ -476,6 +483,27 @@
         delete
         from WTGL_JHJL
         where XH = #{id}
+    </delete>
+    <delete id="deleteWtgzByWtid">
+        delete from WTGL_WTGZ where WTID in (
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </delete>
+    <delete id="deleteZrdbByIds">
+        delete from WTGL_ZRDB where WTID in (
+        <foreach collection="list" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </delete>
+    <delete id="deleteJhjlByWtids">
+        delete from WTGL_JHJL where WTID in (
+        <foreach collection="list" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
     </delete>
     <select id="selectWtxxData1" parameterType="com.ruoyi.project.question.domain.WtxxDTO"
             resultType="com.ruoyi.project.question.domain.vo.WtxxVo">
@@ -821,8 +849,15 @@
         select *
         from WTGL_YWCJ
         where WTSJ = 'true'
-          and WTZT in ('提交','接受','反馈')
+          and WTZT in ('提交', '接受', '反馈')
           and TO_DATE(TO_CHAR(SYSDATE - 1 / 12, 'YYYY-MM-DD HH24:MI:SS'), 'YYYY-MM-DD HH24:MI:SS') > CJSJ
+    </select>
+    <select id="selectJhjlByWtidsAndHffj" resultType="java.lang.String">
+        select xh from WTGL_JHJL where WTID in (
+        <foreach collection="list" item="item" separator=",">
+            #{item}
+        </foreach>
+        )
     </select>
 
 </mapper>

@@ -16,6 +16,10 @@
                      style="background-color: red" type="primary" size="small"
                      @click="closeQuestion">申请关闭
           </el-button>
+          <el-button v-if="authority.wtsj && (radios==='处理中' || radios==='待关闭') && closureID.yjjb != null && closureID.yjjb !== ''"
+                     style="background-color: red" type="primary" size="small"
+                     @click.once="wtsjOne"><span v-if="closureID.yjjb != null && closureID.yjjb !== ''">问题升级-{{ closureID.yjjb }}</span>
+          </el-button>
           <div style="position: absolute;left: 550px;display: inline-block">
             <div style="display: inline-block;text-align: center;margin-right: 80px;font-size: 15px;float: right">
               <div><label>完成天数</label></div>
@@ -285,15 +289,17 @@
               </div>
             </el-card>
             <div v-show="isContextMenuVisible" class="context-menu"
-                 v-if="closureID.wtzt !== '已关闭' && this.authority.recover"
+                 v-if="(closureID.wtzt !== '已关闭' && this.authority.recover)
+                        &&(itemJhjl.jhzt !== '领导批示' || itemJhjl.hfrid === userInfo.userId+'' || guanliyuan)"
                  :style="{ top: contextMenuPosition.y + 'px', left: contextMenuPosition.x + 'px',zIndex: 10}">
               <!-- 菜单内容 -->
               <div style="border-color: transparent">
                 <el-button v-if="itemJhjl.jhzt !== '领导批示'" type="text" icon="el-icon-upload"
-                           @click="fjylBut('dia')">上传附件
+                           @click="fjylBut('dia')">附件预览
                 </el-button>
                 <br v-if="itemJhjl.jhzt !== '领导批示'">
                 <el-button type="text" icon="el-icon-delete"
+                           v-if="itemJhjl.hfrid === userInfo.userId+'' || guanliyuan"
                            @click="deleteJhjl">删除
                 </el-button>
               </div>
@@ -335,7 +341,7 @@
                   <el-table-column label="操作" width="55px" align="center"
                                    class-name="small-padding fixed-width">
                     <template slot-scope="scope">
-                      <el-button v-if="scope.row.cjrid === userInfo.userId.toString()" size="mini"
+                      <el-button v-if="scope.row.cjrid === userInfo.userId+'' || guanliyuan" size="mini"
                                  type="text" @click="fjDelete(scope.row)"><span
                         style="color:black;">删除</span>
                       </el-button>
@@ -377,7 +383,7 @@
                   <el-table-column label="操作" width="55px" align="center"
                                    class-name="small-padding fixed-width">
                     <template slot-scope="scope">
-                      <el-button v-if="scope.row.cjrid === userInfo.userId.toString()" size="mini"
+                      <el-button v-if="scope.row.cjrid === userInfo.userId.toString() || guanliyuan" size="mini"
                                  type="text" @click="fjDelete(scope.row)"><span
                         style="color:black;">删除</span>
                       </el-button>
@@ -481,7 +487,7 @@ import {
   updateQuestionsStatus, getJhjl, getLDPS,
   selectJhjlList, answerSelectOff, updateQuestionStatus,
   getzerData, saveJhjlList, closedLoop, activate,
-  deleteJhjlByXh, updateQuestionWddb,
+  deleteJhjlByXh, updateQuestionWddb, updateMyDoListStatus,
 } from "@/api/question/question";
 import {delFj, selectFjListByIds} from "@/api/fj/fj";
 import fj from "@/views/fj/fj";
@@ -493,6 +499,7 @@ export default {
   props: ['closureID', 'radios', 'authority'],
   data() {
     return {
+      guanliyuan: false,//是否管理员
       userInfo: {},
       isLdps: true,//判断领导批示能否写如数据
       isShow: false,//判断附件预览是否展示
@@ -542,6 +549,11 @@ export default {
     getUserInfo() {
       getUserInfo().then(response => {
         this.userInfo = response.data
+        this.userInfo.user.roles.forEach(value => {
+          if (value.roleName.includes('管理员')) {
+            this.guanliyuan = true
+          }
+        })
       })
     },
     //打开弹出框的焦点事件
@@ -604,6 +616,9 @@ export default {
         this.huifuId = '';
         this.huifuTest = ''
         return;
+      }
+      if (this.authority.dbgz && this.closureID.cjrid !== this.userInfo.userId+'') {
+        sjjh.userName = '1'
       }
       if (id === null || id === '') {
         saveJhjlList(sjjh).then(res => {
@@ -817,24 +832,22 @@ export default {
 
     //关闭选择信息的确定按钮
     confirmAnswer(row) {
-      if (this.handleSelectGB.length === 0) {
-        this.$message.error("请至少选择一条数据")
-        return
-      }
       this.$confirm('是否确认答案选择项?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        answerSelectOff({
+        let data = {
           sjjhDTOS: this.handleSelectGB,
           wtxl: row.wtxl,
           wtlb: row.wtlb,
           gxh: row.gxh,
           wtms: row.wtms,
           jh: row.jh,
-          cpxh: row.cpxh
-        }).then(res => {
+          cpxh: row.cpxh,
+          wtid: this.closureID.id
+        }
+        answerSelectOff(data).then(res => {
           if (res.code === 200) {
             this.$message.success("关闭成功");
             this.$emit('closeXzxi')
@@ -998,7 +1011,7 @@ export default {
     deleteJhjl() {
       // 处理菜单项点击事件
       let ejhfppyj = this.itemJhjl.ejhfppyj;
-      if (this.itemJhjl.hffj) {
+      if (this.itemJhjl.hffj === "是") {
         this.$message.error("该回复下面有附件不能删除");
         return
       }
@@ -1014,7 +1027,7 @@ export default {
             } else {
               this.loadJhjlList('回复');
             }
-            this.loadJhjlList('回复');
+            this.loadJhjlList('领导批示');
           } else {
             this.$message.error("删除失败");
           }
@@ -1045,9 +1058,23 @@ export default {
       id.value = '待关闭';
       ids.push(id);
       updateQuestionsStatus(ids).then(res => {
+        updateMyDoListStatus(ids).then(res=>{
+          if (res.code === 200) {
+            this.$message.success("申请关闭成功");
+            this.openDialog();
+          }
+        })
+      })
+
+    },
+    //问题升级
+    wtsjOne() {
+      wtsjOneZrr(this.closureID).then(res=>{
         if (res.code === 200) {
-          this.$message.success("申请关闭成功");
-          this.openDialog();
+          this.$message.success("升级成功")
+          this.openDialog()
+        }else {
+          this.$message.error(res.msg)
         }
       })
     },

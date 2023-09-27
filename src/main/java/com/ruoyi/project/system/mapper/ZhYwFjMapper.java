@@ -78,4 +78,9 @@ public interface ZhYwFjMapper {
      * 根据其他表id查询附件列表
      */
     List<ZhYwFj> selectFjListByIds(String[] qtbxhs);
+
+    /**
+     * 查询附件地址
+     */
+    List<String> selectFwjdzsByQtbxhs(List<String> xhs);
 }

@@ -59,7 +59,6 @@
       <el-table-column show-overflow-tooltip label="件号" align="center" prop="jh" />
       <el-table-column show-overflow-tooltip label="产品型号" align="center" prop="cpxh" />
       <el-table-column show-overflow-tooltip label="工序号" align="center" prop="gxh" />
-      <el-table-column show-overflow-tooltip label="关键字" align="center" prop="keywords" />
     </el-table>
 
     <pagination

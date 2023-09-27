@@ -56,9 +56,28 @@
     <el-table height="calc(100vh - 220px)" border v-loading="loading" :data="ywzdList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="序号" type="index" width="50"/>
-      <el-table-column label="主节点(父)" align="center" prop="zjd" />
-      <el-table-column label="次节点" align="center" prop="cjd" />
-      <el-table-column label="备注" align="center" prop="bz" />
+      <el-table-column label="主节点" header-align="center" prop="zjd" />
+      <el-table-column label="次节点" header-align="center" prop="cjd" />
+      <el-table-column label="备注" header-align="center" prop="bz" />
+      <el-table-column label="排序" align="center" width="120px" prop="px" />
+      <el-table-column show-overflow-tooltip label="操作" width="150px" align="center">
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleUpdate(scope.row)"
+          >修改
+          </el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click="handleDelete(scope.row)"
+          >删除
+          </el-button>
+        </template>
+      </el-table-column>
     </el-table>
 
     <pagination
@@ -70,7 +89,7 @@
     />
 
     <!-- 添加或修改字典对话框 -->
-    <el-dialog class="wtglZdAddDialog" :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog class="wtglZdAddDialog" :title="title" :visible.sync="open" width="500px" :close-on-click-modal="false" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-form-item label="主节点(父)" prop="zjd">
           <el-input v-model="form.zjd" placeholder="请输入主节点(父)" />
@@ -80,6 +99,9 @@
         </el-form-item>
         <el-form-item label="备注" prop="bz">
           <el-input v-model="form.bz" placeholder="请输入备注" />
+        </el-form-item>
+        <el-form-item label="排序" prop="px">
+          <el-input v-model.number="form.px" placeholder="请输入排序" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -131,6 +153,10 @@ export default {
         cjd: [
           {required: true, message: '请填次节点', trigger: 'blur'}
         ],
+        px: [
+          {required: true, message: '排序不能为空'},
+          {type: 'number', message: '排序必须为数字值'}
+        ],
       }
     };
   },
@@ -158,7 +184,8 @@ export default {
         zjd: null,
         cjd: null,
         bz: null,
-        xh: null
+        xh: null,
+        px: null
       };
     },
     /** 搜索按钮操作 */

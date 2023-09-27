@@ -7,9 +7,20 @@
           <el-radio label="处理中" class="el_radios_position">处理中</el-radio>
           <el-radio label="已关闭" class="el_radios_position">已关闭</el-radio>
         </el-radio-group>
-        <el-button type="success" size="small" @click="problemConcern">问题关注</el-button>
-        <el-button type="success" :disabled="single" size="small" @click="openDialog">回复/预览</el-button>
-        <el-button style="background-color: red" :disabled="single" type="primary" size="small" @click="closeQuestion">申请关闭</el-button>
+        <el-button :disabled="multiple" type="success" size="small" @click="problemConcern">问题关注</el-button>
+        <el-button
+          :style="{background: 'linear-gradient(to bottom,'+(single?'#f902e680, #08ff0480':'#f902e6, #08ff04')+')',color: 'white'}"
+          :disabled="single" size="small" @click="openDialog">回复/预览</el-button>
+        <el-button v-if="queryParams.radios === '处理中'" :disabled="single" type="primary"
+                   :style="{backgroundColor: single?'#FF000080':'#FF0000', borderColor:single?'#FF000000':'#FF0000', color:'white'}"
+                   size="small" @click="closeQuestion">申请关闭
+        </el-button>
+        <el-button v-if="queryParams.radios !=='已关闭'" type="primary" :disabled="single" size="mini"
+                   @click="handleUpload">附件预览
+        </el-button>
+        <el-button v-if="queryParams.radios ==='待办'" type="danger" :disabled="single" size="small"
+                   @click="zndyDialog">启用问题处理库
+        </el-button>
         <el-button type="warning" size="small" @click="shuaxin">刷新</el-button>
         <el-select style="margin-left: 10px" v-model="queryParams.type" clearable placeholder="请选择">
           <el-option
@@ -60,230 +71,90 @@
             </el-table-column>
             <el-table-column
               align="center"
-              prop=""
               label="预警字段"
               show-overflow-tooltip
             >
               <template slot-scope="scope">
+                <div style="padding-top: 3px;height: 37px;" v-if="scope.row.xwjjsj !== '' && scope.row.xwjjsj != null">
+                  <img
+                    style="width: 30px"
+                    v-if="getTimeText(scope.row.xwjjsj)==='超出'&&scope.row.wtzt!=='已关闭'"
+                    :src="require('@/assets/questionIcons/红灯.png')"
+                  />
+                  <img
+                    style="width: 30px"
+                    v-if="getTimeText(scope.row.xwjjsj)==='警告'&&scope.row.wtzt!=='已关闭'"
+                    :src="require('@/assets/questionIcons/黄灯.png')"
+                  />
+                  <img
+                    style="width: 30px"
+                    v-if="getTimeText(scope.row.xwjjsj)==='正常'&&scope.row.wtzt!=='已关闭'"
+                    :src="require('@/assets/questionIcons/绿灯.png')"
+                  />
+                </div>
+                <div style="padding-top: 3px;height: 37px;" v-else>
+                  <img
+                    style="width: 30px"
+                    :src="require('@/assets/questionIcons/问题升级.png')"
+                  />
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" prop="wtdb" label="反馈预警" show-overflow-tooltip>
+              <template slot-scope="scope">
                 <img
                   style="width: 30px"
-                  v-if="getTimeText(scope.row.xwjjsj)==='超出'&&scope.row.wtzt!=='已关闭'"
-                  :src="require('@/assets/questionIcons/红灯.png')"
-                />
-                <img
-                  style="width: 30px"
-                  v-if="getTimeText(scope.row.xwjjsj)==='警告'&&scope.row.wtzt!=='已关闭'"
-                  :src="require('@/assets/questionIcons/黄灯.png')"
-                />
-                <img
-                  style="width: 30px"
-                  v-if="getTimeText(scope.row.xwjjsj)==='正常'&&scope.row.wtzt!=='已关闭'"
-                  :src="require('@/assets/questionIcons/绿灯.png')"
+                  v-if="getFkyjText(scope.row)==='红'"
+                  :src="require('@/assets/questionIcons/红警告.png')"
                 />
               </template>
             </el-table-column>
-            <el-table-column
-              prop="wdwt"
-              label="我的待办待办数量"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="zrrzt"
-              label="责任人状态"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="wtbh"
-              label="问题编号"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="cjr"
-              label="人员"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="cjbm"
-              label="部门"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="wtmc"
-              label="问题名称"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="gxh"
-              label="工序号"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="cjsj"
-              label="问题创建时间"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="scddh"
-              label="生产订单号"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="cpxh"
-              label="产品型号"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="jh"
-              label="件号"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="wtly"
-              label="问题来源"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="wtlb"
-              label="问题类别"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="wtxl"
-              label="问题细类"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="wtms"
-              label="问题描述"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="zrbm"
-              label="责任部门"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="zrr"
-              label="责任人"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="yzrbm"
-              label="阅知人部门"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="yzr"
-              label="阅知人"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="zycd"
-              label="重要程度"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="xwjjsj"
-              label="希望解决时间"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="dqzrr"
-              label="主责任人"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="wtzt"
-              label="问题状态"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="jssj"
-              label="接收时间"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="gzxt"
-              label="是否跟踪协同"
-              show-overflow-tooltip
-            >
+            <el-table-column show-overflow-tooltip width="135" prop="wtdb" label="我的问题待办数量" align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="wtbh" label="问题编号" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="zrrzt" label="责任人状态" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="cjr" label="人员" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="cjbm" label="部门" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="80" prop="zycd" label="重要程度" align="center"/>
+            <el-table-column show-overflow-tooltip width="210" prop="wtmc" label="问题名称" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="wtly" label="问题来源" align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="wtlb" label="问题类别" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="wtxl" label="问题细类" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="310" prop="wtms" label="问题描述" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="wtzt" label="问题状态" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="yxcd" label="影响程度" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="gxh" label="工序号" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="scddh" label="生产订单号" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="cpxh" label="产品型号" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="jh" label="件号" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="pc" label="批次" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="sb" label="设备" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="zrbm" label="责任部门" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="zrr" label="责任人" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="yzrbm" label="阅知人部门" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="yzr" label="阅知人" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="155" prop="cjsj" label="问题创建时间" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="155" prop="xwjjsj" label="希望解决时间" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="155" prop="jssj" label="接收时间" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="155" prop="gbsj" label="关闭时间" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="lxfk" label="是否例行反馈" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="135" prop="xcphwt" label="是否现场配合问题" header-align="center">
               <template slot-scope="scope">
-                <span >{{ scope.row.gzxt==='true'?'是':'否' }}</span>
+                <span>{{ scope.row.xcphwt === 'true' ? '是' : '否' }}</span>
               </template>
             </el-table-column>
-            <el-table-column
-              prop="gbsj"
-              label="关闭时间"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="lxfk"
-              label="是否例行反馈"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="pc"
-              label="批次"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="sb"
-              label="设备"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="xcphwt"
-              label="是否现场配合问题"
-              show-overflow-tooltip
-            >
+            <el-table-column show-overflow-tooltip width="120" prop="ldps" label="是否领导批示" header-align="center">
               <template slot-scope="scope">
-                <span >{{ scope.row.xcphwt==='true'?'是':'否' }}</span>
+                <span>{{ scope.row.ldps === 'true' ? '是' : '否' }}</span>
               </template>
             </el-table-column>
-            <el-table-column
-              prop="ldps"
-              label="是否领导批示"
-              show-overflow-tooltip
-            >
+            <el-table-column show-overflow-tooltip width="120" prop="gzxt" label="是否跟踪协同" header-align="center">
               <template slot-scope="scope">
-                <span >{{ scope.row.ldps==='true'?'是':'否' }}</span>
+                <span>{{ scope.row.gzxt === 'true' ? '是' : '否' }}</span>
               </template>
             </el-table-column>
-            <el-table-column
-              prop="scfj"
-              label="是否上传附件"
-              show-overflow-tooltip
-            >
+            <el-table-column show-overflow-tooltip width="120" prop="scfj" label="是否上传附件" header-align="center">
               <template slot-scope="scope">
-                <span >{{ scope.row.scfj==='true'?'是':'否' }}</span>
+                <span>{{ scope.row.scfj === 'true' ? '是' : '否' }}</span>
               </template>
             </el-table-column>
           </el-table>
@@ -307,8 +178,14 @@
                   @closeDia="open = false" @changeWidth="changeDialogWidth"/>
     </el-dialog>
     <!--  上传问题的弹出框  -->
-    <el-dialog v-if="openScfj" @close="reload" class="xcssjyk" append-to-body title="上传附件" :visible.sync="openScfj" width="40%" append-to-body>
+    <el-dialog v-if="openScfj" @close="reload" class="xcssjyk" append-to-body title="上传附件" :visible.sync="openScfj"
+               width="800px">
       <fj v-if="openScfj" :fileList="fileList" :row="selectFj"></fj>
+    </el-dialog>
+    <!--  历史答案的弹出框  -->
+    <el-dialog @close="reload" class="dialogRad" :close-on-click-modal="false" title="启用问题处理库" :visible.sync="lishidaanDialog"
+               width="1200px" height="400px">
+      <zdhf ref="cxda" @dialogdafk="dialogdafk" v-if="lishidaanDialog" :form="closureID"></zdhf>
     </el-dialog>
   </div>
 </template>
@@ -319,16 +196,17 @@ import {
   updateMyDoListStatus, getQuestionList, getJhjl,
   getLDPS, getzerData, saveJhjlList, updateWtztEnd,
   savegzwtList, deleteJhjlByXh, updateQuestionWDWTToZero,
-  updateQuestionWdwt,updateSfdzfk
+  updateQuestionWdwt, updateSfdzfk
 } from "@/api/question/question";
 import huifuyulan from "@/views/question/huifuyulan";
 import {getFjByIds, listById} from "@/api/fj/fj";
 import fj from "@/views/fj/fj";
+import zdhf from "@/views/question/MyToDoList/znwdDialog";
 import {getSjzrzdByZrrid, wtsjOneZrr} from "@/api/question/sjzrzd";
 
 export default {
   components: {
-    fj,huifuyulan
+    fj, huifuyulan,zdhf
   },
   computed: {
     getTimeText() {
@@ -336,7 +214,7 @@ export default {
         const currentTime = new Date();
         const targetTime = new Date(time);
         const diffTime = targetTime - currentTime;
-        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))+1;
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
         if (diffDays >= 2) {
           return '正常'; // 在三天前之前，添加绿色类名
         } else if (diffDays < 2 && diffDays >= 1) {
@@ -349,12 +227,12 @@ export default {
     //判断是否反馈预警
     getFkyjText() {
       return function (row) {
-        if (row.qwfksj === undefined||row.qwfksj===null ||row.qwfksj==='') {
+        if (row.qwfksj === undefined || row.qwfksj === null || row.qwfksj === '') {
           return;
         }
         if (row.sfdzfk === 0 || row.sfdzfk === '0') {
           const date = new Date();
-          const week=date.getDay();
+          const week = date.getDay();
           return '红';
         }
 
@@ -366,13 +244,15 @@ export default {
       //权限
       authority: {
         shangchuangfujian: true,//上传附件
-        ldps:false,//领导批示
-        controls:false,//操作
+        ldps: false,//领导批示
+        controls: false,//操作
         recover: true,//回复
         shenqingguanbi: true,//申请关闭
         close: false,//关闭
+        dbgz: false,//待办/关注
         wtsj: true//问题升级
       },
+      lishidaanDialog: false,//历史答案弹窗
       single: true,//多选就不好使
       multiple: true,//多选也好使
       fileList: [],//文件的集合
@@ -383,25 +263,25 @@ export default {
       wwcts: '',//未完成天数
       cqts: '',//超期天数
       wcts: '',//完成天数
-      itemJhjl:{},//单击回复数据的当前值
-      isContextMenuVisible:false,//是否显示菜单
-      contextMenuPosition: { x: 0, y: 0 },//实现右键菜单的
+      itemJhjl: {},//单击回复数据的当前值
+      isContextMenuVisible: false,//是否显示菜单
+      contextMenuPosition: {x: 0, y: 0},//实现右键菜单的
       currentDivIndex: null,//实现单击颜色变化的
       wtms: '',//问题描述不能修改
-      huifuTest:'',//回复弹出框的输入框
-      huifuId:'',//存上级的id值
-      ejhfppyj:'',//存下级的所有id
+      huifuTest: '',//回复弹出框的输入框
+      huifuId: '',//存上级的id值
+      ejhfppyj: '',//存下级的所有id
       //回复预览框需要的的属性
-      closureID:{},//点击回复预览的数据，存在这里
-      lingdaopishiDialog:false,//领导批示按钮的弹出框的是否显示
-      lixingfankuiDialog:false,//例行反馈按钮的弹出框的是否显示
-      huifuDialog:false,//回复按钮的弹出框的是否显示
-      islxfk:false,//是否是例行反馈
-      isShowLdps:false,//判断是否有领导批示
-      isShow:false,//判断附件预览是否展示
-      width:'1090px',//回复预览弹出框的大小1390
+      closureID: {},//点击回复预览的数据，存在这里
+      lingdaopishiDialog: false,//领导批示按钮的弹出框的是否显示
+      lixingfankuiDialog: false,//例行反馈按钮的弹出框的是否显示
+      huifuDialog: false,//回复按钮的弹出框的是否显示
+      islxfk: false,//是否是例行反馈
+      isShowLdps: false,//判断是否有领导批示
+      isShow: false,//判断附件预览是否展示
+      width: '1090px',//回复预览弹出框的大小1390
       fujian: false,//附件多选框是否确定
-      zrrList:[],//回复预览页面的责任人数据集合
+      zrrList: [],//回复预览页面的责任人数据集合
       title: "",
       open: false,//是否打开回复预览页面
       jhsjList: [],//交互数据的数组
@@ -423,7 +303,7 @@ export default {
         label: '问题描述'
       }],
 
-      handleSelect:[],//选择的数据
+      handleSelect: [],//选择的数据
       // 总条数
       total: 0,
       //加载图片
@@ -439,9 +319,9 @@ export default {
         tPid: null,
         tLevel: null,
         radios: '待办',
-        username:'',
-        WTID:null,
-        JHZT:null
+        username: '',
+        WTID: null,
+        JHZT: null
       },
       tableData: []
     };
@@ -463,6 +343,51 @@ export default {
           this.dialogReload();
         } else {
           this.$message.error(res.msg);
+        }
+      });
+    },
+    //智能答疑
+    zndyDialog() {
+      this.lishidaanDialog = true
+    },
+    //答案反馈
+    dialogdafk(row) {
+      let type = ''
+      if (this.closureID.lxfk === '例行反馈') {
+        type = '例行反馈'
+      }else{
+        type = '回复'
+      }
+      let sjjh ={
+        value: this.closureID.wtzt,
+        hfxx: row.daxx,
+        wtbt: this.closureID.wtmc,
+        wtid: this.closureID.id,
+        wtcjid: this.closureID.cjrid,
+        wtcjr: this.closureID.cjr,
+        wtcjbm: this.closureID.cjbm,
+        wtcjks: this.closureID.cjks,
+        jhzt: type,
+        js:1,
+        xh:'',
+        userName:'待办'
+      }
+      saveJhjlList(sjjh).then(res=>{
+        if (res.code === 200) {
+          let ids = []
+          let id = {id: '',value:''}
+          id.value = '待关闭'
+          id.id = this.closureID.id
+          ids.push(id)
+          updateMyDoListStatus(ids).then(res=>{
+            if (res.code === 200) {
+              this.$message.success("回复成功并且申请关闭成功")
+              this.load()
+            }
+          })
+          this.lishidaanDialog = false
+        }else {
+          this.$message.error("回复失败")
         }
       });
     },
@@ -490,9 +415,9 @@ export default {
     //上传附件按钮对用的方法
     handleUpload(str, data) {
       this.whoFjBut = str;
-      this.selectFj = data || this.closureID
+      this.selectFj = this.closureID
       listById({id: this.selectFj.xh || this.selectFj.id}).then(res => {
-        this.fileList = res.rows;
+        this.fileList = res.rows
         this.openScfj = true;
       });
     },
@@ -504,7 +429,7 @@ export default {
       });
     },
     //给表格的表头设置颜色
-    styleFunc({row,column,rowIndex, columnIndex}) {
+    styleFunc({row, column, rowIndex, columnIndex}) {
       if (column.property === 'wtms' || column.property === 'wtmc') {
         return "background:orange";
       }
@@ -555,12 +480,14 @@ export default {
           return
         }
         this.closureID = row
-      }else {
+      } else {
         this.closureID = this.handleSelect[0]
       }
-      getSjzrzdByZrrid(this.closureID.zrrid).then(res=>{
-        this.closureID.yjjb = res.data.yjjb
-        this.closureID.yjzrrid = res.data.yjzrrid
+      getSjzrzdByZrrid(this.closureID.zrrid).then(res => {
+        if (res.data != null) {
+          this.closureID.yjjb = res.data.yjjb;
+          this.closureID.yjzrrid = res.data.yjzrrid
+        }
       })
       this.width = '1090px';
       this.title = "回复/预览";
@@ -604,7 +531,7 @@ export default {
           id.value = '待关闭';
           ids.push(id);
         });
-        updateMyDoListStatus(ids).then(res=>{
+        updateMyDoListStatus(ids).then(res => {
           if (res.code === 200) {
             this.$message.success("修改成功");
             this.load();
@@ -615,12 +542,13 @@ export default {
     //多选框的方法
     handleSelectionChange(val) {
       this.handleSelect = val
-      this.single = val.length !== 1
+      this.closureID = val[0]
+      this.single = val.length !== 1;
       this.multiple = !val.length
     },
     //给closureID赋值一级级别和一级级别id
     getSjzr(zrrid) {
-      getSjzrzdByZrrid(zrrid).then(res=>{
+      getSjzrzdByZrrid(zrrid).then(res => {
         this.closureID.yjjb = res.data.yjjb;
         this.closureID.yjzrrId = res.data.yjzrrid;
       })
@@ -646,14 +574,14 @@ export default {
     },
     //修改问题状态为接收状态
     updateWtzt() {
-      let wt={id:this.closureID.id, wtzt: this.closureID.wtzt};
-      updateWtztEnd(wt).then(res=>{
+      let wt = {id: this.closureID.id, wtzt: this.closureID.wtzt};
+      updateWtztEnd(wt).then(res => {
         this.load()
       });
     },
     //预览回复弹窗关闭方法
     yulanhuifuClose() {
-      updateQuestionWDWTToZero({id:this.closureID.id}).then(res=>{
+      updateQuestionWDWTToZero({id: this.closureID.id}).then(res => {
         this.shuaxin()
       })
     },
@@ -665,10 +593,10 @@ export default {
         return;
       }
       let ids = [];
-      this.handleSelect.forEach(Item=>{
+      this.handleSelect.forEach(Item => {
         ids.push(Item.id);
       });
-      savegzwtList(ids).then(res=>{
+      savegzwtList(ids).then(res => {
         if (res.code === 200) {
           this.$message.success("关注成功");
           this.load();
@@ -718,9 +646,10 @@ export default {
 </script>
 
 <style>
-.el-checkbox__input.is-checked + .el-checkbox__label{
+.el-checkbox__input.is-checked + .el-checkbox__label {
   color: white;
 }
+
 .fj .el-checkbox__label {
   font-size: 16px;
 }
@@ -786,27 +715,35 @@ export default {
   color: black;
   font-size: 17px;
 }
-.myQuestionTable .el-table__cell{
+
+.myQuestionTable .el-table__cell {
   height: 40px;
 }
-.myQuestionTable .el-table--medium .el-table__cell{
+
+.myQuestionTable .el-table--medium .el-table__cell {
   padding: 0;
 }
-.dialog .el-table .el-table__header-wrapper th, .el-table .el-table__fixed-header-wrapper th{
+
+.dialog .el-table .el-table__header-wrapper th, .el-table .el-table__fixed-header-wrapper th {
   color: black;
 }
-.dialog .el-aside{
+
+.dialog .el-aside {
   background-color: transparent;
 }
-.dialog .el-checkbox__input.is-checked+.el-checkbox__label{
+
+.dialog .el-checkbox__input.is-checked + .el-checkbox__label {
   color: black;
 }
-.dialogRad .el-checkbox__label{
+
+.dialogRad .el-checkbox__label {
   color: black;
 }
-.dialogRad .el-checkbox__input.is-checked + .el-checkbox__label{
+
+.dialogRad .el-checkbox__input.is-checked + .el-checkbox__label {
   color: black;
 }
+
 .dialogRad .el-dialog__headerbtn {
   z-index: 100;
 }
@@ -815,9 +752,11 @@ export default {
 .el-table {
   color: black;
 }
+
 .el-tooltip__popper {
   font-size: 18px; /* 调整字体大小为你需要的大小 */
 }
+
 .context-menu {
   position: fixed;
   background-color: white;
@@ -833,6 +772,7 @@ export default {
 .menu-item:hover {
   background-color: lightblue;
 }
+
 .green-color {
   background-color: green;
 }
@@ -924,14 +864,17 @@ export default {
   position: absolute;;
   z-index: 1;
 }
-.tablec ::v-deep .el-table{
-  background: rgba(0,0,0,0);
+
+.tablec ::v-deep .el-table {
+  background: rgba(0, 0, 0, 0);
 }
-.tablec ::v-deep .el-table tr{
-  background: rgba(0,0,0,0);
+
+.tablec ::v-deep .el-table tr {
+  background: rgba(0, 0, 0, 0);
 }
-.tablec ::v-deep .el-table .el-table__header-wrapper th, .el-table .el-table__fixed-header-wrapper th{
-  background-color:rgba(0,0,0,0);
+
+.tablec ::v-deep .el-table .el-table__header-wrapper th, .el-table .el-table__fixed-header-wrapper th {
+  background-color: rgba(0, 0, 0, 0);
 }
 </style>
 

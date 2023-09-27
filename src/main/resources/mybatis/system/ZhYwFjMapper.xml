@@ -14,7 +14,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectZhYwFjVo">
-        select xh, id, wjmc, scsj, lj, cjr from ZH_YW_FJ
+        select xh, id, wjmc, scsj, lj, cjr, cjrid from ZH_YW_FJ
     </sql>
 
     <select id="selectZhYwFjList" parameterType="ZhYwFj" resultMap="ZhYwFjResult">
@@ -48,6 +48,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectFjListByIds" resultType="com.ruoyi.project.system.domain.ZhYwFj">
         select * from ZH_YW_FJ where ID in(
             <foreach collection="array" separator="," item="id">
+                #{id}
+            </foreach>
+            )
+    </select>
+    <select id="selectFwjdzsByQtbxhs" resultType="java.lang.String">
+        select LJ from ZH_YW_FJ where ID in (
+            <foreach collection="list"  item="id" separator=",">
                 #{id}
             </foreach>
             )

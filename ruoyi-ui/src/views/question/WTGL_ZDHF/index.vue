@@ -98,19 +98,19 @@
       </el-col>
 
     </el-row>
-    <el-table border v-loading="loading" height="calc(100vh - 320px)" :data="daccList"
+    <el-table border :header-cell-style="styleFunc" v-loading="loading" height="calc(100vh - 320px)" :data="daccList"
               @selection-change="handleSelectionChange">
       <el-table-column label="序号" type="index" width="50"/>
-      <el-table-column show-overflow-tooltip label="产品型号" align="center" prop="cpxh"/>
-      <el-table-column show-overflow-tooltip label="件号" align="center" prop="jh"/>
-      <el-table-column show-overflow-tooltip label="工序号" align="center" prop="gxh"/>
-      <el-table-column show-overflow-tooltip label="问题名称" align="center" prop="wtmc"/>
-      <el-table-column show-overflow-tooltip label="问题类别" align="center" prop="wtlb"/>
-      <el-table-column show-overflow-tooltip label="问题细类" align="center" prop="wtxl"/>
-      <el-table-column show-overflow-tooltip label="问题描述" align="center" prop="wtms"/>
-      <el-table-column show-overflow-tooltip label="答案信息" align="center" prop="daxx"/>
-      <el-table-column show-overflow-tooltip label="热度" align="center" prop="rd"/>
-      <el-table-column label="操作" align="center" width="100">
+      <el-table-column show-overflow-tooltip header-align="center" width="210" label="产品型号" prop="cpxh"/>
+      <el-table-column show-overflow-tooltip header-align="center" width="310" label="件号" prop="jh"/>
+      <el-table-column show-overflow-tooltip header-align="center" width="120" label="工序号" prop="gxh"/>
+      <el-table-column show-overflow-tooltip header-align="center" width="120" label="问题名称" prop="wtmc"/>
+      <el-table-column show-overflow-tooltip header-align="center" width="120" label="问题类别" prop="wtlb"/>
+      <el-table-column show-overflow-tooltip header-align="center" width="120" label="问题细类" prop="wtxl"/>
+      <el-table-column show-overflow-tooltip header-align="center" width="120" label="问题描述" prop="wtms"/>
+      <el-table-column show-overflow-tooltip header-align="center" width="300" label="答案信息" prop="daxx"/>
+      <el-table-column show-overflow-tooltip header-align="center" width="100" label="热度" prop="rd"/>
+      <el-table-column show-overflow-tooltip label="操作" align="center" width="100">
         <template slot-scope="scope">
           <el-button @click="xiangxixinxi(scope.row)" type="text" size="small">详细信息</el-button>
         </template>
@@ -212,6 +212,12 @@ export default {
 
   },
   methods: {
+    //给表格的表头设置颜色
+    styleFunc({row, column, rowIndex, columnIndex}) {
+      if (column.property === 'wtms' || column.property === 'wtmc') {
+        return "background:orange";
+      }
+    },
     //详细信息的方法
     xiangxixinxi(row) {
       if (this.form != null) {

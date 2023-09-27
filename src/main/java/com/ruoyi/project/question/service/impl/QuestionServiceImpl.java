@@ -12,8 +12,10 @@ import com.ruoyi.project.system.domain.SysDept;
 import com.ruoyi.project.system.domain.SysUser;
 import com.ruoyi.project.system.mapper.SysDeptMapper;
 import com.ruoyi.project.system.mapper.SysUserMapper;
+import com.ruoyi.project.system.mapper.ZhYwFjMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -35,6 +37,9 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Autowired
     private SysUserMapper sysUserMapper;
+
+    @Autowired
+    private ZhYwFjMapper fjMapper;
 
     /**
      * 我的问题查询数据（通过单选框的判断）
@@ -89,8 +94,20 @@ public class QuestionServiceImpl implements QuestionService {
      * @param ids 删除数据的集合
      */
     @Override
-    public void deleteQuestions(List<String> ids) {
-        questionMapper.deleteQuestions(ids);
+    public List<String> deleteQuestions(List<String> ids) {
+        //查询有附件的交互记录
+        List<String> xhs = questionMapper.selectJhjlByWtidsAndHffj(ids);
+        //查询附件地址
+        xhs.addAll(ids);
+        List<String> fwjdz = fjMapper.selectFwjdzsByQtbxhs(xhs);
+        if (fwjdz.size() != 0) {
+            return fwjdz;
+        }
+        questionMapper.deleteQuestions(ids);//删除问题
+        questionMapper.deleteWtgzByWtid(ids);//删除关注数据
+        questionMapper.deleteZrdbByIds(ids);//删除责任人
+        questionMapper.deleteJhjlByWtids(ids);//删除交互记录
+        return fwjdz;
     }
 
 
@@ -120,14 +137,16 @@ public class QuestionServiceImpl implements QuestionService {
             List<ZrrVO> list = questionMapper.getzerData(dto.getID());
             for (ZrrVO zrrVO : list) {
                 String zrrzt = zrrVO.getZRRZT();
-                if ("申请已完成".equals(zrrzt)) {
+                if ("申请已完成".equals(zrrzt) || "确认已完成".equals(zrrzt)) {
                     num++;
                 }
             }
             if (num == list.size()) {
                 dto.setValue("待关闭");
-                wtxxDTOS.add(dto);
+            } else {
+                dto.setValue("反馈");
             }
+            wtxxDTOS.add(dto);
         }
         if (wtxxDTOS.size() > 0) {
             questionMapper.updateQuestionsStatus(wtxxDTOS);
@@ -217,7 +236,8 @@ public class QuestionServiceImpl implements QuestionService {
     public void createQuestion(WtxxDTO wtxxDTO) {
         Long userId = SecurityUtils.getUserId();
         wtxxDTO.setCJRID(userId + "");//创建人id
-        wtxxDTO.setCJR(SecurityUtils.getUsername());//创建人
+        SysUser sysUser = sysUserMapper.selectUserById(SecurityUtils.getUserId());
+        wtxxDTO.setCJR(sysUser.getNickName());//创建人
         //创建人科室
         //创建人部门
         String id = UUID.randomUUID().toString();
@@ -272,6 +292,7 @@ public class QuestionServiceImpl implements QuestionService {
         SysUser sysUser = sysUserMapper.selectUserById(userId);
         sjjh.setWTZRR(sysUser.getNickName());
         sjjh.setHFR(sysUser.getNickName());
+        sjjh.setHFRID(sysUser.getUserId().toString());
         List<WtxxDTO> wtxxDTOS = new ArrayList<>();
         if (sjjh.getXH() != null && !sjjh.getXH().isEmpty() && !"领导批示".equals(sjjh.getJHZT())) {
             if ("接收".equals(sjjh.getValue()) && sjjh.getUserName() != null) {
@@ -419,8 +440,27 @@ public class QuestionServiceImpl implements QuestionService {
      * 责任人闭环功能
      */
     @Override
-    public void closedLoop(String xh) {
-        questionMapper.closedLoop(xh);
+    public void closedLoop(ZrrVO zrrVO) {
+        questionMapper.closedLoop(zrrVO.getXH());
+        List<ZrrVO> zrrVOS = questionMapper.getzerData(zrrVO.getWTID());
+        int num = 0;
+        WtxxDTO dto = new WtxxDTO();
+        dto.setID(zrrVO.getWTID());
+        for (ZrrVO zrr : zrrVOS) {
+            String zrrzt = zrr.getZRRZT();
+            if ("申请已完成".equals(zrrzt) || "确认已完成".equals(zrrzt)) {
+                num++;
+            }
+        }
+        if (num == zrrVOS.size()) {
+            dto.setValue("待关闭");
+        } else {
+            dto.setValue("反馈");
+        }
+
+        List<WtxxDTO> wtxxDTOS = new ArrayList<>();
+        wtxxDTOS.add(dto);
+        questionMapper.updateQuestionsStatus(wtxxDTOS);
     }
 
     /**
@@ -594,13 +634,10 @@ public class QuestionServiceImpl implements QuestionService {
     public void answerSelectOff(DaccDTO daccDTO) {
         List<SjjhDTO> sjjh = daccDTO.getSjjhDTOS();
         //关闭问题
-        if (sjjh.size() == 0) {
-            return;
-        }
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String format = simpleDateFormat.format(new Date());
         //给当前问题修改为已关闭状态
-        questionMapper.updateQuestionStatusSJ(sjjh.get(0).getWTID(), "已关闭", format);
+        questionMapper.updateQuestionStatusSJ(daccDTO.getWTID(), "已关闭", format);
         DaccVO daccVO = new DaccVO();
         for (SjjhDTO sjjhDTO : sjjh) {
             daccVO.setWTID(sjjhDTO.getWTID());
@@ -631,9 +668,9 @@ public class QuestionServiceImpl implements QuestionService {
                 if ("".equals(zrr)) {
                     zrr = zrrVO.getZRR();
                     zrrId = zrrVO.getZRRID();
-                }else {
-                    zrr = zrr + "," +zrrVO.getZRR();
-                    zrrId = zrrId + "," +zrrVO.getZRRID();
+                } else {
+                    zrr = zrr + "," + zrrVO.getZRR();
+                    zrrId = zrrId + "," + zrrVO.getZRRID();
                 }
             }
             daccVO.setZRR(zrr);
@@ -643,7 +680,7 @@ public class QuestionServiceImpl implements QuestionService {
         }
         //修改所有的责任人为确定已完成
         //先找出wtid的数据
-        String wtid = sjjh.get(0).getWTID();
+        String wtid = daccDTO.getWTID();
         List<ZrrVO> zrrVOS = questionMapper.getzerData(wtid);
         for (ZrrVO zrrVO : zrrVOS) {
             if ("申请已完成".equals(zrrVO.getZRRZT())) {

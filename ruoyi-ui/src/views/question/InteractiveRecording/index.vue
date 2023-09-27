@@ -40,128 +40,16 @@
             ref="multipleTable"
             border
             style="width: 100%">
-            <el-table-column
-              type="selection"
-              width="50"
-              :reserve-selection="true">
-            </el-table-column>
-            <el-table-column
-              label="序号"
-              type="index"
-              width="50">
-            </el-table-column>
-            <el-table-column
-              prop="hfxx"
-              label="回复信息"
-              show-overflow-tooltip
-            >
-              <template slot-scope="scope">
-                <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'hfxx'"
-                          v-model="scope.row.hfxx" @blur="inputBlur(scope)"></el-input>
-                <span v-else>{{ scope.row.hfxx }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="wtbt"
-              label="问题标题"
-              show-overflow-tooltip
-              show-overflow-tooltip
-            >
-              <template slot-scope="scope">
-                <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'wtbt'"
-                          v-model="scope.row.wtbt" @blur="inputBlur(scope)"></el-input>
-                <span v-else>{{ scope.row.wtbt }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="wtid"
-              label="问题ID"
-              show-overflow-tooltip
-              show-overflow-tooltip
-            >
-              <template slot-scope="scope">
-                <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'wtid'"
-                          v-model="scope.row.wtid" @blur="inputBlur(scope)"></el-input>
-                <span v-else>{{ scope.row.wtid }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="hfr"
-              label="问题创建人"
-              show-overflow-tooltip
-            >
-              <template slot-scope="scope">
-                <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'hfr'"
-                          v-model="scope.row.hfr" @blur="inputBlur(scope)"></el-input>
-                <span v-else>{{ scope.row.hfr }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="wtcjr"
-              label="问题创建人"
-              show-overflow-tooltip
-            >
-              <template slot-scope="scope">
-                <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'wtcjr'"
-                          v-model="scope.row.wtcjr" @blur="inputBlur(scope)"></el-input>
-                <span v-else>{{ scope.row.wtcjr }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="wtcjbm"
-              label="问题创建部门"
-              show-overflow-tooltip
-            >
-              <template slot-scope="scope">
-                <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'wtcjbm'"
-                          v-model="scope.row.wtcjbm" @blur="inputBlur(scope)"></el-input>
-                <span v-else>{{ scope.row.wtcjbm }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="wtcjsj"
-              label="问题创建时间"
-              show-overflow-tooltip
-            >
-              <template slot-scope="scope">
-                <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'wtcjsj'"
-                          v-model="scope.row.wtcjsj" @blur="inputBlur(scope)"></el-input>
-                <span v-else>{{ scope.row.wtcjsj }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="wtzrr"
-              label="问题责任人"
-              show-overflow-tooltip
-            >
-              <template slot-scope="scope">
-                <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'wtzrr'"
-                          v-model="scope.row.wtzrr" @blur="inputBlur(scope)"></el-input>
-                <span v-else>{{ scope.row.wtzrr }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="jhzt"
-              label="交互记录状态"
-              show-overflow-tooltip
-            >
-              <template slot-scope="scope">
-                <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'jhzt'"
-                          v-model="scope.row.jhzt" @blur="inputBlur(scope)"></el-input>
-                <span v-else>{{ scope.row.jhzt }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="ejhfppyj"
-              label="二级回复信息与一级回复信息匹配的"
-              show-overflow-tooltip
-            >
-              <template slot-scope="scope">
-                <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'ejhfppyj'"
-                          v-model="scope.row.ejhfppyj" @blur="inputBlur(scope)"></el-input>
-                <span v-else>{{ scope.row.ejhfppyj }}</span>
-              </template>
-            </el-table-column>
+            <el-table-column type="selection" width="50" :reserve-selection="true"/>
+            <el-table-column label="序号" type="index" width="50"/>
+            <el-table-column show-overflow-tooltip width="150" prop="wtbt" label="问题名称"/>
+            <el-table-column show-overflow-tooltip width="120" prop="hfr" label="回复人"/>
+            <el-table-column show-overflow-tooltip width="120" prop="wtcjr" label="问题创建人"/>
+            <el-table-column show-overflow-tooltip width="120" prop="wtcjbm" label="问题创建部门"/>
+            <el-table-column show-overflow-tooltip width="155" prop="wtcjsj" label="问题创建时间"/>
+            <el-table-column show-overflow-tooltip width="120" prop="wtzrr" label="问题责任人"/>
+            <el-table-column show-overflow-tooltip width="120" prop="jhzt" label="交互记录状态"/>
+            <el-table-column show-overflow-tooltip prop="hfxx" label="回复信息"/>
           </el-table>
         </div>
         <pagination
