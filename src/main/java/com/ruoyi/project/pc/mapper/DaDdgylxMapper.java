@@ -61,7 +61,12 @@ public interface DaDdgylxMapper {
     public int deleteDaDdgylxByIds(String[] ids);
 
     /**
-     * 搜索订单工艺路线数据（根据零组件号集合查询）
+     * 搜索订单工艺路线数据（根据零组件号集合查询）倒序
+     */
+    List<DaDdgylx> selectByLzjhDesc(String ddh);
+
+    /**
+     * 搜索订单工艺路线数据（根据零组件号集合查询）正序
      */
     List<DaDdgylx> selectByLzjh(String ddh);
 
@@ -69,4 +74,6 @@ public interface DaDdgylxMapper {
      * 批量修改数据
      */
     int updateDaDdgylxList(DaDdgylx daDdgylx);
+
+
 }

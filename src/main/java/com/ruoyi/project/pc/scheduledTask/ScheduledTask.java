@@ -2,14 +2,10 @@ package com.ruoyi.project.pc.scheduledTask;
 
 import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.project.pc.service.IDaDdgylxService;
-import com.ruoyi.project.question.service.QuestionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
-
-import javax.annotation.PostConstruct;
 
 /**
  * Author: QXD
@@ -25,10 +21,19 @@ public class ScheduledTask extends BaseController {
     @Autowired
     private IDaDdgylxService daDdgylxService;
 
-    @PostConstruct
+//    @PostConstruct
     public void pc() {
         System.out.println("开始");
-        daDdgylxService.pc();
+        String lzjh = "D000000046";
+        daDdgylxService.pc(lzjh);
         System.out.println("结束");
+    }
+
+    //@PostConstruct
+    public void sbpc() {
+        System.out.println("开始设备排产");
+        String lzjh = "D000000046";
+        daDdgylxService.sbpc(lzjh, "2023-09-26 10:00");
+        System.out.println("结束设备排产");
     }
 }

@@ -5,12 +5,12 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-
 import com.ruoyi.project.pc.domain.DaBc;
 import com.ruoyi.project.pc.domain.DaLzjscdd;
 import com.ruoyi.project.pc.mapper.DaBcMapper;
 import com.ruoyi.project.pc.mapper.DaLzjscddMapper;
 import com.ruoyi.project.pc.mapper.DaRlMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.project.pc.mapper.DaDdgylxMapper;
@@ -24,15 +24,19 @@ import com.ruoyi.project.pc.service.IDaDdgylxService;
  * @date 2023-09-22
  */
 @Service
+@Slf4j
 public class DaDdgylxServiceImpl implements IDaDdgylxService {
     @Autowired
     private DaDdgylxMapper daDdgylxMapper;
     @Autowired
     private DaLzjscddMapper daLzjscddMapper;
+    @Autowired
+    private DaRlMapper daRlMapper;
+    @Autowired
+    private DaBcMapper daBcMapper;
 
     /**
      * 查询订单工艺路线
-     *
      * @param id 订单工艺路线主键
      * @return 订单工艺路线
      */
@@ -43,7 +47,6 @@ public class DaDdgylxServiceImpl implements IDaDdgylxService {
 
     /**
      * 查询订单工艺路线列表
-     *
      * @param daDdgylx 订单工艺路线
      * @return 订单工艺路线
      */
@@ -54,7 +57,6 @@ public class DaDdgylxServiceImpl implements IDaDdgylxService {
 
     /**
      * 新增订单工艺路线
-     *
      * @param daDdgylx 订单工艺路线
      * @return 结果
      */
@@ -65,7 +67,6 @@ public class DaDdgylxServiceImpl implements IDaDdgylxService {
 
     /**
      * 修改订单工艺路线
-     *
      * @param daDdgylx 订单工艺路线
      * @return 结果
      */
@@ -76,7 +77,6 @@ public class DaDdgylxServiceImpl implements IDaDdgylxService {
 
     /**
      * 批量删除订单工艺路线
-     *
      * @param ids 需要删除的订单工艺路线主键
      * @return 结果
      */
@@ -87,7 +87,6 @@ public class DaDdgylxServiceImpl implements IDaDdgylxService {
 
     /**
      * 删除订单工艺路线信息
-     *
      * @param id 订单工艺路线主键
      * @return 结果
      */
@@ -100,16 +99,13 @@ public class DaDdgylxServiceImpl implements IDaDdgylxService {
      * 排产方法
      */
     @Override
-    public void pc() {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-//        String lzjh = "D000000046/D000000047/D000000039/D000000041/D000000042/D000000045/";
-        String lzjh = "D000000046";
+    public void pc(String lzjh) {
         String[] split = lzjh.split("/");
         //获取班次的每天总分钟
         List<DaBc> daBcs = daBcMapper.selectDaBcList(new DaBc());
         //根据订单号获得订单工艺路线的集合
         for (String s : split) {
-            List<DaDdgylx> daDdgylxes = daDdgylxMapper.selectByLzjh(s);
+            List<DaDdgylx> daDdgylxes = daDdgylxMapper.selectByLzjhDesc(s);
             String jhkssk = "";
             for (DaDdgylx daDdgylx : daDdgylxes) {
                 //获得在职数量
@@ -118,7 +114,7 @@ public class DaDdgylxServiceImpl implements IDaDdgylxService {
                 List<DaLzjscdd> daLzjscdds = daLzjscddMapper.selectDaLzjscddList(daLzjscdd);
                 long zzsl = 1;
                 if (daLzjscdds.size() != 1) {
-                    System.out.println("数据出现错误"+"生产订单号："+daLzjscdd.getScddh());
+                    log.info("数据出现错误"+"生产订单号：{}",daLzjscdd.getScddh());
                     break;
                 } else {
                     zzsl = daLzjscdds.get(0).getZzsl();
@@ -140,11 +136,11 @@ public class DaDdgylxServiceImpl implements IDaDdgylxService {
                 //jhkssk = isSatisfyCondition(daDdgylx.getJhwcsj(), min);
                 jhkssk = twoIsSatisfyCondition(daDdgylx.getJhwcsj(), min,daBcs);
                 if ("".equals(jhkssk)) {
-                    System.out.println("班次出现错误，请重新确定"+"生产订单号："+daLzjscdd.getScddh());
+                    log.info("班次出现错误，请重新确定,生产订单号：{}",daLzjscdd.getScddh());
                     break;
                 }
                 if ("计划结束时间填写错误".equals(jhkssk)) {
-                    System.out.println(jhkssk+"生产订单号："+daLzjscdd.getScddh());
+                    log.info("计划结束时间填写错误:生产订单号：{}",daLzjscdd.getScddh());
                     break;
                 }
                 //这里也处理时间的范围原因
@@ -156,16 +152,6 @@ public class DaDdgylxServiceImpl implements IDaDdgylxService {
             for (DaDdgylx daDdgylx : daDdgylxes) {
                 System.out.println(daDdgylx);
             }
-            /*for (DaDdgylx daDdgylx : daDdgylxes) {
-                String jhkssjUpdate = daDdgylx.getJhkssj();
-                String jhwcsjUpdate = daDdgylx.getJhwcsj();
-                try {
-                    Date parse = simpleDateFormat.parse(jhkssjUpdate);
-                    Date parse1 = simpleDateFormat.parse(jhwcsjUpdate);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-            }*/
         }
 
     }
@@ -260,9 +246,7 @@ public class DaDdgylxServiceImpl implements IDaDdgylxService {
         }
         return dateString + " " + jhkssj;
     }
-
-    @Autowired
-    private DaBcMapper daBcMapper;
+    //判断时间是否在规则范围内
     private String twoIsSatisfyCondition(String jhwcsj, long minutes,List<DaBc> daBcs) {
         String[] jhkssjStr = jhwcsj.split(" ");
         DaBc daBcZao = null;
@@ -315,7 +299,7 @@ public class DaDdgylxServiceImpl implements IDaDdgylxService {
                 dataTime = getCountPlusinutes(daBcZao.getKssj(), num, daBcZao.getJssj(), daBcWu.getKssj(), daBcWu.getJssj(), daBcWan.getKssj());
             }
         } else {
-            System.out.println("计划结束时间填写错误");
+            log.info("计划结束时间填写错误");
             return "计划结束时间填写错误";
         }
         //计划结束时间的日期
@@ -382,10 +366,10 @@ public class DaDdgylxServiceImpl implements IDaDdgylxService {
             Calendar startTime = Calendar.getInstance();
             Calendar endTime = Calendar.getInstance();
 
-            // 设置起始时间为8:00
+            // 设置起始时间为
             startTime.setTime(sdf.parse(start));
 
-            // 设置结束时间为17:00
+            // 设置结束时间为
             endTime.setTime(sdf.parse(end));
 
             // 计算总分钟数
@@ -419,7 +403,66 @@ public class DaDdgylxServiceImpl implements IDaDdgylxService {
             } else {
                 return Math.toIntExact(totalMinutes);
             }
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+    //计算两个时间的差值，如果在休息范围内减去休息正序
+    private static Integer getMinutesToUnrestzheng(String start, String end, String restTime, String restTimeToEnd, String restTimeTwo, String restTimeToEndTwo) {
+        try {
+            if (start == null || "".equals(start)&&
+                    end==null||"".equals(end)&&
+                    restTime==null||"".equals(restTime)&&
+                    restTimeToEnd==null||"".equals(restTimeToEnd)&&
+                    restTimeTwo==null||"".equals(restTimeTwo)&&
+                    restTimeToEndTwo==null||"".equals(restTimeToEndTwo)
+            ) {
+                return null;
+            }
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 
+            // 创建 Calendar 对象，表示起始时间和结束时间
+            Calendar startTime = Calendar.getInstance();
+            Calendar endTime = Calendar.getInstance();
+
+            // 设置起始时间为
+            startTime.setTime(sdf.parse(start));
+
+            // 设置结束时间为
+            endTime.setTime(sdf.parse(end));
+
+            // 计算总分钟数
+            long totalMinutes = (endTime.getTimeInMillis() - startTime.getTimeInMillis()) / (60 * 1000);
+
+            // 休息时间段1（假设从12:00到13:00为休息时间）
+            Calendar breakStartTime1 = Calendar.getInstance();
+            Calendar breakEndTime1 = Calendar.getInstance();
+            breakStartTime1.setTime(sdf.parse(restTime));
+            breakEndTime1.setTime(sdf.parse(restTimeToEnd));
+
+            // 休息时间段2（假设从15:30到16:00为休息时间）
+            Calendar breakStartTime2 = Calendar.getInstance();
+            Calendar breakEndTime2 = Calendar.getInstance();
+            breakStartTime2.setTime(sdf.parse(restTimeTwo));
+            breakEndTime2.setTime(sdf.parse(restTimeToEndTwo));
+
+            // 计算休息时间段1的分钟数
+            long breakMinutes1 = (breakEndTime1.getTimeInMillis() - breakStartTime1.getTimeInMillis()) / (60 * 1000);
+
+            // 计算休息时间段2的分钟数
+            long breakMinutes2 = (breakEndTime2.getTimeInMillis() - breakStartTime2.getTimeInMillis()) / (60 * 1000);
+
+            // 扣除休息时间的分钟数
+            //判断是否在休息时间内
+            if (Integer.parseInt(start.split(":")[0]) < Integer.parseInt(restTime.split(":")[0])) {
+                return Math.toIntExact(totalMinutes - breakMinutes1 - breakMinutes2);
+            } else if (Integer.parseInt(start.split(":")[0]) > Integer.parseInt(restTimeToEnd.split(":")[0])&&
+                    Integer.parseInt(start.split(":")[0]) < Integer.parseInt(restTimeTwo.split(":")[0])) {
+                return Math.toIntExact(totalMinutes - breakMinutes2);
+            } else {
+                return Math.toIntExact(totalMinutes);
+            }
         } catch (ParseException e) {
             e.printStackTrace();
             return 0;
@@ -488,8 +531,6 @@ public class DaDdgylxServiceImpl implements IDaDdgylxService {
             return null;
         }
     }
-    @Autowired
-    private DaRlMapper daRlMapper;
 
     //执行减一天的方法
     public String getTimeReductionOf(String dateString) {
@@ -504,62 +545,148 @@ public class DaDdgylxServiceImpl implements IDaDdgylxService {
         date = date.minusDays(1);
 
         // 将结果日期对象格式化为字符串
-        String resultDateString = date.format(formatter);
+        return date.format(formatter);
+    }
+    //执行加一天的方法
+    public String getTimeAddDayOf(String dateString) {
 
-        return resultDateString;
+        // 定义日期格式
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        // 将初始日期字符串解析为 LocalDate 对象
+        LocalDate date = LocalDate.parse(dateString, formatter);
+
+        // 每次减去一天
+        date = date.plusDays(1);
+
+        // 将结果日期对象格式化为字符串
+        return date.format(formatter);
     }
 
-    private String time(String time) throws ParseException {
-        // 定义日期时间格式
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-        // 解析字符串为日期时间
-        Date dateTime = sdf.parse(time);
-
-        // 创建 Calendar 对象并设置日期时间
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(dateTime);
-
-        // 判断日期是否在工作时间内
-        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-
-        if (dayOfWeek >= Calendar.MONDAY && dayOfWeek <= Calendar.FRIDAY) {
-            // 周一到周五
-            if (hour < 8) {
-                calendar.set(Calendar.HOUR_OF_DAY, 8);
-                calendar.set(Calendar.MINUTE, 0);
-            } else if (hour >= 12 && hour < 13) {
-                calendar.set(Calendar.HOUR_OF_DAY, 13);
-                calendar.set(Calendar.MINUTE, 0);
-            } else if (hour >= 17 && hour < 18) {
-                calendar.set(Calendar.HOUR_OF_DAY, 18);
-                calendar.set(Calendar.MINUTE, 0);
-            } else if (hour >= 21) {
-                // 如果超过晚上九点，将日期调整到第二天的早上八点
-                calendar.add(Calendar.DAY_OF_YEAR, 1);
-                calendar.set(Calendar.HOUR_OF_DAY, 8);
-                calendar.set(Calendar.MINUTE, 0);
+    /**
+     * 设备排产
+     */
+    @Override
+    public void sbpc(String lzjh,String dateTime) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        //将lzjh切割
+        String[] split = lzjh.split("/");
+        if (dateTime == null || "".equals(dateTime)) {
+            dateTime = simpleDateFormat.format(new Date());
+        }
+        List<DaBc> daBcs = daBcMapper.selectDaBcList(new DaBc());
+        for (String s : split) {
+            List<DaDdgylx> daDdgylxes = daDdgylxMapper.selectByLzjh(s);
+            String jhkssj = null;
+            for (DaDdgylx daDdgylx : daDdgylxes) {
+                long zzsl = 1;
+                {
+                    //获得在职数量
+                    DaLzjscdd daLzjscdd = new DaLzjscdd();
+                    daLzjscdd.setScddh(daDdgylx.getDdh());
+                    List<DaLzjscdd> daLzjscdds = daLzjscddMapper.selectDaLzjscddList(daLzjscdd);
+                    if (daLzjscdds.size() != 1) {
+                        log.info("数据出现错误" + "生产订单号：{}", daLzjscdd.getScddh());
+                        break;
+                    } else {
+                        zzsl = daLzjscdds.get(0).getZzsl();
+                    }
+                }
+                Long jggs = daDdgylx.getJggs();
+                Long zbgs = daDdgylx.getZbgs();
+                //获得需要多少分钟
+                long min = zzsl * jggs + zbgs;
+                //获取计划在制数量
+                if (jhkssj == null) {
+                    jhkssj = dateTime;
+                }
+                daDdgylx.setJhkssj(jhkssj);
+                //通过开始时间计算结束时间
+                jhkssj = getJiSuanTime(jhkssj, min, daBcs);
+                daDdgylx.setJhwcsj(jhkssj);
             }
-        } else {
-            // 周末
-            // 将日期调整到下周一的早上八点
-            int daysUntilMonday = Calendar.MONDAY - dayOfWeek + (dayOfWeek <= Calendar.FRIDAY ? 0 : 7);
-            calendar.add(Calendar.DAY_OF_YEAR, daysUntilMonday);
-            calendar.set(Calendar.HOUR_OF_DAY, 8);
-            calendar.set(Calendar.MINUTE, 0);
+            for (DaDdgylx daDdgylx : daDdgylxes) {
+                log.info("数据：{}", daDdgylx);
+            }
         }
 
-        // 打印调整后的日期时间
-        Date adjustedDateTime = calendar.getTime();
-        System.out.println("调整后的日期时间：" + sdf.format(adjustedDateTime));
-        return sdf.format(adjustedDateTime);
+    }
+
+    private void selectList(String ddh) {
+        List<DaDdgylx> daDdgylxes = daDdgylxMapper.selectByLzjh(ddh);
+
+    }
+
+    private String getJiSuanTime(String jhkssj, long minutes, List<DaBc> daBcs) {
+        String[] jhkssjStr = jhkssj.split(" ");
+        DaBc daBcZao = null;
+        DaBc daBcWu = null;
+        DaBc daBcWan = null;
+        int minutesBc = 0;
+        for (DaBc daBc : daBcs) {
+            if ("早班".equals(daBc.getBcmc())) {
+                daBcZao = daBc;
+            } else if ("午班".equals(daBc.getBcmc())) {
+                daBcWu = daBc;
+            } else {
+                daBcWan = daBc;
+            }
+            Integer minutes1 = getMinutes(daBc.getKssj(), daBc.getJssj());
+            if (minutes1 == null) {
+                minutesBc = 0;
+                break;
+            }
+            minutesBc += minutes1;
+        }
+        //先判断班次差距的分钟为0的时候，那么出现错误
+        if (minutesBc == 0) {
+            return null;
+        }
+        //判断当前工序的生产时间和一天的分钟做对比，如果一天大那么再这一天之内，如果大于一天分钟那么大于一天
+        //minutesBc 是班次一天的所有分钟
+        //获取这个一道序需要多少天
+        long day = minutes / minutesBc;
+        //去掉多少天后剩余多少分钟；
+        long min = minutes % minutesBc;
+        //判断计划结束时间的时间判断在早中晚那个位置，并且和早办的开始时间 相差多少分钟，
+        // 如果相差的时间小于min的话那么就往上加一天，如果小于那么就直接减
+        Integer minutes1 = getMinutesToUnrestzheng(jhkssjStr[1], daBcWan.getJssj(), daBcZao.getJssj(), daBcWu.getKssj(), daBcWu.getJssj(), daBcWan.getKssj());
+        String dataTime = null;
+        if (minutes1 >= 0) {
+            if (min - minutes1 < 0) {
+                int num = Math.toIntExact(min);
+                dataTime = getCountPlusinutes(jhkssjStr[1], num, daBcZao.getJssj(), daBcWu.getKssj(), daBcWu.getJssj(), daBcWan.getKssj());
+            }else{
+                day += 1;
+                int num = Math.toIntExact(min - minutes1);
+                dataTime = getCountPlusinutes(daBcZao.getKssj(), num, daBcZao.getJssj(), daBcWu.getKssj(), daBcWu.getJssj(), daBcWan.getKssj());
+            }
+        } else {
+            log.info("计算时间出现错误");
+            return null;
+        }
+        //计划结束时间的日期
+        String dateString = jhkssjStr[0];
+        //计算天数
+        //查询数据库来判断是否放假
+        //如果是的话那就拿上一条的不放假日期
+        for (long i = 0; i < day; i++) {
+            String timeReductionOf = getTimeAddDayOf(dateString);
+            //先在数据库中找到这个字符串是否上班，如果不上班那么在次执行减一天的操作
+            String isSb = daRlMapper.selectByRq(timeReductionOf);
+            while ("否".equals(isSb)) {
+                timeReductionOf = getTimeAddDayOf(timeReductionOf);
+                isSb = daRlMapper.selectByRq(timeReductionOf);
+            }
+            dateString = timeReductionOf;
+        }
+        return dateString+" "+dataTime;
     }
 
     public static void main(String[] args) {
-        Integer minutesToUnrest = getMinutesToUnrest("10:00", "9:00", "12:00", "13:00", "17:00", "18:00");
+        String countPlusinutes = getCountPlusinutes("18:25", 55, "12:00", "13:00", "17:00", "18:00");
+        System.out.println(countPlusinutes);
+        Integer minutesToUnrest = getMinutesToUnrest("18:25", "21:00", "12:00", "13:00", "17:00", "18:00");
         System.out.println(minutesToUnrest);
-        //String countPlusinutes = getCountPlusinutes("8:00", 550);
-        //System.out.println(countPlusinutes);
     }
 }

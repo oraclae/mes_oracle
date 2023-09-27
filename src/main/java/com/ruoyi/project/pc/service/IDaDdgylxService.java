@@ -11,6 +11,7 @@ import com.ruoyi.project.pc.domain.DaDdgylx;
  * @date 2023-09-22
  */
 public interface IDaDdgylxService {
+
     /**
      * 查询订单工艺路线
      *
@@ -60,5 +61,14 @@ public interface IDaDdgylxService {
     public int deleteDaDdgylxById(String id);
 
 
-    public void pc();
+    /**
+     * 排产
+     */
+    public void pc(String lzjh);
+
+    /**
+     * 设备排产
+     */
+    public void sbpc(String lzjh,String dateTime);
+
 }

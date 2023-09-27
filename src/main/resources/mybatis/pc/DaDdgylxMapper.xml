@@ -155,10 +155,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectDaDdgylxVo"/>
         where ID = #{ID}
     </select>
-    <select id="selectByLzjh" parameterType="String" resultType="com.ruoyi.project.pc.domain.DaDdgylx">
+    <select id="selectByLzjhDesc" parameterType="String" resultType="com.ruoyi.project.pc.domain.DaDdgylx">
         <include refid="selectDaDdgylxVo"/>
         where "gxh">= (select "gxh" from DA_DDGYLX where "ddh"=#{ddh} and "zzsl" >0)
         and "ddh"=#{ddh} order by "gxh" desc
+    </select>
+    <select id="selectByLzjh" parameterType="String" resultType="com.ruoyi.project.pc.domain.DaDdgylx">
+        <include refid="selectDaDdgylxVo"/>
+        where "gxh">= (select "gxh" from DA_DDGYLX where "ddh"=#{ddh} and "zzsl" >0)
+        and "ddh"=#{ddh} order by "gxh"
     </select>
 
     <insert id="insertDaDdgylx" parameterType="com.ruoyi.project.pc.domain.DaDdgylx">
