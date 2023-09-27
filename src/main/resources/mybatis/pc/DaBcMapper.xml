@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.pc.mapper.DaBcMapper">
+
+    <resultMap type="com.ruoyi.project.pc.domain.DaBc" id="DaBcResult">
+        <result property="id"    column="ID"    />
+        <result property="bcmc"    column="bcmc"    />
+        <result property="bcdh"    column="bcdh"    />
+        <result property="kssj"    column="kssj"    />
+        <result property="jssj"    column="jssj"    />
+        <result property="bz"    column="bz"    />
+    </resultMap>
+
+    <sql id="selectDaBcVo">
+        select "ID", "bcmc", "bcdh", "kssj", "jssj", "bz" from da_bc
+    </sql>
+
+    <select id="selectDaBcList" parameterType="com.ruoyi.project.pc.domain.DaBc" resultMap="DaBcResult">
+        <include refid="selectDaBcVo"/>
+        <where>
+            <if test="bcmc != null  and bcmc != ''"> and "bcmc" = #{bcmc}</if>
+            <if test="bcdh != null  and bcdh != ''"> and "bcdh" = #{bcdh}</if>
+            <if test="kssj != null  and kssj != ''"> and "kssj" = #{kssj}</if>
+            <if test="jssj != null  and jssj != ''"> and "jssj" = #{jssj}</if>
+            <if test="bz != null  and bz != ''"> and "bz" = #{bz}</if>
+        </where>
+    </select>
+
+    <select id="selectDaBcById" parameterType="String" resultMap="DaBcResult">
+        <include refid="selectDaBcVo"/>
+        where ID = #{id}
+    </select>
+
+    <insert id="insertDaBc" parameterType="com.ruoyi.project.pc.domain.DaBc">
+        insert into da_bc
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">"ID",</if>
+            <if test="bcmc != null">"bcmc",</if>
+            <if test="bcdh != null">"bcdh",</if>
+            <if test="kssj != null">"kssj",</if>
+            <if test="jssj != null">"jssj",</if>
+            <if test="bz != null">"bz",</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="bcmc != null">#{bcmc},</if>
+            <if test="bcdh != null">#{bcdh},</if>
+            <if test="kssj != null">#{kssj},</if>
+            <if test="jssj != null">#{jssj},</if>
+            <if test="bz != null">#{bz},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDaBc" parameterType="com.ruoyi.project.pc.domain.DaBc">
+        update da_bc
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="bcmc != null">"bcmc" = #{bcmc},</if>
+            <if test="bcdh != null">"bcdh" = #{bcdh},</if>
+            <if test="kssj != null">"kssj" = #{kssj},</if>
+            <if test="jssj != null">"jssj" = #{jssj},</if>
+            <if test="bz != null">"bz" = #{bz},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deleteDaBcById" parameterType="String">
+        delete from da_bc where ID = #{id}
+    </delete>
+
+    <delete id="deleteDaBcByIds" parameterType="String">
+        delete from da_bc where DA_BC.ID in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

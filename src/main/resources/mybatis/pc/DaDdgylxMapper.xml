@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.pc.mapper.DaDdgylxMapper">
+
+    <resultMap type="com.ruoyi.project.pc.domain.DaDdgylx" id="DaDdgylxResult">
+        <result property="ID"    column="ID"    />
+        <result property="cpxh"    column="cpxh"    />
+        <result property="cpmc"    column="cpmc"    />
+        <result property="lzjxh"    column="lzjxh"    />
+        <result property="lzjmc"    column="lzjmc"    />
+        <result property="jd"    column="jd"    />
+        <result property="bc"    column="bc"    />
+        <result property="gxh"    column="gxh"    />
+        <result property="gxmc"    column="gxmc"    />
+        <result property="czdw"    column="czdw"    />
+        <result property="sbxh"    column="sbxh"    />
+        <result property="kzm"    column="kzm"    />
+        <result property="bz"    column="bz"    />
+        <result property="gjx"    column="gjx"    />
+        <result property="gc"    column="gc"    />
+        <result property="ry"    column="ry"    />
+        <result property="ywdj"    column="ywdj"    />
+        <result property="zlyq"    column="zlyq"    />
+        <result property="zbgs"    column="zbgs"    />
+        <result property="jggs"    column="jggs"    />
+        <result property="scjg"    column="scjg"    />
+        <result property="scjgsj"    column="scjgsj"    />
+        <result property="hsgs"    column="hsgs"    />
+        <result property="hsgsbl"    column="hsgsbl"    />
+        <result property="chbm"    column="chbm"    />
+        <result property="pc"    column="pc"    />
+        <result property="cj"    column="cj"    />
+        <result property="lysm"    column="lysm"    />
+        <result property="pgsj"    column="pgsj"    />
+        <result property="jhkssj"    column="jhkssj"    />
+        <result property="jhwcsj"    column="jhwcsj"    />
+        <result property="sjwcsj"    column="sjwcsj"    />
+        <result property="ddsl"    column="ddsl"    />
+        <result property="zzsl"    column="zzsl"    />
+        <result property="qrsl"    column="qrsl"    />
+        <result property="bfsl"    column="bfsl"    />
+        <result property="llsl"    column="llsl"    />
+        <result property="jksl"    column="jksl"    />
+        <result property="cpsl"    column="cpsl"    />
+        <result property="fgfxsl"    column="fgfxsl"    />
+        <result property="cpsm"    column="cpsm"    />
+        <result property="cjsj"    column="cjsj"    />
+        <result property="jysl"    column="jysl"    />
+        <result property="bhgpsl"    column="bhgpsl"    />
+        <result property="qr"    column="qr"    />
+        <result property="qrjl"    column="qrjl"    />
+        <result property="js"    column="js"    />
+        <result property="xtkz"    column="xtkz"    />
+        <result property="ddzt"    column="ddzt"    />
+        <result property="sfyw"    column="sfyw"    />
+        <result property="mlxtbm"    column="mlxtbm"    />
+        <result property="rybh"    column="rybh"    />
+        <result property="kw"    column="kw"    />
+        <result property="sfjj"    column="sfjj"    />
+        <result property="tqsl"    column="tqsl"    />
+        <result property="sfzg"    column="sfzg"    />
+        <result property="sfwx"    column="sfwx"    />
+        <result property="fc"    column="fc"    />
+        <result property="cqzt"    column="cqzt"    />
+        <result property="jhlx"    column="jhlx"    />
+        <result property="gxxsysj"    column="gxxsysj"    />
+        <result property="jgdy"    column="jgdy"    />
+        <result property="sfxygz"    column="sfxygz"    />
+        <result property="sbbm"    column="sbbm"    />
+        <result property="gd"    column="gd"    />
+        <result property="fj"    column="fj"    />
+        <result property="ddh"    column="ddh"    />
+    </resultMap>
+
+    <sql id="selectDaDdgylxVo">
+        select "ID","ddh","cpxh", "cpmc", "lzjxh", "lzjmc", "jd", "bc", "gxh", "gxmc", "czdw", "sbxh", "kzm", "bz", "gjx", "gc", "ry", "ywdj", "zlyq", "zbgs", "jggs", "scjg", "scjgsj", "hsgs", "hsgsbl", "chbm", "pc", "cj", "lysm", "pgsj", "jhkssj", "jhwcsj", "sjwcsj", "ddsl", "zzsl", "qrsl", "bfsl", "llsl", "jksl", "cpsl", "fgfxsl", "cpsm", "cjsj", "jysl", "bhgpsl", "qr", "qrjl", "js", "xtkz", "ddzt", "sfyw", "mlxtbm", "rybh", "kw", "sfjj", "tqsl", "sfzg", "sfwx", "fc", "cqzt", "jhlx", "gxxsysj", "jgdy", "sfxygz", "sbbm", "gd", "fj" from da_ddgylx
+    </sql>
+
+    <select id="selectDaDdgylxList" parameterType="com.ruoyi.project.pc.domain.DaDdgylx" resultMap="DaDdgylxResult">
+        <include refid="selectDaDdgylxVo"/>
+        <where>
+            <if test="cpxh != null  and cpxh != ''"> and "cpxh" like concat(concat('%', #{cpxh}), '%')</if>
+            <if test="cpmc != null  and cpmc != ''"> and "cpmc" like concat(concat('%', #{cpmc}), '%')</if>
+            <if test="lzjxh != null  and lzjxh != ''"> and "lzjxh" like concat(concat('%', #{lzjxh}), '%')</if>
+            <if test="lzjmc != null  and lzjmc != ''"> and "lzjmc" like concat(concat('%', #{lzjmc}), '%')</if>
+            <if test="jd != null  and jd != ''"> and "jd" = #{jd}</if>
+            <if test="bc != null  and bc != ''"> and "bc" = #{bc}</if>
+            <if test="gxh != null "> and "gxh" = #{gxh}</if>
+            <if test="gxmc != null  and gxmc != ''"> and "gxmc" like concat(concat('%', #{gxmc}), '%')</if>
+            <if test="czdw != null  and czdw != ''"> and "czdw" = #{czdw}</if>
+            <if test="sbxh != null  and sbxh != ''"> and "sbxh" = #{sbxh}</if>
+            <if test="kzm != null  and kzm != ''"> and "kzm" = #{kzm}</if>
+            <if test="bz != null  and bz != ''"> and "bz" = #{bz}</if>
+            <if test="gjx != null  and gjx != ''"> and "gjx" = #{gjx}</if>
+            <if test="gc != null  and gc != ''"> and "gc" = #{gc}</if>
+            <if test="ry != null  and ry != ''"> and "ry" = #{ry}</if>
+            <if test="ywdj != null  and ywdj != ''"> and "ywdj" = #{ywdj}</if>
+            <if test="zlyq != null  and zlyq != ''"> and "zlyq" = #{zlyq}</if>
+            <if test="zbgs != null "> and "zbgs" = #{zbgs}</if>
+            <if test="jggs != null "> and "jggs" = #{jggs}</if>
+            <if test="scjg != null "> and "scjg" = #{scjg}</if>
+            <if test="scjgsj != null "> and "scjgsj" = #{scjgsj}</if>
+            <if test="hsgs != null "> and "hsgs" = #{hsgs}</if>
+            <if test="hsgsbl != null "> and "hsgsbl" = #{hsgsbl}</if>
+            <if test="chbm != null  and chbm != ''"> and "chbm" = #{chbm}</if>
+            <if test="pc != null  and pc != ''"> and "pc" = #{pc}</if>
+            <if test="cj != null  and cj != ''"> and "cj" = #{cj}</if>
+            <if test="lysm != null  and lysm != ''"> and "lysm" = #{lysm}</if>
+            <if test="pgsj != null "> and "pgsj" = #{pgsj}</if>
+            <if test="jhkssj != null "> and "jhkssj" = #{jhkssj}</if>
+            <if test="jhwcsj != null "> and "jhwcsj" = #{jhwcsj}</if>
+            <if test="sjwcsj != null "> and "sjwcsj" = #{sjwcsj}</if>
+            <if test="ddsl != null "> and "ddsl" = #{ddsl}</if>
+            <if test="zzsl != null "> and "zzsl" = #{zzsl}</if>
+            <if test="qrsl != null "> and "qrsl" = #{qrsl}</if>
+            <if test="bfsl != null "> and "bfsl" = #{bfsl}</if>
+            <if test="llsl != null "> and "llsl" = #{llsl}</if>
+            <if test="jksl != null "> and "jksl" = #{jksl}</if>
+            <if test="cpsl != null "> and "cpsl" = #{cpsl}</if>
+            <if test="fgfxsl != null "> and "fgfxsl" = #{fgfxsl}</if>
+            <if test="cpsm != null  and cpsm != ''"> and "cpsm" = #{cpsm}</if>
+            <if test="cjsj != null "> and "cjsj" = #{cjsj}</if>
+            <if test="jysl != null "> and "jysl" = #{jysl}</if>
+            <if test="bhgpsl != null "> and "bhgpsl" = #{bhgpsl}</if>
+            <if test="qr != null  and qr != ''"> and "qr" = #{qr}</if>
+            <if test="qrjl != null  and qrjl != ''"> and "qrjl" = #{qrjl}</if>
+            <if test="js != null  and js != ''"> and "js" = #{js}</if>
+            <if test="xtkz != null  and xtkz != ''"> and "xtkz" = #{xtkz}</if>
+            <if test="ddzt != null  and ddzt != ''"> and "ddzt" = #{ddzt}</if>
+            <if test="sfyw != null  and sfyw != ''"> and "sfyw" = #{sfyw}</if>
+            <if test="mlxtbm != null  and mlxtbm != ''"> and "mlxtbm" = #{mlxtbm}</if>
+            <if test="rybh != null  and rybh != ''"> and "rybh" = #{rybh}</if>
+            <if test="kw != null  and kw != ''"> and "kw" = #{kw}</if>
+            <if test="sfjj != null  and sfjj != ''"> and "sfjj" = #{sfjj}</if>
+            <if test="tqsl != null  and tqsl != ''"> and "tqsl" = #{tqsl}</if>
+            <if test="sfzg != null  and sfzg != ''"> and "sfzg" = #{sfzg}</if>
+            <if test="sfwx != null  and sfwx != ''"> and "sfwx" = #{sfwx}</if>
+            <if test="fc != null  and fc != ''"> and "fc" = #{fc}</if>
+            <if test="cqzt != null  and cqzt != ''"> and "cqzt" = #{cqzt}</if>
+            <if test="jhlx != null  and jhlx != ''"> and "jhlx" = #{jhlx}</if>
+            <if test="gxxsysj != null  and gxxsysj != ''"> and "gxxsysj" = #{gxxsysj}</if>
+            <if test="jgdy != null  and jgdy != ''"> and "jgdy" = #{jgdy}</if>
+            <if test="sfxygz != null  and sfxygz != ''"> and "sfxygz" = #{sfxygz}</if>
+            <if test="sbbm != null  and sbbm != ''"> and "sbbm" = #{sbbm}</if>
+            <if test="gd != null  and gd != ''"> and "gd" = #{gd}</if>
+            <if test="fj != null  and fj != ''"> and "fj" = #{fj}</if>
+            <if test="ddh != null  and ddh != ''"> and "ddh" = #{ddh}</if>
+        </where>
+        order by "lzjxh","gxh"
+    </select>
+
+    <select id="selectDaDdgylxById" parameterType="String" resultMap="DaDdgylxResult">
+        <include refid="selectDaDdgylxVo"/>
+        where ID = #{ID}
+    </select>
+    <select id="selectByLzjh" parameterType="String" resultType="com.ruoyi.project.pc.domain.DaDdgylx">
+        <include refid="selectDaDdgylxVo"/>
+        where "gxh">= (select "gxh" from DA_DDGYLX where "ddh"=#{ddh} and "zzsl" >0)
+        and "ddh"=#{ddh} order by "gxh" desc
+    </select>
+
+    <insert id="insertDaDdgylx" parameterType="com.ruoyi.project.pc.domain.DaDdgylx">
+        insert into da_ddgylx
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="ID != null">ID,</if>
+            <if test="cpxh != null">"cpxh",</if>
+            <if test="cpmc != null">"cpmc",</if>
+            <if test="lzjxh != null">"lzjxh",</if>
+            <if test="lzjmc != null">"lzjmc",</if>
+            <if test="jd != null">"jd",</if>
+            <if test="bc != null">"bc",</if>
+            <if test="gxh != null">"gxh",</if>
+            <if test="gxmc != null">"gxmc",</if>
+            <if test="czdw != null">"czdw",</if>
+            <if test="sbxh != null">"sbxh",</if>
+            <if test="kzm != null">"kzm",</if>
+            <if test="bz != null">"bz",</if>
+            <if test="gjx != null">"gjx",</if>
+            <if test="gc != null">"gc",</if>
+            <if test="ry != null">"ry",</if>
+            <if test="ywdj != null">"ywdj",</if>
+            <if test="zlyq != null">"zlyq",</if>
+            <if test="zbgs != null">"zbgs",</if>
+            <if test="jggs != null">"jggs",</if>
+            <if test="scjg != null">"scjg",</if>
+            <if test="scjgsj != null">"scjgsj",</if>
+            <if test="hsgs != null">"hsgs",</if>
+            <if test="hsgsbl != null">"hsgsbl",</if>
+            <if test="chbm != null">"chbm",</if>
+            <if test="pc != null">"pc",</if>
+            <if test="cj != null">"cj",</if>
+            <if test="lysm != null">"lysm",</if>
+            <if test="pgsj != null">"pgsj",</if>
+            <if test="jhkssj != null">"jhkssj",</if>
+            <if test="jhwcsj != null">"jhwcsj",</if>
+            <if test="sjwcsj != null">"sjwcsj",</if>
+            <if test="ddsl != null">"ddsl",</if>
+            <if test="zzsl != null">"zzsl",</if>
+            <if test="qrsl != null">"qrsl",</if>
+            <if test="bfsl != null">"bfsl",</if>
+            <if test="llsl != null">"llsl",</if>
+            <if test="jksl != null">"jksl",</if>
+            <if test="cpsl != null">"cpsl",</if>
+            <if test="fgfxsl != null">"fgfxsl",</if>
+            <if test="cpsm != null">"cpsm",</if>
+            <if test="cjsj != null">"cjsj",</if>
+            <if test="jysl != null">"jysl",</if>
+            <if test="bhgpsl != null">"bhgpsl",</if>
+            <if test="qr != null">"qr",</if>
+            <if test="qrjl != null">"qrjl",</if>
+            <if test="js != null">"js",</if>
+            <if test="xtkz != null">"xtkz",</if>
+            <if test="ddzt != null">"ddzt",</if>
+            <if test="sfyw != null">"sfyw",</if>
+            <if test="mlxtbm != null">"mlxtbm",</if>
+            <if test="rybh != null">"rybh",</if>
+            <if test="kw != null">"kw",</if>
+            <if test="sfjj != null">"sfjj",</if>
+            <if test="tqsl != null">"tqsl",</if>
+            <if test="sfzg != null">"sfzg",</if>
+            <if test="sfwx != null">"sfwx",</if>
+            <if test="fc != null">"fc",</if>
+            <if test="cqzt != null">"cqzt",</if>
+            <if test="jhlx != null">"jhlx",</if>
+            <if test="gxxsysj != null">"gxxsysj",</if>
+            <if test="jgdy != null">"jgdy",</if>
+            <if test="sfxygz != null">"sfxygz",</if>
+            <if test="sbbm != null">"sbbm",</if>
+            <if test="gd != null">"gd",</if>
+            <if test="fj != null">"fj",</if>
+            <if test="ddh != null">"ddh",</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="ID != null">#{ID},</if>
+            <if test="cpxh != null">#{cpxh},</if>
+            <if test="cpmc != null">#{cpmc},</if>
+            <if test="lzjxh != null">#{lzjxh},</if>
+            <if test="lzjmc != null">#{lzjmc},</if>
+            <if test="jd != null">#{jd},</if>
+            <if test="bc != null">#{bc},</if>
+            <if test="gxh != null">#{gxh},</if>
+            <if test="gxmc != null">#{gxmc},</if>
+            <if test="czdw != null">#{czdw},</if>
+            <if test="sbxh != null">#{sbxh},</if>
+            <if test="kzm != null">#{kzm},</if>
+            <if test="bz != null">#{bz},</if>
+            <if test="gjx != null">#{gjx},</if>
+            <if test="gc != null">#{gc},</if>
+            <if test="ry != null">#{ry},</if>
+            <if test="ywdj != null">#{ywdj},</if>
+            <if test="zlyq != null">#{zlyq},</if>
+            <if test="zbgs != null">#{zbgs},</if>
+            <if test="jggs != null">#{jggs},</if>
+            <if test="scjg != null">#{scjg},</if>
+            <if test="scjgsj != null">#{scjgsj},</if>
+            <if test="hsgs != null">#{hsgs},</if>
+            <if test="hsgsbl != null">#{hsgsbl},</if>
+            <if test="chbm != null">#{chbm},</if>
+            <if test="pc != null">#{pc},</if>
+            <if test="cj != null">#{cj},</if>
+            <if test="lysm != null">#{lysm},</if>
+            <if test="pgsj != null">#{pgsj},</if>
+            <if test="jhkssj != null">#{jhkssj},</if>
+            <if test="jhwcsj != null">#{jhwcsj},</if>
+            <if test="sjwcsj != null">#{sjwcsj},</if>
+            <if test="ddsl != null">#{ddsl},</if>
+            <if test="zzsl != null">#{zzsl},</if>
+            <if test="qrsl != null">#{qrsl},</if>
+            <if test="bfsl != null">#{bfsl},</if>
+            <if test="llsl != null">#{llsl},</if>
+            <if test="jksl != null">#{jksl},</if>
+            <if test="cpsl != null">#{cpsl},</if>
+            <if test="fgfxsl != null">#{fgfxsl},</if>
+            <if test="cpsm != null">#{cpsm},</if>
+            <if test="cjsj != null">#{cjsj},</if>
+            <if test="jysl != null">#{jysl},</if>
+            <if test="bhgpsl != null">#{bhgpsl},</if>
+            <if test="qr != null">#{qr},</if>
+            <if test="qrjl != null">#{qrjl},</if>
+            <if test="js != null">#{js},</if>
+            <if test="xtkz != null">#{xtkz},</if>
+            <if test="ddzt != null">#{ddzt},</if>
+            <if test="sfyw != null">#{sfyw},</if>
+            <if test="mlxtbm != null">#{mlxtbm},</if>
+            <if test="rybh != null">#{rybh},</if>
+            <if test="kw != null">#{kw},</if>
+            <if test="sfjj != null">#{sfjj},</if>
+            <if test="tqsl != null">#{tqsl},</if>
+            <if test="sfzg != null">#{sfzg},</if>
+            <if test="sfwx != null">#{sfwx},</if>
+            <if test="fc != null">#{fc},</if>
+            <if test="cqzt != null">#{cqzt},</if>
+            <if test="jhlx != null">#{jhlx},</if>
+            <if test="gxxsysj != null">#{gxxsysj},</if>
+            <if test="jgdy != null">#{jgdy},</if>
+            <if test="sfxygz != null">#{sfxygz},</if>
+            <if test="sbbm != null">#{sbbm},</if>
+            <if test="gd != null">#{gd},</if>
+            <if test="fj != null">#{fj},</if>
+            <if test="ddh != null">#{ddh},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDaDdgylx" parameterType="com.ruoyi.project.pc.domain.DaDdgylx">
+        update da_ddgylx
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="cpxh != null">"cpxh" = #{cpxh},</if>
+            <if test="cpmc != null">"cpmc" = #{cpmc},</if>
+            <if test="lzjxh != null">"lzjxh" = #{lzjxh},</if>
+            <if test="lzjmc != null">"lzjmc" = #{lzjmc},</if>
+            <if test="jd != null">"jd" = #{jd},</if>
+            <if test="bc != null">"bc" = #{bc},</if>
+            <if test="gxh != null">"gxh" = #{gxh},</if>
+            <if test="gxmc != null">"gxmc" = #{gxmc},</if>
+            <if test="czdw != null">"czdw" = #{czdw},</if>
+            <if test="sbxh != null">"sbxh" = #{sbxh},</if>
+            <if test="kzm != null">"kzm" = #{kzm},</if>
+            <if test="bz != null">"bz" = #{bz},</if>
+            <if test="gjx != null">"gjx" = #{gjx},</if>
+            <if test="gc != null">"gc" = #{gc},</if>
+            <if test="ry != null">"ry" = #{ry},</if>
+            <if test="ywdj != null">"ywdj" = #{ywdj},</if>
+            <if test="zlyq != null">"zlyq" = #{zlyq},</if>
+            <if test="zbgs != null">"zbgs" = #{zbgs},</if>
+            <if test="jggs != null">"jggs" = #{jggs},</if>
+            <if test="scjg != null">"scjg" = #{scjg},</if>
+            <if test="scjgsj != null">"scjgsj" = #{scjgsj},</if>
+            <if test="hsgs != null">"hsgs" = #{hsgs},</if>
+            <if test="hsgsbl != null">"hsgsbl" = #{hsgsbl},</if>
+            <if test="chbm != null">"chbm" = #{chbm},</if>
+            <if test="pc != null">"pc" = #{pc},</if>
+            <if test="cj != null">"cj" = #{cj},</if>
+            <if test="lysm != null">"lysm" = #{lysm},</if>
+            <if test="pgsj != null">"pgsj" = #{pgsj},</if>
+            <if test="jhkssj != null">"jhkssj" = #{jhkssj},</if>
+            <if test="jhwcsj != null">"jhwcsj" = #{jhwcsj},</if>
+            <if test="sjwcsj != null">"sjwcsj" = #{sjwcsj},</if>
+            <if test="ddsl != null">"ddsl" = #{ddsl},</if>
+            <if test="zzsl != null">"zzsl" = #{zzsl},</if>
+            <if test="qrsl != null">"qrsl" = #{qrsl},</if>
+            <if test="bfsl != null">"bfsl" = #{bfsl},</if>
+            <if test="llsl != null">"llsl" = #{llsl},</if>
+            <if test="jksl != null">"jksl" = #{jksl},</if>
+            <if test="cpsl != null">"cpsl" = #{cpsl},</if>
+            <if test="fgfxsl != null">"fgfxsl" = #{fgfxsl},</if>
+            <if test="cpsm != null">"cpsm" = #{cpsm},</if>
+            <if test="jysl != null">"jysl" = #{jysl},</if>
+            <if test="bhgpsl != null">"bhgpsl" = #{bhgpsl},</if>
+            <if test="qr != null">"qr" = #{qr},</if>
+            <if test="qrjl != null">"qrjl" = #{qrjl},</if>
+            <if test="js != null">"js" = #{js},</if>
+            <if test="xtkz != null">"xtkz" = #{xtkz},</if>
+            <if test="ddzt != null">"ddzt" = #{ddzt},</if>
+            <if test="sfyw != null">"sfyw" = #{sfyw},</if>
+            <if test="mlxtbm != null">"mlxtbm" = #{mlxtbm},</if>
+            <if test="rybh != null">"rybh" = #{rybh},</if>
+            <if test="kw != null">"kw" = #{kw},</if>
+            <if test="sfjj != null">"sfjj" = #{sfjj},</if>
+            <if test="tqsl != null">"tqsl" = #{tqsl},</if>
+            <if test="sfzg != null">"sfzg" = #{sfzg},</if>
+            <if test="sfwx != null">"sfwx" = #{sfwx},</if>
+            <if test="fc != null">"fc" = #{fc},</if>
+            <if test="cqzt != null">"cqzt" = #{cqzt},</if>
+            <if test="jhlx != null">"jhlx" = #{jhlx},</if>
+            <if test="gxxsysj != null">"gxxsysj" = #{gxxsysj},</if>
+            <if test="jgdy != null">"jgdy" = #{jgdy},</if>
+            <if test="sfxygz != null">"sfxygz" = #{sfxygz},</if>
+            <if test="sbbm != null">"sbbm" = #{sbbm},</if>
+            <if test="gd != null">"gd" = #{gd},</if>
+            <if test="fj != null">"fj" = #{fj},</if>
+        </trim>
+        where ID = #{ID}
+    </update>
+    <update id="updateDaDdgylxList" parameterType="com.ruoyi.project.pc.domain.DaDdgylx">
+        update da_ddgylx set "jhkssj" =#{jhkssj}, "jhwcsj" = #{jhwcsj}
+        where ID = #{ID}
+    </update>
+
+    <delete id="deleteDaDdgylxById" parameterType="String">
+        delete from da_ddgylx where ID = #{ID}
+    </delete>
+
+    <delete id="deleteDaDdgylxByIds" parameterType="String">
+        delete from da_ddgylx where ID in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.pc.mapper.DaLzjscddMapper">
+
+    <resultMap type="com.ruoyi.project.pc.domain.DaLzjscdd" id="DaLzjscddResult">
+        <result property="id"    column="ID"/>
+        <result property="lzjh"    column="lzjh"/>
+        <result property="lzjmc"    column="lzjmc"/>
+        <result property="scddh"    column="scddh"/>
+        <result property="sfwx"    column="sfwx"/>
+        <result property="pc"    column="pc"/>
+        <result property="yqjfrq"    column="yqjfrq"/>
+        <result property="ddsl"    column="ddsl"/>
+        <result property="zzsl"    column="zzsl"/>
+        <result property="zzpzt"    column="zzpzt"/>
+        <result property="yjwcsj"    column="yjwcsj"/>
+        <result property="wgsl"    column="wgsl"/>
+        <result property="sjwcsj"    column="sjwcsj"/>
+        <result property="cjrq"    column="cjrq"/>
+    </resultMap>
+
+    <sql id="selectDaLzjscddVo">
+        select "ID", "lzjh", "lzjmc", "scddh", "sfwx", "pc", "yqjfrq", "ddsl", "zzsl", "zzpzt", "yjwcsj", "wgsl", "sjwcsj", "cjrq" from da_lzjscdd
+    </sql>
+
+    <select id="selectDaLzjscddList" parameterType="com.ruoyi.project.pc.domain.DaLzjscdd" resultMap="DaLzjscddResult">
+        <include refid="selectDaLzjscddVo"/>
+        <where>
+            <if test="lzjh != null  and lzjh != ''"> and "lzjh" like concat(concat('%', #{lzjh}), '%')</if>
+            <if test="lzjmc != null  and lzjmc != ''"> and "lzjmc" like concat(concat('%', #{lzjmc}), '%')</if>
+            <if test="scddh != null  and scddh != ''"> and "scddh" like concat(concat('%', #{scddh}), '%')</if>
+            <if test="sfwx != null  and sfwx != ''"> and "sfwx" = #{sfwx}</if>
+            <if test="pc != null  and pc != ''"> and "pc" = #{pc}</if>
+            <if test="yqjfrq != null "> and "yqjfrq" = #{yqjfrq}</if>
+            <if test="ddsl != null "> and "ddsl" = #{ddsl}</if>
+            <if test="zzsl != null "> and "zzsl" = #{zzsl}</if>
+            <if test="zzpzt != null  and zzpzt != ''"> and "zzpzt" = #{zzpzt}</if>
+            <if test="yjwcsj != null "> and "yjwcsj" = #{yjwcsj}</if>
+            <if test="wgsl != null "> and "wgsl" = #{wgsl}</if>
+            <if test="sjwcsj != null "> and "sjwcsj" = #{sjwcsj}</if>
+            <if test="cjrq != null "> and "cjrq" = #{cjrq}</if>
+        </where>
+    </select>
+
+    <select id="selectDaLzjscddById" parameterType="String" resultMap="DaLzjscddResult">
+        <include refid="selectDaLzjscddVo"/>
+        where ID = #{id}
+    </select>
+
+    <insert id="insertDaLzjscdd" parameterType="com.ruoyi.project.pc.domain.DaLzjscdd">
+        insert into da_lzjscdd
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">"ID",</if>
+            <if test="lzjh != null">"lzjh",</if>
+            <if test="lzjmc != null">"lzjmc",</if>
+            <if test="scddh != null">"scddh",</if>
+            <if test="sfwx != null">"sfwx",</if>
+            <if test="pc != null">"pc",</if>
+            <if test="yqjfrq != null">"yqjfrq",</if>
+            <if test="ddsl != null">"ddsl",</if>
+            <if test="zzsl != null">"zzsl",</if>
+            <if test="zzpzt != null">"zzpzt",</if>
+            <if test="yjwcsj != null">"yjwcsj",</if>
+            <if test="wgsl != null">"wgsl",</if>
+            <if test="sjwcsj != null">"sjwcsj",</if>
+            <if test="cjrq != null">"cjrq",</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="lzjh != null">#{lzjh},</if>
+            <if test="lzjmc != null">#{lzjmc},</if>
+            <if test="scddh != null">#{scddh},</if>
+            <if test="sfwx != null">#{sfwx},</if>
+            <if test="pc != null">#{pc},</if>
+            <if test="yqjfrq != null">#{yqjfrq},</if>
+            <if test="ddsl != null">#{ddsl},</if>
+            <if test="zzsl != null">#{zzsl},</if>
+            <if test="zzpzt != null">#{zzpzt},</if>
+            <if test="yjwcsj != null">#{yjwcsj},</if>
+            <if test="wgsl != null">#{wgsl},</if>
+            <if test="sjwcsj != null">#{sjwcsj},</if>
+            <if test="cjrq != null">#{cjrq},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDaLzjscdd" parameterType="com.ruoyi.project.pc.domain.DaLzjscdd">
+        update da_lzjscdd
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="lzjh != null">"lzjh" = #{lzjh},</if>
+            <if test="lzjmc != null">"lzjmc" = #{lzjmc},</if>
+            <if test="scddh != null">"scddh" = #{scddh},</if>
+            <if test="sfwx != null">"sfwx" = #{sfwx},</if>
+            <if test="pc != null">"pc" = #{pc},</if>
+            <if test="yqjfrq != null">"yqjfrq" = #{yqjfrq},</if>
+            <if test="ddsl != null">"ddsl" = #{ddsl},</if>
+            <if test="zzsl != null">"zzsl" = #{zzsl},</if>
+            <if test="zzpzt != null">"zzpzt" = #{zzpzt},</if>
+            <if test="yjwcsj != null">"yjwcsj" = #{yjwcsj},</if>
+            <if test="wgsl != null">"wgsl" = #{wgsl},</if>
+            <if test="sjwcsj != null">"sjwcsj" = #{sjwcsj},</if>
+            <if test="cjrq != null">"cjrq" = #{cjrq},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deleteDaLzjscddById" parameterType="String">
+        delete from da_lzjscdd where "ID" = #{id}
+    </delete>
+
+    <delete id="deleteDaLzjscddByIds" parameterType="String">
+        delete from da_lzjscdd where "ID" in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

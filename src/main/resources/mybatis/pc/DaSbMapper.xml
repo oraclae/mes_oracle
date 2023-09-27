@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.pc.mapper.DaSbMapper">
+
+    <resultMap type="com.ruoyi.project.pc.domain.DaSb" id="DaSbResult">
+        <result property="id"    column="ID"    />
+        <result property="sbbh"    column="sbbh"    />
+        <result property="sbmc"    column="sbmc"    />
+        <result property="sblb"    column="sblb"    />
+        <result property="ssbm"    column="ssbm"    />
+        <result property="sbbc"    column="sbbc"    />
+        <result property="sbys"    column="sbys"    />
+        <result property="gttxscx"    column="gttxscx"    />
+        <result property="zt"    column="zt"    />
+        <result property="bz"    column="bz"    />
+        <result property="sbbm"    column="sbbm"    />
+    </resultMap>
+
+    <sql id="selectDaSbVo">
+        select "ID", "sbbh", "sbmc", "sblb", "ssbm", "sbbc", "sbys", "gttxscx", "zt", "bz", "sbbm" from da_sb
+    </sql>
+
+    <select id="selectDaSbList" parameterType="com.ruoyi.project.pc.domain.DaSb" resultMap="DaSbResult">
+        <include refid="selectDaSbVo"/>
+        <where>
+            <if test="sbbh != null  and sbbh != ''"> and "sbbh" = #{sbbh}</if>
+            <if test="sbmc != null  and sbmc != ''"> and "sbmc" = #{sbmc}</if>
+            <if test="sblb != null  and sblb != ''"> and "sblb" = #{sblb}</if>
+            <if test="ssbm != null  and ssbm != ''"> and "ssbm" = #{ssbm}</if>
+            <if test="sbbc != null  and sbbc != ''"> and "sbbc" = #{sbbc}</if>
+            <if test="sbys != null  and sbys != ''"> and "sbys" = #{sbys}</if>
+            <if test="gttxscx != null  and gttxscx != ''"> and "gttxscx" = #{gttxscx}</if>
+            <if test="zt != null  and zt != ''"> and "zt" = #{zt}</if>
+            <if test="bz != null  and bz != ''"> and "bz" = #{bz}</if>
+            <if test="sbbm != null  and sbbm != ''"> and "sbbm" = #{sbbm}</if>
+        </where>
+    </select>
+
+    <select id="selectDaSbById" parameterType="String" resultMap="DaSbResult">
+        <include refid="selectDaSbVo"/>
+        where ID = #{id}
+    </select>
+
+    <insert id="insertDaSb" parameterType="com.ruoyi.project.pc.domain.DaSb">
+        insert into da_sb
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">"ID",</if>
+            <if test="sbbh != null">"sbbh",</if>
+            <if test="sbmc != null">"sbmc",</if>
+            <if test="sblb != null">"sblb",</if>
+            <if test="ssbm != null">"ssbm",</if>
+            <if test="sbbc != null">"sbbc",</if>
+            <if test="sbys != null">"sbys",</if>
+            <if test="gttxscx != null">"gttxscx",</if>
+            <if test="zt != null">"zt",</if>
+            <if test="bz != null">"bz",</if>
+            <if test="sbbm != null">"sbbm",</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="sbbh != null">#{sbbh},</if>
+            <if test="sbmc != null">#{sbmc},</if>
+            <if test="sblb != null">#{sblb},</if>
+            <if test="ssbm != null">#{ssbm},</if>
+            <if test="sbbc != null">#{sbbc},</if>
+            <if test="sbys != null">#{sbys},</if>
+            <if test="gttxscx != null">#{gttxscx},</if>
+            <if test="zt != null">#{zt},</if>
+            <if test="bz != null">#{bz},</if>
+            <if test="sbbm != null">#{sbbm},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDaSb" parameterType="com.ruoyi.project.pc.domain.DaSb">
+        update da_sb
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sbbh != null">"sbbh" = #{sbbh},</if>
+            <if test="sbmc != null">"sbmc" = #{sbmc},</if>
+            <if test="sblb != null">"sblb" = #{sblb},</if>
+            <if test="ssbm != null">"ssbm" = #{ssbm},</if>
+            <if test="sbbc != null">"sbbc" = #{sbbc},</if>
+            <if test="sbys != null">"sbys" = #{sbys},</if>
+            <if test="gttxscx != null">"gttxscx" = #{gttxscx},</if>
+            <if test="zt != null">"zt" = #{zt},</if>
+            <if test="bz != null">"bz" = #{bz},</if>
+            <if test="sbbm != null">"sbbm" = #{sbbm},</if>
+        </trim>
+        where ID = #{id}
+    </update>
+
+    <delete id="deleteDaSbById" parameterType="String">
+        delete from da_sb where ID = #{id}
+    </delete>
+
+    <delete id="deleteDaSbByIds" parameterType="String">
+        delete from da_sb where ID in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
