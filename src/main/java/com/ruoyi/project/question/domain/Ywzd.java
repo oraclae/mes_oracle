@@ -31,6 +31,9 @@ public class Ywzd {
     /** 序号 */
     private String XH;
 
+    /** 排序 */
+    private String PX;
+
     /** 请求参数 */
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Map<String, Object> params;

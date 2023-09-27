@@ -273,4 +273,29 @@ public interface QuestionMapper {
      * 修改回复数据的
      */
     void updatejhjlToHFFJ(@Param("qtbxh") String qtbxh,@Param("hffj") String hffj);
+
+    /**
+     * 通过问题id查询含有附件的交互记录
+     */
+    List<String> selectJhjlByWtidsAndHffj(List<String> ids);
+
+    /**
+     * 根据问题id删除关注数据
+     */
+    void deleteWtgzByWtid(@Param("ids") List<String> ids);
+
+    /**
+     * 根据问题id删除责任人
+     */
+    void deleteZrdbByIds(List<String> ids);
+
+    /**
+     * 根据问题id删除交互记录
+     */
+    void deleteJhjlByWtids(List<String> ids);
+
+    /**
+     * 根据id查询问题书否存在
+     */
+    int countQuestionById(String id);
 }

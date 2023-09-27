@@ -6,7 +6,9 @@
           <el-radio label="待办" class="el_radios_position">待办</el-radio>
           <el-radio label="已关闭" class="el_radios_position">已关闭</el-radio>
         </el-radio-group>
-        <el-button type="success" size="small" :disabled="single" @click="openDialog">回复/预览</el-button>
+        <el-button
+          :style="{background: 'linear-gradient(to bottom,'+(single?'#f902e680, #08ff0480':'#f902e6, #08ff04')+')',color: 'white'}"
+          size="small" :disabled="single" @click="openDialog">回复/预览</el-button>
         <el-button type="warning" size="small" @click="shuaxin">刷新</el-button>
         <el-select style="margin-left: 10px" v-model="queryParams.type" clearable placeholder="请选择">
           <el-option
@@ -44,182 +46,50 @@
             @cell-dblclick="cellClick"
             @row-dblclick="openDialog"
           >
-            <el-table-column
-              type="selection"
-              width="50"
-              :reserve-selection="true">
-            </el-table-column>
-            <el-table-column
-              label="序号"
-              type="index"
-              width="50">
-            </el-table-column>
-            <el-table-column
-              prop="wtbh"
-              label="问题编号"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="cjr"
-              label="人员"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="cjbm"
-              label="部门"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="wtmc"
-              label="问题名称"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="gxh"
-              label="工序号"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="cjsj"
-              label="问题创建时间"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="scddh"
-              label="生产订单号"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="cpxh"
-              label="产品型号"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="wtly"
-              label="问题来源"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="wtlb"
-              label="问题类别"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="wtxl"
-              label="问题细类"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="wtms"
-              label="问题描述"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="yzrbm"
-              label="阅知人部门"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="yzr"
-              label="阅知人"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="zycd"
-              label="重要程度"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="xwjjsj"
-              label="希望解决时间"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="wtzt"
-              label="问题状态"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="jssj"
-              label="接收时间"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="gzxt"
-              label="是否跟踪协同"
-              show-overflow-tooltip
-            >
+            <el-table-column type="selection" width="50" :reserve-selection="true"></el-table-column>
+            <el-table-column label="序号" type="index" width="50"></el-table-column>
+            <el-table-column show-overflow-tooltip width="120" prop="wtbh" label="问题编号" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="cjr" label="人员" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="cjbm" label="部门" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="80" prop="zycd" label="重要程度" align="center"/>
+            <el-table-column show-overflow-tooltip width="210" prop="wtmc" label="问题名称" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="wtly" label="问题来源" align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="wtlb" label="问题类别" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="wtxl" label="问题细类" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="310" prop="wtms" label="问题描述" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="wtzt" label="问题状态" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="yxcd" label="影响程度" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="gxh" label="工序号" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="scddh" label="生产订单号" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="cpxh" label="产品型号" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="jh" label="件号" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="pc" label="批次" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="sb" label="设备" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="yzrbm" label="阅知人部门" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="yzr" label="阅知人" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="155" prop="cjsj" label="问题创建时间" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="155" prop="xwjjsj" label="希望解决时间" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="155" prop="jssj" label="接收时间" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="155" prop="gbsj" label="关闭时间" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="lxfk" label="是否例行反馈" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="ldps" label="是否领导批示" header-align="center">
               <template slot-scope="scope">
-                <span >{{ scope.row.gzxt==='true'?'是':'否' }}</span>
+                <span>{{ scope.row.ldps === 'true' ? '是' : '否' }}</span>
               </template>
             </el-table-column>
-            <el-table-column
-              prop="gbsj"
-              label="关闭时间"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="lxfk"
-              label="是否例行反馈"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="pc"
-              label="批次"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="sb"
-              label="设备"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column
-              prop="xcphwt"
-              label="是否现场配合问题"
-              show-overflow-tooltip
-            >
+            <el-table-column show-overflow-tooltip width="135" prop="xcphwt" label="是否现场配合问题" header-align="center">
               <template slot-scope="scope">
-                <span >{{ scope.row.xcphwt==='true'?'是':'否' }}</span>
+                <span>{{ scope.row.xcphwt === 'true' ? '是' : '否' }}</span>
               </template>
             </el-table-column>
-            <el-table-column
-              prop="ldps"
-              label="是否领导批示"
-              show-overflow-tooltip
-            >
+            <el-table-column show-overflow-tooltip width="120" prop="gzxt" label="是否跟踪协同" header-align="center">
               <template slot-scope="scope">
-                <span >{{ scope.row.ldps==='true'?'是':'否' }}</span>
+                <span>{{ scope.row.gzxt === 'true' ? '是' : '否' }}</span>
               </template>
             </el-table-column>
-            <el-table-column
-              prop="scfj"
-              label="是否上传附件"
-              show-overflow-tooltip
-            >
+            <el-table-column show-overflow-tooltip width="120" prop="scfj" label="是否上传附件" header-align="center">
               <template slot-scope="scope">
-                <span >{{ scope.row.scfj==='true'?'是':'否' }}</span>
+                <span>{{ scope.row.scfj === 'true' ? '是' : '否' }}</span>
               </template>
             </el-table-column>
           </el-table>
@@ -230,6 +100,7 @@
           :page.sync="queryParams.pageNum"
           :limit.sync="queryParams.pageSize"
           @pagination="load"
+          :page-sizes="[20, 50, 100]"
         />
       </el-col>
     </el-row>
@@ -243,7 +114,7 @@
                   @closeDia="open = false" @changeWidth="changeDialogWidth"/>
     </el-dialog>
     <!--  上传问题的弹出框  -->
-    <el-dialog v-if="openScfj" @close="reload" class="xcssjyk" append-to-body title="上传附件" :visible.sync="openScfj" width="40%" append-to-body>
+    <el-dialog v-if="openScfj" @close="load" class="xcssjyk" append-to-body title="上传附件" :visible.sync="openScfj" width="40%" append-to-body>
       <fj v-if="openScfj" :fileList="fileList" :row="selectFj"></fj>
     </el-dialog>
   </div>
@@ -354,7 +225,7 @@ export default {
       // 查询参数
       queryParams: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 20,
         tName: null,
         tCode: null,
         tPid: null,

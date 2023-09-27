@@ -2,6 +2,8 @@ package com.ruoyi.project.system.service.impl;
 
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.framework.config.RuoYiConfig;
+import com.ruoyi.project.question.domain.WtxxDTO;
+import com.ruoyi.project.question.domain.vo.Sjjh;
 import com.ruoyi.project.question.mapper.QuestionMapper;
 import com.ruoyi.project.system.domain.SysUser;
 import com.ruoyi.project.system.domain.ZhYwFj;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -65,9 +68,17 @@ public class ZhYwFjServiceImpl implements IZhYwFjService {
     public int insertZhYwFj(ZhYwFj zhYwFj) {
         SysUser sysUser = sysUserMapper.selectUserById(SecurityUtils.getUserId());
         zhYwFj.setXh(UUID.randomUUID().toString());
+        String wtid = zhYwFj.getId();
         if ("回复数据".equals(zhYwFj.getType())) {
             questionMapper.updatejhjlToHFFJ(zhYwFj.getId(),"是");
+            Sjjh sjjh = questionMapper.selectJhjlByXh(zhYwFj.getId());
+            wtid = sjjh.getWTID();
         }
+        //修改问题的上传附件状态
+        WtxxDTO wtxxDTO = new WtxxDTO();
+        wtxxDTO.setID(wtid);
+        wtxxDTO.setSCFJ("true");
+        questionMapper.updateQuestion(wtxxDTO);
         zhYwFj.setScsj(new Date());
         zhYwFj.setCjr(sysUser.getNickName());
         zhYwFj.setCjrid(sysUser.getUserId().toString());
@@ -102,12 +113,38 @@ public class ZhYwFjServiceImpl implements IZhYwFjService {
             if (file.isFile()) {
                 boolean delete = file.delete();
                 if (delete) {
-                    //修改交互记录  删除附件
-                    String qtbxh = zhYwFjMapper.selectQtbxhByXh(xhs[0]);
+                    //删除数据库附件
                     zhYwFjMapper.deleteZhYwFjByXhs(xhs);
-                    int num = zhYwFjMapper.countByXhs(qtbxh);
-                    if (num < 1) {
-                        questionMapper.updatejhjlToHFFJ(qtbxh, "否");
+                    //判断删除的是问题附件还是交互记录附件
+                    int questionNum = questionMapper.countQuestionById(zhYwFj.getId());
+                    Sjjh sjjh = questionMapper.selectJhjlByXh(zhYwFj.getId());
+                    //如果是问题管理的附件删除
+                    if (questionNum != 0 || sjjh != null) {
+                        /*获取问题id*/
+                        String wtid = zhYwFj.getId();
+                        //通过其他表序号查询附件数量
+                        int num = zhYwFjMapper.countByXhs(zhYwFj.getId());
+                        //如果删除的是交互记录的附件
+                        if (sjjh != null) {
+                            //如果没有其他附件了则将交互记录的hffj改为否
+                            if (num < 1) {
+                                questionMapper.updatejhjlToHFFJ(zhYwFj.getId(), "否");
+                            }
+                            //获取问题id
+                            wtid = sjjh.getWTID();
+                        }
+
+                        //获取当前问题下交互记录有附件的序号判断数量
+                        List<String> ids = new ArrayList<>();
+                        ids.add(wtid);
+                        List<String> jhjlXhs = questionMapper.selectJhjlByWtidsAndHffj(ids);
+                        //如果没有附件则改变问题附件为false
+                        if (jhjlXhs.size() == 0 && num == 0) {
+                            WtxxDTO wtxxDTO = new WtxxDTO();
+                            wtxxDTO.setID(wtid);
+                            wtxxDTO.setSCFJ("false");
+                            questionMapper.updateQuestion(wtxxDTO);
+                        }
                     }
                     return 1;
                 } else {

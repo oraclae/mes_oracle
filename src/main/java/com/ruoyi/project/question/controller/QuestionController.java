@@ -95,9 +95,9 @@ public class QuestionController extends BaseController {
      * 批量删除问题数据
      */
     @PostMapping("/myquestion/deleteQuestions")
-    public AjaxResult deleteQuestions(@RequestBody List<String> ids) {
-        questionService.deleteQuestions(ids);
-        return AjaxResult.success("删除成功");
+    public TableDataInfo deleteQuestions(@RequestBody List<String> ids) {
+        List<String> list = questionService.deleteQuestions(ids);
+        return getDataTable(list);
     }
 
     /**
@@ -297,7 +297,7 @@ public class QuestionController extends BaseController {
         wtxxVo.setBHSJ(format);
         wtxxDTOS.add(wtxxVo);
         questionService.updateQuestions(wtxxDTOS);
-        questionService.closedLoop(zrrVO.getXH());
+        questionService.closedLoop(zrrVO);
         return AjaxResult.success("责任人闭环成功");
     }
 

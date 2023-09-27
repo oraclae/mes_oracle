@@ -27,6 +27,7 @@ public class SjjhDTO {
    private String WTBT;       //问题标题
    private String WTID;       //问题ID
    private String HFR;        //回复人
+   private String HFRID;        //回复人id
    private String WTCJID;     //问题创建人ID
    private String WTCJR;      //问题创建人
    private String WTCJBM;     //问题创建部门

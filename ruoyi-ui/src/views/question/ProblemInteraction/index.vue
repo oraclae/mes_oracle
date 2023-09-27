@@ -4,10 +4,12 @@
       <!--用户数据-->
       <el-col :span="20" :xs="24">
         <el-radio-group v-model="queryParams.radios" @change="changeRadio">
-          <el-radio label="待办" class="el_radios_position">待办</el-radio>
+          <el-radio label="处理中" class="el_radios_position">处理中</el-radio>
           <el-radio label="已关闭" class="el_radios_position">已关闭</el-radio>
         </el-radio-group>
-        <el-button type="success" size="small" :disabled="single" @click="openDialog">回复/预览</el-button>
+        <el-button
+          :style="{background: 'linear-gradient(to bottom,'+(single?'#f902e680, #08ff0480':'#f902e6, #08ff04')+')',color: 'white'}"
+          size="small" :disabled="single" @click="openDialog">回复/预览</el-button>
         <el-button type="success" size="small" :disabled="multiple" @click="problemConcern">问题关注</el-button>
         <el-button type="warning" size="small" @click="shuaxin">刷新</el-button>
         <!--        <el-button type="primary" size="small" @click="saveData">保存</el-button>-->
@@ -50,301 +52,50 @@
             border
             @row-dblclick="openDialog"
           >
-            <el-table-column
-              type="selection"
-              width="50"
-              :reserve-selection="true">
-            </el-table-column>
-            <el-table-column
-              label="序号"
-              type="index"
-              width="50">
-            </el-table-column>
-            <el-table-column
-              prop="wtbh"
-              label="问题编号"
-              show-overflow-tooltip
-            >
+            <el-table-column type="selection" width="50" :reserve-selection="true"></el-table-column>
+            <el-table-column label="序号" type="index" width="50"/>
+            <el-table-column show-overflow-tooltip width="120" prop="wtbh" label="问题编号" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="cjr" label="人员" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="cjbm" label="部门" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="80" prop="zycd" label="重要程度" align="center"/>
+            <el-table-column show-overflow-tooltip width="210" prop="wtmc" label="问题名称" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="wtly" label="问题来源" align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="wtlb" label="问题类别" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="wtxl" label="问题细类" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="310" prop="wtms" label="问题描述" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="wtzt" label="问题状态" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="yxcd" label="影响程度" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="gxh" label="工序号" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="scddh" label="生产订单号" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="cpxh" label="产品型号" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="jh" label="件号" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="pc" label="批次" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="sb" label="设备" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="yzrbm" label="阅知人部门" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="yzr" label="阅知人" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="155" prop="cjsj" label="问题创建时间" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="155" prop="xwjjsj" label="希望解决时间" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="155" prop="jssj" label="接收时间" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="155" prop="gbsj" label="关闭时间" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="lxfk" label="是否例行反馈" header-align="center"/>
+            <el-table-column show-overflow-tooltip width="120" prop="ldps" label="是否领导批示" header-align="center">
               <template slot-scope="scope">
-                <!--              <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'wtbh'"-->
-                <!--                        v-model="scope.row.wtbh" @blur="inputBlur(scope)"></el-input>-->
-                <span>{{ scope.row.wtbh }}</span>
+                <span>{{ scope.row.ldps === 'true' ? '是' : '否' }}</span>
               </template>
             </el-table-column>
-            <el-table-column
-              prop="cjr"
-              label="人员"
-              show-overflow-tooltip
-            >
+            <el-table-column show-overflow-tooltip width="135" prop="xcphwt" label="是否现场配合问题" header-align="center">
               <template slot-scope="scope">
-                <!--              <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'cjr'"-->
-                <!--                        v-model="scope.row.cjr" @blur="inputBlur(scope)"></el-input>-->
-                <span>{{ scope.row.cjr }}</span>
+                <span>{{ scope.row.xcphwt === 'true' ? '是' : '否' }}</span>
               </template>
             </el-table-column>
-            <el-table-column
-              prop="cjbm"
-              label="部门"
-              show-overflow-tooltip
-            >
+            <el-table-column show-overflow-tooltip width="120" prop="gzxt" label="是否跟踪协同" header-align="center">
               <template slot-scope="scope">
-                <!--              <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'cjbm'"-->
-                <!--                        v-model="scope.row.cjbm" @blur="inputBlur(scope)"></el-input>-->
-                <span>{{ scope.row.cjbm}}</span>
+                <span>{{ scope.row.gzxt === 'true' ? '是' : '否' }}</span>
               </template>
             </el-table-column>
-            <el-table-column
-              prop="wtmc"
-              label="问题名称"
-              show-overflow-tooltip
-            >
+            <el-table-column show-overflow-tooltip width="120" prop="scfj" label="是否上传附件" header-align="center">
               <template slot-scope="scope">
-                <!--              <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'wtmc'"-->
-                <!--                        v-model="scope.row.wtmc" @blur="inputBlur(scope)"></el-input>-->
-                <span>{{ scope.row.wtmc }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="gxh"
-              label="工序号"
-              show-overflow-tooltip
-            >
-              <template slot-scope="scope">
-                <!--              <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'gxh'"-->
-                <!--                        v-model="scope.row.gxh" @blur="inputBlur(scope)"></el-input>-->
-                <span>{{ scope.row.gxh }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="cjsj"
-              label="问题创建时间"
-              show-overflow-tooltip
-            >
-              <template slot-scope="scope">
-                <!--              <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'cjsj'"-->
-                <!--                        v-model="scope.row.cjsj" @blur="inputBlur(scope)"></el-input>-->
-                <span>{{ scope.row.cjsj }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="scddh"
-              label="生产订单号"
-              show-overflow-tooltip
-            >
-              <template slot-scope="scope">
-                <!--              <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'scddh'"-->
-                <!--                        v-model="scope.row.scddh" @blur="inputBlur(scope)"></el-input>-->
-                <span>{{ scope.row.scddh }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="cpxh"
-              label="产品型号"
-              show-overflow-tooltip
-            >
-              <template slot-scope="scope">
-                <!--              <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'cpxh'"-->
-                <!--                        v-model="scope.row.cpxh" @blur="inputBlur(scope)"></el-input>-->
-                <span>{{ scope.row.cpxh }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="wtly"
-              label="问题来源"
-              show-overflow-tooltip
-            >
-              <template slot-scope="scope">
-                <!--              <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'wtly'"-->
-                <!--                        v-model="scope.row.wtly" @blur="inputBlur(scope)"></el-input>-->
-                <span>{{ scope.row.wtly }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="wtlb"
-              label="问题类别"
-              show-overflow-tooltip
-            >
-              <template slot-scope="scope">
-                <!--              <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'wtlb'"-->
-                <!--                        v-model="scope.row.wtlb" @blur="inputBlur(scope)"></el-input>-->
-                <span>{{ scope.row.wtlb }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="wtxl"
-              label="问题细类"
-              show-overflow-tooltip
-            >
-              <template slot-scope="scope">
-                <!--              <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'wtxl'"-->
-                <!--                        v-model="scope.row.wtxl" @blur="inputBlur(scope)"></el-input>-->
-                <span>{{ scope.row.wtxl }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="wtms"
-              label="问题描述"
-              show-overflow-tooltip
-            >
-              <template slot-scope="scope">
-                <!--              <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'wtms'"-->
-                <!--                        v-model="scope.row.wtms" @blur="inputBlur(scope)"></el-input>-->
-                <span>{{ scope.row.wtms }}</span>
-              </template>
-            </el-table-column>
-
-            <el-table-column
-              prop="yzrbm"
-              label="阅知人部门"
-              show-overflow-tooltip
-            >
-              <template slot-scope="scope">
-                <!--              <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'yzrbm'"-->
-                <!--                        v-model="scope.row.yzrbm" @blur="inputBlur(scope)"></el-input>-->
-                <span>{{ scope.row.yzrbm }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="yzr"
-              label="阅知人"
-              show-overflow-tooltip
-            >
-              <template slot-scope="scope">
-                <!--              <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'yzr'"-->
-                <!--                        v-model="scope.row.yzr" @blur="inputBlur(scope)"></el-input>-->
-                <span>{{ scope.row.yzr }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="zycd"
-              label="重要程度"
-              show-overflow-tooltip
-            >
-              <template slot-scope="scope">
-                <!--              <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'zycd'"-->
-                <!--                        v-model="scope.row.zycd" @blur="inputBlur(scope)"></el-input>-->
-                <span>{{ scope.row.zycd }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="xwjjsj"
-              label="希望解决时间"
-              show-overflow-tooltip
-            >
-              <template slot-scope="scope">
-                <!--              <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'xwjjsj'"-->
-                <!--                        v-model="scope.row.xwjjsj" @blur="inputBlur(scope)"></el-input>-->
-                <span>{{ scope.row.xwjjsj }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="wtzt"
-              label="问题状态"
-              show-overflow-tooltip
-            >
-              <template slot-scope="scope">
-                <!--              <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'wtzt'"-->
-                <!--                        v-model="scope.row.wtzt" @blur="inputBlur(scope)"></el-input>-->
-                <span>{{ scope.row.wtzt }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="jssj"
-              label="接收时间"
-              show-overflow-tooltip
-            >
-              <template slot-scope="scope">
-                <!--              <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'jssj'"-->
-                <!--                        v-model="scope.row.jssj" @blur="inputBlur(scope)"></el-input>-->
-                <span>{{ scope.row.jssj }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="gzxt"
-              label="是否跟踪协同"
-              show-overflow-tooltip
-            >
-              <template slot-scope="scope">
-                <!--              <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'gzxt'"-->
-                <!--                        v-model="scope.row.gzxt" @blur="inputBlur(scope)"></el-input>-->
-                <span>{{ scope.row.gzxt==='true'?'是':'否' }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="gbsj"
-              label="关闭时间"
-              show-overflow-tooltip
-            >
-              <template slot-scope="scope">
-                <!--              <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'gbsj'"-->
-                <!--                        v-model="scope.row.gbsj" @blur="inputBlur(scope)"></el-input>-->
-                <span>{{ scope.row.gbsj }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="lxfk"
-              label="是否例行反馈"
-              show-overflow-tooltip
-            >
-              <template slot-scope="scope">
-                <!--              <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'lxfk'"-->
-                <!--                        v-model="scope.row.lxfk" @blur="inputBlur(scope)"></el-input>-->
-                <span>{{ scope.row.lxfk }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="pc"
-              label="批次"
-              show-overflow-tooltip
-            >
-              <template slot-scope="scope">
-                <!--              <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'pc'"-->
-                <!--                        v-model="scope.row.pc" @blur="inputBlur(scope)"></el-input>-->
-                <span>{{ scope.row.pc }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="sb"
-              label="设备"
-              show-overflow-tooltip
-            >
-              <template slot-scope="scope">
-                <!--              <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'sb'"-->
-                <!--                        v-model="scope.row.sb" @blur="inputBlur(scope)"></el-input>-->
-                <span>{{ scope.row.sb }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="xcphwt"
-              label="是否现场配合问题"
-              show-overflow-tooltip
-            >
-              <template slot-scope="scope">
-                <!--              <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'xcphwt'"-->
-                <!--                        v-model="scope.row.xcphwt" @blur="inputBlur(scope)"></el-input>-->
-                <span>{{ scope.row.xcphwt==='true'?'是':'否' }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="ldps"
-              label="是否领导批示"
-              show-overflow-tooltip
-            >
-              <template slot-scope="scope">
-                <!--              <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'ldps'"-->
-                <!--                        v-model="scope.row.ldps" @blur="inputBlur(scope)"></el-input>-->
-                <span>{{ scope.row.ldps==='true'?'是':'否' }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="scfj"
-              label="是否上传附件"
-              show-overflow-tooltip
-            >
-              <template slot-scope="scope">
-                <!--              <el-input v-if="editing && scope.$index === editingIndex && editingProperty === 'scfj'"-->
-                <!--                        v-model="scope.row.scfj" @blur="inputBlur(scope)"></el-input>-->
-                <span>{{ scope.row.scfj==='true'?'是':'否' }}</span>
+                <span>{{ scope.row.scfj === 'true' ? '是' : '否' }}</span>
               </template>
             </el-table-column>
           </el-table>
@@ -401,7 +152,7 @@
       </div>
     </el-dialog>
     <!--  上传问题的弹出框  -->
-    <el-dialog v-if="openScfj" @close="reload" class="xcssjyk" append-to-body title="上传附件" :visible.sync="openScfj" width="40%" append-to-body>
+    <el-dialog v-if="openScfj" @close="load" class="xcssjyk" append-to-body title="上传附件" :visible.sync="openScfj" width="40%" append-to-body>
       <fj v-if="openScfj" :fileList="fileList" :row="selectFj"></fj>
     </el-dialog>
   </div>

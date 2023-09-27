@@ -57,244 +57,30 @@
     <el-table border v-loading="loading" :data="upCjlsList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="序号" type="index" width="50"/>
-      <el-table-column width="110px" label="创建部门科室" align="center" prop="cjbmks" />
-      <el-table-column label="创建时间" align="center" prop="cjsj" width="110">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.CJSJ, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column show-overflow-tooltip width="100px" label="问题名称" align="center" prop="wtmc" />
-      <el-table-column show-overflow-tooltip width="100px" label="问题状态" align="center" prop="wtzt" />
-      <el-table-column show-overflow-tooltip width="100px" label="问题类别" align="center" prop="wtlb" />
-      <el-table-column show-overflow-tooltip width="100px" label="问题细类" align="center" prop="wtxl" />
-      <el-table-column show-overflow-tooltip width="110px" label="生产订单号" align="center" prop="scddh" />
-      <el-table-column show-overflow-tooltip width="100px" label="产品型号" align="center" prop="jh" />
-      <el-table-column show-overflow-tooltip width="100px" label="班产日期" align="center" prop="bcrq" />
-      <el-table-column show-overflow-tooltip width="100px" label="批次" align="center" prop="pc" />
-      <el-table-column show-overflow-tooltip width="100px" label="工序号" align="center" prop="gxh" />
-      <el-table-column show-overflow-tooltip width="100px" label="工序名称" align="center" prop="gxmc" />
-      <el-table-column show-overflow-tooltip width="100px" label="问题描述" align="center" prop="wtms" />
-      <el-table-column show-overflow-tooltip width="100px" label="设备型号" align="center" prop="sbxh" />
-      <el-table-column show-overflow-tooltip width="100px" label="提报人" align="center" prop="tbr" />
-      <el-table-column show-overflow-tooltip width="110px" label="被叫责任科室" align="center" prop="bjzrks" />
-      <el-table-column show-overflow-tooltip width="100px" label="被叫人" align="center" prop="bjzrr" />
-      <el-table-column show-overflow-tooltip width="120px" label="提报-接收时间" align="center" prop="tbjssj" />
-      <el-table-column show-overflow-tooltip width="120px" label="提报-当前时间" align="center" prop="tbdqst" />
-      <el-table-column show-overflow-tooltip width="100px" label="接收人" align="center" prop="jsr" />
-      <el-table-column show-overflow-tooltip width="100px" label="解决方案" align="center" prop="jjfa" />
-      <el-table-column show-overflow-tooltip width="100px" label="是否满意" align="center" prop="sfmy" />
-      <el-table-column show-overflow-tooltip width="100px" label="提报人ID" align="center" prop="tbrid" />
-      <el-table-column show-overflow-tooltip width="100px" label="被叫人ID" align="center" prop="bjrid" />
-      <el-table-column show-overflow-tooltip width="100px" label="接收人ID" align="center" prop="jsrid" />
+      <el-table-column show-overflow-tooltip width="110" prop="cjbmks" label="创建部门科室" header-align="center" />
+      <el-table-column show-overflow-tooltip width="110" prop="cjsj" label="创建时间" header-align="center" />
+      <el-table-column show-overflow-tooltip width="120" prop="jjfa" label="解决方案" header-align="center" />
+      <el-table-column show-overflow-tooltip width="120" prop="wtmc" label="问题名称" header-align="center" />
+      <el-table-column show-overflow-tooltip width="120" prop="wtzt" label="问题状态" header-align="center" />
+      <el-table-column show-overflow-tooltip width="120" prop="wtlb" label="问题类别" header-align="center" />
+      <el-table-column show-overflow-tooltip width="120" prop="wtxl" label="问题细类" header-align="center" />
+      <el-table-column show-overflow-tooltip width="120" prop="wtms" label="问题描述" header-align="center" />
+      <el-table-column show-overflow-tooltip width="110" prop="scddh" label="生产订单号" header-align="center" />
+      <el-table-column show-overflow-tooltip width="120" prop="cpxh" label="产品型号" header-align="center" />
+      <el-table-column show-overflow-tooltip width="120" prop="jh" label="件号" header-align="center" />
+      <el-table-column show-overflow-tooltip width="120" prop="bcrq" label="班产日期" header-align="center" />
+      <el-table-column show-overflow-tooltip width="120" prop="pc" label="批次" header-align="center" />
+      <el-table-column show-overflow-tooltip width="120" prop="gxh" label="工序号" header-align="center" />
+      <el-table-column show-overflow-tooltip width="120" prop="gxmc" label="工序名称" header-align="center" />
+      <el-table-column show-overflow-tooltip width="120" prop="sbxh" label="设备型号" header-align="center" />
+      <el-table-column show-overflow-tooltip width="120" prop="tbr" label="提报人" header-align="center" />
+      <el-table-column show-overflow-tooltip width="110" prop="bjzrks" label="被叫责任科室" header-align="center" />
+      <el-table-column show-overflow-tooltip width="120" prop="bjzrr" label="被叫人" header-align="center" />
+      <el-table-column show-overflow-tooltip width="120" prop="tbjssj" label="提报-接收时间" header-align="center" />
+      <el-table-column show-overflow-tooltip width="120" prop="tbdqst" label="提报-当前时间" header-align="center" />
+      <el-table-column show-overflow-tooltip width="120" prop="jsr" label="接收人" header-align="center" />
+      <el-table-column show-overflow-tooltip width="120" prop="sfmy" label="是否满意" header-align="center" />
     </el-table>
-
-    <!--      <el-table border v-loading="loading" :data="upCjlsList" @selection-change="handleSelectionChange"
-                    :cell-class-name=tableRowClassName
-                    @cell-dblclick="celldblClick">
-            <el-table-column type="selection" width="55" align="center"/>
-            <el-table-column
-              label="序号"
-              type="index"
-              width="50">
-            </el-table-column>
-            <el-table-column show-overflow-tooltip width="100px" label="创建部门科室" align="center" prop="cjbmks">
-              <template slot-scope="scope">
-                <el-input v-if="entityIndex === scope.$index && entityName === 'cjbmks'"
-                          v-model="scope.row.cjbmks"
-                          @blur="out(scope)"/>
-                <span v-else>{{ scope.row.cjbmks }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column show-overflow-tooltip label="创建时间" align="center" prop="cjsj" width="120px">
-              <template slot-scope="scope">
-                <span>{{ parseTime(scope.row.cjsj, '{y}-{m}-{d}') }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column show-overflow-tooltip label="问题名称" align="center" prop="wtmc">
-              <template slot-scope="scope">
-                <el-input v-if="entityIndex === scope.$index && entityName === 'wtmc'"
-                          v-model="scope.row.wtmc"
-                          @blur="out(scope)"/>
-                <span v-else>{{ scope.row.wtmc }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column show-overflow-tooltip label="问题状态" align="center" prop="wtzt">
-              <template slot-scope="scope">
-                <el-input v-if="entityIndex === scope.$index && entityName === 'wtzt'"
-                          v-model="scope.row.wtzt"
-                          @blur="out(scope)"/>
-                <span v-else>{{ scope.row.wtzt }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column show-overflow-tooltip label="问题类别" align="center" prop="wtlb">
-              <template slot-scope="scope">
-                <el-input v-if="entityIndex === scope.$index && entityName === 'wtlb'"
-                          v-model="scope.row.wtlb"
-                          @blur="out(scope)"/>
-                <span v-else>{{ scope.row.wtlb }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column show-overflow-tooltip label="问题细类" align="center" prop="wtxl">
-              <template slot-scope="scope">
-                <el-input v-if="entityIndex === scope.$index && entityName === 'wtxl'"
-                          v-model="scope.row.wtxl"
-                          @blur="out(scope)"/>
-                <span v-else>{{ scope.row.wtxl }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column show-overflow-tooltip width="100px" label="生产订单号" align="center" prop="scddh">
-              <template slot-scope="scope">
-                <el-input v-if="entityIndex === scope.$index && entityName === 'scddh'"
-                          v-model="scope.row.scddh"
-                          @blur="out(scope)"/>
-                <span v-else>{{ scope.row.scddh }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column show-overflow-tooltip label="产品型号" align="center" prop="jh">
-              <template slot-scope="scope">
-                <el-input v-if="entityIndex === scope.$index && entityName === 'jh'"
-                          v-model="scope.row.jh"
-                          @blur="out(scope)"/>
-                <span v-else>{{ scope.row.jh }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column show-overflow-tooltip label="班产日期" align="center" prop="bcrq">
-              <template slot-scope="scope">
-                <el-input v-if="entityIndex === scope.$index && entityName === 'bcrq'"
-                          v-model="scope.row.bcrq"
-                          @blur="out(scope)"/>
-                <span v-else>{{ scope.row.bcrq }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column show-overflow-tooltip label="批次" align="center" prop="pc">
-              <template slot-scope="scope">
-                <el-input v-if="entityIndex === scope.$index && entityName === 'pc'"
-                          v-model="scope.row.pc"
-                          @blur="out(scope)"/>
-                <span v-else>{{ scope.row.pc }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column show-overflow-tooltip label="工序号" align="center" prop="gxh">
-              <template slot-scope="scope">
-                <el-input v-if="entityIndex === scope.$index && entityName === 'gxh'"
-                          v-model="scope.row.gxh"
-                          @blur="out(scope)"/>
-                <span v-else>{{ scope.row.gxh }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column show-overflow-tooltip label="工序名称" align="center" prop="gxmc">
-              <template slot-scope="scope">
-                <el-input v-if="entityIndex === scope.$index && entityName === 'gxmc'"
-                          v-model="scope.row.gxmc"
-                          @blur="out(scope)"/>
-                <span v-else>{{ scope.row.gxmc }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column show-overflow-tooltip label="问题描述" align="center" prop="wtms">
-              <template slot-scope="scope">
-                <el-input v-if="entityIndex === scope.$index && entityName === 'wtms'"
-                          v-model="scope.row.wtms"
-                          @blur="out(scope)"/>
-                <span v-else>{{ scope.row.wtms }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column show-overflow-tooltip label="设备型号" align="center" prop="sbxh">
-              <template slot-scope="scope">
-                <el-input v-if="entityIndex === scope.$index && entityName === 'sbxh'"
-                          v-model="scope.row.sbxh"
-                          @blur="out(scope)"/>
-                <span v-else>{{ scope.row.sbxh }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column show-overflow-tooltip label="提报人" align="center" prop="tbr">
-              <template slot-scope="scope">
-                <el-input v-if="entityIndex === scope.$index && entityName === 'tbr'"
-                          v-model="scope.row.tbr"
-                          @blur="out(scope)"/>
-                <span v-else>{{ scope.row.tbr }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column show-overflow-tooltip width="100px" label="被叫责任科室" align="center" prop="bjzrks">
-              <template slot-scope="scope">
-                <el-input v-if="entityIndex === scope.$index && entityName === 'bjzrks'"
-                          v-model="scope.row.bjzrks"
-                          @blur="out(scope)"/>
-                <span v-else>{{ scope.row.bjzrks }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column show-overflow-tooltip label="被叫人" align="center" prop="bjzrr">
-              <template slot-scope="scope">
-                <el-input v-if="entityIndex === scope.$index && entityName === 'bjzrr'"
-                          v-model="scope.row.bjzrr"
-                          @blur="out(scope)"/>
-                <span v-else>{{ scope.row.bjzrr }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column show-overflow-tooltip width="120px" label="提报-接收时间" align="center" prop="tbjssj">
-              <template slot-scope="scope">
-                <el-input v-if="entityIndex === scope.$index && entityName === 'tbjssj'"
-                          v-model="scope.row.tbjssj"
-                          @blur="out(scope)"/>
-                <span v-else>{{ scope.row.tbjssj }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column show-overflow-tooltip width="120px" label="提报-当前时间" align="center" prop="tbdqst">
-              <template slot-scope="scope">
-                <el-input v-if="entityIndex === scope.$index && entityName === 'tbdqst'"
-                          v-model="scope.row.tbdqst"
-                          @blur="out(scope)"/>
-                <span v-else>{{ scope.row.tbdqst }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column show-overflow-tooltip label="接收人" align="center" prop="jsr">
-              <template slot-scope="scope">
-                <el-input v-if="entityIndex === scope.$index && entityName === 'jsr'"
-                          v-model="scope.row.jsr"
-                          @blur="out(scope)"/>
-                <span v-else>{{ scope.row.jsr }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column show-overflow-tooltip label="解决方案" align="center" prop="jjfa">
-              <template slot-scope="scope">
-                <el-input v-if="entityIndex === scope.$index && entityName === 'jjfa'"
-                          v-model="scope.row.jjfa"
-                          @blur="out(scope)"/>
-                <span v-else>{{ scope.row.jjfa }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column show-overflow-tooltip label="是否满意" align="center" prop="sfmy">
-              <template slot-scope="scope">
-                <el-input v-if="entityIndex === scope.$index && entityName === 'sfmy'"
-                          v-model="scope.row.sfmy"
-                          @blur="out(scope)"/>
-                <span v-else>{{ scope.row.sfmy }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column show-overflow-tooltip label="提报人ID" align="center" prop="tbrid">
-              <template slot-scope="scope">
-                <el-input v-if="entityIndex === scope.$index && entityName === 'tbrid'"
-                          v-model="scope.row.tbrid"
-                          @blur="out(scope)"/>
-                <span v-else>{{ scope.row.tbrid }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column show-overflow-tooltip label="被叫人ID" align="center" prop="bjrid">
-              <template slot-scope="scope">
-                <el-input v-if="entityIndex === scope.$index && entityName === 'bjrid'"
-                          v-model="scope.row.bjrid"
-                          @blur="out(scope)"/>
-                <span v-else>{{ scope.row.bjrid }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column show-overflow-tooltip label="接收人ID" align="center" prop="jsrid">
-              <template slot-scope="scope">
-                <el-input v-if="entityIndex === scope.$index && entityName === 'jsrid'"
-                          v-model="scope.row.jsrid"
-                          @blur="out(scope)"/>
-                <span v-else>{{ scope.row.jsrid }}</span>
-              </template>
-            </el-table-column>
-          </el-table>-->
 
     <pagination
       v-show="total>0"

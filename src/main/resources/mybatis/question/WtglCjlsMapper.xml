@@ -161,6 +161,7 @@
                 ZJD like '%' || #{selectData} || '%' or CJD like '%' || #{selectData} || '%'
             </if>
         </where>
+        order by ZJD,PX
     </select>
     <select id="listDacc" resultType="com.ruoyi.project.question.domain.WtglDacc">
         select *
@@ -348,7 +349,7 @@
         select BUTNAME, CJD
         from WTGL_UPBUTTON BUT
                  left join WTGL_YWZD WY on BUT.BUTNAME = WY.ZJD
-        order by PX
+        order by BUT.PX,WY.PX
     </select>
     <insert id="insertWtglCjls" parameterType="WtglCjls">
         insert into WTGL_CJLS
@@ -424,12 +425,14 @@
             <if test="ZJD != null">ZJD,</if>
             <if test="CJD != null">CJD,</if>
             <if test="BZ != null">BZ,</if>
+            <if test="PX != null">PX,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="XH != null">#{XH},</if>
             <if test="ZJD != null">#{ZJD},</if>
             <if test="CJD != null">#{CJD},</if>
             <if test="BZ != null">#{BZ},</if>
+            <if test="PX != null">#{PX},</if>
         </trim>
     </insert>
     <insert id="addUpButton">
@@ -530,6 +533,7 @@
             <if test="ZJD != null">ZJD = #{ZJD},</if>
             <if test="CJD != null">CJD = #{CJD},</if>
             <if test="BZ != null">BZ = #{BZ},</if>
+            <if test="PX != null">PX = #{PX},</if>
         </trim>
         where XH = #{XH}
     </update>

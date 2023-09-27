@@ -23,7 +23,7 @@ public interface QuestionService {
      */
     List<WtxxVo> selectWtxxData(WtxxDTO wtxxDTO);
     //批量删除问题的方法
-    void deleteQuestions(List<String> ids);
+    List<String> deleteQuestions(List<String> ids);
     //修改问题状态的方法
     void updateQuestionsStatus(List<WtxxDTO> wtxxDTO);
 
@@ -129,7 +129,7 @@ public interface QuestionService {
     /**
      * 责任人闭环功能
      */
-    void closedLoop(String xh);
+    void closedLoop(ZrrVO zrrVO);
 
     /**
      * 责任人激活功能

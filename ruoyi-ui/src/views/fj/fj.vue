@@ -3,6 +3,8 @@
     <!-- 按钮的地方   -->
     <div>
       <el-upload
+        v-if="row.wtzt !== '已关闭'
+        && (row.hfrid == null || row.hfrid === userInfo.userId+'')"
         ref="upload"
         :limit="1"
         accept=".xlsx, .pdf, .jpg, .xls, .png, .doc, .docx, .zip, .rar"
@@ -26,7 +28,9 @@
       <el-table-column prop="scsj" label="上传时间">
       </el-table-column>
       <el-table-column label="操作" width="120"><template slot-scope="scope">
-          <el-button @click="handleDeleteFj(scope.row)" type="text" size="small">删除</el-button>
+          <el-button v-if="scope.row.cjrid == null
+                           || scope.row.cjrid === userInfo.userId+'' || guanliyuan"
+                     @click="handleDeleteFj(scope.row)" type="text" size="small">删除</el-button>
           <el-button @click="handleDownLoad(scope.row)" type="text" size="small">下载</el-button>
         </template>
       </el-table-column>
@@ -40,12 +44,15 @@
 <script>
 import {getToken} from "@/utils/auth";
 import {addFj, delFj, listById} from "@/api/fj/fj";
+import {getUserInfo} from "@/api/question/wtlbry";
 
 export default {
   name: "fj",
   props:['row','fileList'],
   data() {
     return {
+      guanliyuan: false,//是否管理员
+      userInfo:{},//当前登录用户
       // 上传参数
       upload: {
         // 是否禁用上传
@@ -65,8 +72,20 @@ export default {
     if (this.fileList == null || this.fileList.length === 0) {
       this.load()
     }
+    this.getUserInfo()
   },
   methods: {
+    //获取用户信息
+    getUserInfo() {
+      getUserInfo().then(response => {
+        this.userInfo = response.data
+        this.userInfo.user.roles.forEach(value => {
+          if (value.roleName.includes('管理员')) {
+            this.guanliyuan = true
+          }
+        })
+      })
+    },
     load() {
       listById({id: this.row.xh || this.row.id}).then(res => {
         this.fileListTable = res.rows;

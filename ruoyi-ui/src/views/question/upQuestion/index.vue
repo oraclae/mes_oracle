@@ -96,32 +96,29 @@
               </el-button>
             </template>
           </el-table-column>
-          <el-table-column type="index" label="序号" align="center" width="50px"/>
-          <el-table-column show-overflow-tooltip label="创建部门科室" header-align="center" width="150px" prop="cjbmks"/>
-          <el-table-column show-overflow-tooltip label="问题名称" header-align="center" width="100px" prop="wtmc"/>
-          <el-table-column show-overflow-tooltip label="问题状态" header-align="center" width="100px" prop="wtzt"/>
-          <el-table-column show-overflow-tooltip label="问题类别" header-align="center" width="100px" prop="wtlb"/>
-          <el-table-column show-overflow-tooltip label="问题细类" header-align="center" width="100px" prop="wtxl"/>
-          <el-table-column show-overflow-tooltip label="生产订单号" header-align="center" width="120px" prop="scddh"/>
-          <el-table-column show-overflow-tooltip label="产品型号" header-align="center" width="100px" prop="cpxh"/>
-          <el-table-column show-overflow-tooltip label="件号" header-align="center" width="100px" prop="jh"/>
-          <el-table-column show-overflow-tooltip label="班产日期" header-align="center" width="120px" prop="bcrq"/>
-          <el-table-column show-overflow-tooltip label="批次" header-align="center" width="100px" prop="pc"/>
-          <el-table-column show-overflow-tooltip label="工序号" header-align="center" width="100px" prop="gxh"/>
-          <el-table-column show-overflow-tooltip label="问题描述" header-align="center" width="100px" prop="wtms"/>
-          <el-table-column show-overflow-tooltip label="设备型号" header-align="center" width="100px" prop="sbxh"/>
-          <el-table-column show-overflow-tooltip label="是否满意" header-align="center" width="100px" prop="sfmy"/>
-          <el-table-column show-overflow-tooltip label="提报人" header-align="center" width="100px" prop="tbr"/>
-          <el-table-column show-overflow-tooltip label="被叫责任科室" header-align="center" width="120px" prop="bjzrks"/>
-          <el-table-column show-overflow-tooltip label="被叫人" header-align="center" width="100px" prop="bjzrr"/>
-          <el-table-column show-overflow-tooltip label="接收时间" header-align="center" width="100px" prop="tbjssj"/>
-          <el-table-column show-overflow-tooltip label="当前时间" header-align="center" width="100px" prop="tbdqst"/>
-          <el-table-column show-overflow-tooltip label="接收人" header-align="center" width="100px" prop="jsr"/>
-          <el-table-column show-overflow-tooltip label="解决方案" header-align="center" width="100px" prop="jjfa"/>
-          <el-table-column show-overflow-tooltip label="创建时间" header-align="center" width="100px" prop="cjsj"/>
-          <el-table-column show-overflow-tooltip label="提报人ID" header-align="center" width="100px" prop="tbrid"/>
-          <el-table-column show-overflow-tooltip label="被叫人ID" header-align="center" width="100px" prop="bjrid"/>
-          <el-table-column show-overflow-tooltip label="接收人ID" header-align="center" width="100px" prop="jsrid"/>
+          <el-table-column type="index" label="序号" align="center" width="50"/>
+          <el-table-column show-overflow-tooltip width="210" prop="jjfa" label="解决方案" header-align="center"/>
+          <el-table-column show-overflow-tooltip width="120" prop="cjbmks" label="创建部门科室" header-align="center"/>
+          <el-table-column show-overflow-tooltip width="120" prop="tbr" label="提报人" header-align="center"/>
+          <el-table-column show-overflow-tooltip width="210" prop="wtmc" label="问题名称" header-align="center"/>
+          <el-table-column show-overflow-tooltip width="120" prop="wtzt" label="问题状态" header-align="center"/>
+          <el-table-column show-overflow-tooltip width="120" prop="wtlb" label="问题类别" header-align="center"/>
+          <el-table-column show-overflow-tooltip width="120" prop="wtxl" label="问题细类" header-align="center"/>
+          <el-table-column show-overflow-tooltip width="310" prop="wtms" label="问题描述" header-align="center"/>
+          <el-table-column show-overflow-tooltip width="120" prop="scddh" label="生产订单号" header-align="center"/>
+          <el-table-column show-overflow-tooltip width="120" prop="cpxh" label="产品型号" header-align="center"/>
+          <el-table-column show-overflow-tooltip width="120" prop="jh" label="件号" header-align="center"/>
+          <el-table-column show-overflow-tooltip width="120" prop="bcrq" label="班产日期" header-align="center"/>
+          <el-table-column show-overflow-tooltip width="120" prop="pc" label="批次" header-align="center"/>
+          <el-table-column show-overflow-tooltip width="120" prop="gxh" label="工序号" header-align="center"/>
+          <el-table-column show-overflow-tooltip width="120" prop="sbxh" label="设备型号" header-align="center"/>
+          <el-table-column show-overflow-tooltip width="120" prop="bjzrks" label="被叫责任科室" header-align="center"/>
+          <el-table-column show-overflow-tooltip width="120" prop="bjzrr" label="被叫人" header-align="center"/>
+          <el-table-column show-overflow-tooltip width="120" prop="jsr" label="接收人" header-align="center"/>
+          <el-table-column show-overflow-tooltip width="155" prop="cjsj" label="创建时间" header-align="center"/>
+          <el-table-column show-overflow-tooltip width="100" prop="tbjssj" label="接收时间" header-align="center"/>
+          <el-table-column show-overflow-tooltip width="100" prop="tbdqst" label="当前时间" header-align="center"/>
+          <el-table-column show-overflow-tooltip width="120" prop="sfmy" label="是否满意" header-align="center"/>
         </el-table>
         <div style="height: 50px">
           <pagination
