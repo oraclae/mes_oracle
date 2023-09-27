@@ -422,7 +422,7 @@
     </div>
 
     <!--  选择答案弹框  -->
-    <el-dialog append-to-body v-if="xuanzedaan" class="dialogRad" :close-on-click-modal="false" title="选择答案"
+    <el-dialog append-to-body v-if="xuanzedaan" class="dialogRad" :close-on-click-modal="false" title="请选择满意答案或直接关闭问题"
                :visible.sync="xuanzedaan">
       <el-table height="600px" ref="daanTable" @selection-change="handleChangeSelection"
                 :data="huifuxinxiList" row-key="xh" border>
@@ -682,10 +682,6 @@ export default {
       if (!row.xh) {
         return
       }
-      if (row.cjrid !== this.userInfo.userId.toString()) {
-        this.$message.error("此附件不是您上传的，不可删除!")
-        return;
-      }
       this.$confirm('是否确认删除数据项?', '提示', {
         confirmButtonText: '确认',
         cancelButtonText: '取消',
@@ -793,9 +789,8 @@ export default {
         this.wwcts = '已完成'
         //超期天数
         this.cqts = '已完成'
-      }
+      }else {
       //计算未完成天数
-      if (data.wtzt !== '已关闭') {
         var cjsjDate = new Date(data.cjsj);
         // 计算时间差（以毫秒为单位）
         var wwctsms = currentDate.getTime() - cjsjDate.getTime();
@@ -803,6 +798,10 @@ export default {
         var wwctsmim = Math.floor(wwctsms / (1000 * 60 * 60 * 24));
         this.wwcts = wwctsmim.toString() + "天";
         //超期天数
+        if (data.xwjjsj == null) {
+          this.cqts = '0天'
+          return
+        }
         var xwjjsjDate = new Date(data.xwjjsj);
         // 计算时间差（以毫秒为单位）
         var xwjjsjms = currentDate.getTime() - xwjjsjDate.getTime();

@@ -367,7 +367,7 @@
                   @closeDia="open = false" @changeWidth="changeDialogWidth"/>
     </el-dialog>
     <!--  选择答案弹窗  -->
-    <el-dialog class="dialogRad" title="选择答案" v-if="xuanzedaan" :visible.sync="xuanzedaan" @open="clearSelect">
+    <el-dialog class="dialogRad" title="请选择满意答案" v-if="xuanzedaan" :visible.sync="xuanzedaan" @open="clearSelect">
       <el-table
         ref="daanTable"
         @selection-change="handleChangeSelection"

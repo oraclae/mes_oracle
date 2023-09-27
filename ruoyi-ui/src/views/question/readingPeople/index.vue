@@ -3,7 +3,6 @@
     <el-row :gutter="24">
       <el-col :span="20" :xs="24">
         <el-radio-group v-model="queryParams.radios" @change="changeRadio">
-          <el-radio label="待办" class="el_radios_position">待办</el-radio>
           <el-radio label="处理中" class="el_radios_position">处理中</el-radio>
           <el-radio label="已关闭" class="el_radios_position">已关闭</el-radio>
         </el-radio-group>

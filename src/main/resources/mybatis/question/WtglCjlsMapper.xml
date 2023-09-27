@@ -349,7 +349,7 @@
         select BUTNAME, CJD
         from WTGL_UPBUTTON BUT
                  left join WTGL_YWZD WY on BUT.BUTNAME = WY.ZJD
-        order by PX
+        order by BUT.PX,WY.PX
     </select>
     <insert id="insertWtglCjls" parameterType="WtglCjls">
         insert into WTGL_CJLS
