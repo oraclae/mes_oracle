@@ -55,7 +55,7 @@
 
     <el-table height="calc(100vh - 220px)" border v-loading="loading" :data="ywzdList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="序号" type="index" width="50"/>
+      <el-table-column label="序号" type="index" width="50" align="center"/>
       <el-table-column label="主节点" header-align="center" prop="zjd" />
       <el-table-column label="次节点" header-align="center" prop="cjd" />
       <el-table-column label="备注" header-align="center" prop="bz" />

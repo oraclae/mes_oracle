@@ -56,7 +56,7 @@
     </el-row>
     <el-table border v-loading="loading" :data="upCjlsList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="序号" type="index" width="50"/>
+      <el-table-column label="序号" type="index" width="50" align="center"/>
       <el-table-column show-overflow-tooltip width="110" prop="cjbmks" label="创建部门科室" header-align="center" />
       <el-table-column show-overflow-tooltip width="110" prop="cjsj" label="创建时间" header-align="center" />
       <el-table-column show-overflow-tooltip width="120" prop="jjfa" label="解决方案" header-align="center" />

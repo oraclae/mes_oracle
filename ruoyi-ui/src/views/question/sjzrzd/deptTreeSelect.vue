@@ -20,13 +20,13 @@
         <div class="one-row"></div>
         <div class="two-row">
           <el-table
-            height="300px"
+            max-height="700px"
             :data="userList"
             v-loading="loading"
             @selection-change="handleSelectionChange"
             highlight-current-row
             row-key="id"
-            @row-dblclick="selectData"
+            @row-click="selectData"
             ref="refUserTable"
             border
           >
@@ -38,14 +38,6 @@
           </el-table>
         </div>
         <div class="three-row" style="height: 48px;">
-          <el-button :disabled="multiple" type="success" size="small" style="margin-top: 10px" @click="addUserData">添
-            加
-          </el-button>
-          <el-button :disabled="multipleTwo" type="danger" size="small" style="margin-top: 10px"
-                     @click="deleteUserData">移 除
-          </el-button>
-          <el-button type="primary" size="small" style="margin-top: 10px" @click="submitButten">确 定</el-button>
-          <el-button type="warning" size="small" style="margin-top: 10px" @click="cancelButten">退 出</el-button>
           <pagination
             style="display: inline-block; float: right"
             v-show="total>0"
@@ -55,24 +47,6 @@
             :page-size="50"
             layout="total, prev, pager, next, jumper"
             @pagination="getList"/>
-        </div>
-        <div class="four-row">
-          <el-table
-            ref="refUserTable1"
-            max-height="400px"
-            :data="userSelectTableData"
-            @selection-change="handleChange"
-            @row-dblclick="deleteData"
-            highlight-current-row
-            row-key="id"
-            border
-          >
-            <el-table-column type="selection" width="50px" :reserve-selection="true"/>
-            <el-table-column align="center" label="序号" type="index" width="50px"/>
-            <el-table-column prop="userName" label="账号" show-overflow-tooltip/>
-            <el-table-column prop="nickName" label="姓名" show-overflow-tooltip/>
-            <el-table-column prop="dept.deptName" label="所属部门" show-overflow-tooltip/>
-          </el-table>
         </div>
       </el-col>
     </el-row>
@@ -120,7 +94,7 @@ export default {
   },
   computed: {},
   mounted() {
-    if (this.selectZrrList != null) {
+    if (this.selectZrrList.length>0) {
       this.userSelectTableData = this.selectZrrList
       this.userSelectTableData.forEach(item => {
         if (item.sfzzrr === 'true') {
@@ -192,17 +166,7 @@ export default {
     },
     //双击添加
     selectData(row) {
-      var isSelect = false;
-      if (this.userSelectTableData.length > 0) {
-        this.userSelectTableData.forEach(item => {
-          if (item.userId === row.userId) {
-            isSelect = true;
-          }
-        });
-      }
-      if (!isSelect) {
-        this.userSelectTableData.unshift(row);
-      }
+      this.$emit('selectDialogSubmit', row, this.text)
     },
     //双击删除
     deleteData(row) {

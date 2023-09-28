@@ -227,15 +227,9 @@ export default {
     //判断是否反馈预警
     getFkyjText() {
       return function (row) {
-        if (row.qwfksj === undefined || row.qwfksj === null || row.qwfksj === '') {
-          return;
-        }
-        if (row.sfdzfk === 0 || row.sfdzfk === '0') {
-          const date = new Date();
-          const week = date.getDay();
+        if ((row.sfdzfk === 0 || row.sfdzfk === '0') && row.lxfk === '例行反馈') {
           return '红';
         }
-
       };
     }
   },
