@@ -130,6 +130,7 @@
         :page.sync="queryParams.pageNum"
         :limit.sync="queryParams.pageSize"
         @pagination="getList"
+        :page-sizes="[20, 50, 100]"
       />
     </div>
     <!--详细信息弹窗-->
