@@ -359,7 +359,8 @@ export default {
         controls: false,//操作
         recover: true,//回复
         shenqingguanbi: false,//申请关闭
-        close: false//关闭
+        close: false,//关闭
+        isdown:true,//问题接收页面
       },
       userInfo: {},
       lishidaanDialog: false,//历史答案弹窗

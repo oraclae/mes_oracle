@@ -175,12 +175,12 @@
                            @click="fjylBut('but')"
                            size="mini">上传附件
                 </el-button>
-                <el-button v-if="this.closureID.lxfk==='例行反馈' && authority.recover"
+                <el-button v-if="this.closureID.lxfk==='例行反馈' && authority.recover && iszrr"
                            style="margin-left: 25px;background-color: #ffba00"
                            size="mini"
                            @click="lixingfankuiDialogMethod">例行反馈
                 </el-button>
-                <el-button v-if="this.closureID.lxfk!=='例行反馈' && authority.recover"
+                <el-button v-if="this.closureID.lxfk!=='例行反馈' && authority.recover && iszrr"
                            style="margin-left: 25px;background-color: #ffba00" size="mini"
                            @click="huifuDialogMethod">回复
                 </el-button>
@@ -500,6 +500,7 @@ export default {
   props: ['closureID', 'radios', 'authority'],
   data() {
     return {
+      iszrr:!this.authority.isdown,//登陆人是否为责任人
       guanliyuan: false,//是否管理员
       userInfo: {},
       isLdps: true,//判断领导批示能否写如数据
@@ -541,6 +542,7 @@ export default {
   mounted() {
     this.getUserInfo()
     this.openDialog()
+    console.log(this.closureID)
   },
   beforeDestroy() {
     document.removeEventListener('click', this.handlePageClick);
@@ -745,11 +747,22 @@ export default {
       getzerData({wtid: this.closureID.id}).then(res => {
         if (res.code === 200) {
           this.zrrList = res.rows;
+          //如果是问题接收页面
+          if (this.authority.isdown) {
+            getUserInfo().then(response => {
+              this.userInfo = response.data
+              for (let zrr of this.zrrList) {
+                if (this.userInfo.userId.toString() === zrr.zrrid || this.userInfo.userId.toString() === this.closureID.cjrid) {
+                  this.iszrr = true
+                }
+              }
+            });
+          }
         }
       })
     },
 
-    //h获取附件列表
+    //获取附件列表
     getFileHFFJ() {
       selectJhjlList({ID: this.closureID.id}).then(res=>{
         if (res.code === 200) {

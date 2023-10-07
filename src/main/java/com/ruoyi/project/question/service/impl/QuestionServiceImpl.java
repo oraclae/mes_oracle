@@ -264,9 +264,11 @@ public class QuestionServiceImpl implements QuestionService {
     public List<WtxxVo> getQuestionInteraction(WtxxDTO wtxxDTO) {
         if ("待办".equals(wtxxDTO.getRadios())) {
             wtxxDTO.setWTZT("提交");
-            wtxxDTO.setWTZT1("接收");
-            wtxxDTO.setWTZT2("反馈");
-            wtxxDTO.setWTZT3("待关闭");
+            return questionMapper.selectWtxxData1(wtxxDTO);
+        } else if ("处理中".equals(wtxxDTO.getRadios())) {
+            wtxxDTO.setWTZT("接收");
+            wtxxDTO.setWTZT1("反馈");
+            wtxxDTO.setWTZT2("待关闭");
             return questionMapper.selectWtxxData1(wtxxDTO);
         } else {
             wtxxDTO.setWTZT("已关闭");
@@ -353,7 +355,7 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public List<WtxxVo> getMyProblemList(WtxxDTO wtxxDTO) {
         wtxxDTO.setCJRID(SecurityUtils.getUserId() + "");
-        if ("待办".equals(wtxxDTO.getRadios())) {
+        if ("处理中".equals(wtxxDTO.getRadios())) {
             wtxxDTO.setWTZT("提交");
             wtxxDTO.setWTZT1("接收");
             wtxxDTO.setWTZT2("反馈");
@@ -769,6 +771,7 @@ public class QuestionServiceImpl implements QuestionService {
             wtxxDTO.setWTZT("提交");
             return questionMapper.selectWtxxData1(wtxxDTO);
         } else if ("处理中".equals(wtxxDTO.getRadios())) {
+            wtxxDTO.setWTZT3("提交");
             wtxxDTO.setWTZT("接收");
             wtxxDTO.setWTZT1("反馈");
             wtxxDTO.setWTZT2("待关闭");
