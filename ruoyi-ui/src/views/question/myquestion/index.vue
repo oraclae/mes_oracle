@@ -656,6 +656,7 @@ export default {
     cancellationTime() {
       this.form.xwjjsj = null
       this.canceTime = this.form.wtsj === true;
+      this.isLxfk = this.form.wtsj === true;
     },
     //上传附件的弹出框关闭的执行方法
     reload() {
