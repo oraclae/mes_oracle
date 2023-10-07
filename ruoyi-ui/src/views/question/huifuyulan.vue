@@ -493,6 +493,7 @@ import {
 import {delFj, selectFjListByIds} from "@/api/fj/fj";
 import fj from "@/views/fj/fj";
 import {getUserInfo} from "@/api/question/wtlbry";
+import {wtsjOneZrr} from "@/api/question/sjzrzd"
 
 export default {
   name: "huifuyulan",
