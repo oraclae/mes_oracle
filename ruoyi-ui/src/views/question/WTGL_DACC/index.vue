@@ -67,6 +67,7 @@
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
+      :page-sizes="[20, 50, 100]"
     />
 
     <!-- 添加或修改答案信息对话框 -->
@@ -139,7 +140,7 @@ export default {
       // 查询参数
       queryParams: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 20,
         selectData: null
       },
       // 表单参数

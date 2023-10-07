@@ -110,6 +110,7 @@
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
+      :page-sizes="[20, 50, 100]"
     />
 
     <!-- 添加或修改问题类别人员对照对话框 -->
@@ -207,8 +208,10 @@
           style="display: inline-block; float: right"
           v-show="userTotal>0"
           :total="userTotal"
-          :page.sync="userQueryParams.current"
-          :limit.sync="userQueryParams.size"
+          :page.sync="userQueryParams.pageNum"
+          :limit.sync="userQueryParams.pageSize"
+          :page-size="50"
+          layout="total, prev, pager, next, jumper"
           @pagination="getUserListByDeptIdOtherBy"/>
       </div>
       <div class="four-row">
@@ -303,7 +306,7 @@ export default {
       // 查询参数
       queryParams: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 20,
         wtlb: null,
         wtxl: null,
         deptid: null,
@@ -312,7 +315,7 @@ export default {
       },
       userQueryParams: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 50,
         userName: undefined,
         phonenumber: undefined,
         status: undefined,

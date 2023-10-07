@@ -126,6 +126,7 @@
             :page.sync="queryParams.pageNum"
             :limit.sync="queryParams.pageSize"
             @pagination="getList"
+            :page-sizes="[20, 50, 100]"
             style="background-color: transparent;margin-right: 50px"
           />
         </div>
@@ -468,7 +469,7 @@ export default {
       // 查询参数
       queryParams: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 20,
       },
       // 表单参数
       form: {},
