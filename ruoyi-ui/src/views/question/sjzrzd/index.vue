@@ -104,7 +104,8 @@
             <el-input class="sjzrrDialogWidth" v-model="form.zrbm" placeholder="请输入责任部门"/>
           </el-form-item>
           <el-form-item label="当前责任人ID" prop="dqzerid">
-            <el-input class="sjzrrDialogWidth" style="pointer-events: none" v-model="form.dqzerid" placeholder="选择当前责任人时自动带入"/>
+            <el-input class="sjzrrDialogWidth" style="pointer-events: none" v-model="form.dqzerid"
+                      placeholder="选择当前责任人时自动带入"/>
           </el-form-item>
           <el-form-item label="当前责任人" prop="dqzer">
             <div @click="openTreeVisual('当前责任人')">
@@ -123,7 +124,8 @@
             </el-select>
           </el-form-item>
           <el-form-item label="一级责任人ID" prop="yjzrrid">
-            <el-input class="sjzrrDialogWidth" style="pointer-events: none" v-model="form.yjzrrid" placeholder="选择一级责任人时自动带入"/>
+            <el-input class="sjzrrDialogWidth" style="pointer-events: none" v-model="form.yjzrrid"
+                      placeholder="选择一级责  时自动带入"/>
           </el-form-item>
           <el-form-item label="一级责任人" prop="yjzrr">
             <div @click="openTreeVisual('一级责任人')">
@@ -148,8 +150,10 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
-    <el-dialog class="xzzrrDialog" :close-on-click-modal="false" :title="selectTitle" width="1200px" :visible.sync="treeVisual">
-      <deptTreeSelect :selectZrrList="selectZrrList" :text="selectTitle" @selectDialogCancel="treeVisual=false" @close="treeVisual=false"
+    <el-dialog class="xzzrrDialog" :close-on-click-modal="false" :title="selectTitle" width="1200px"
+               :visible.sync="treeVisual">
+      <deptTreeSelect :selectZrrList="selectZrrList" :text="selectTitle" @selectDialogCancel="treeVisual=false"
+                      @close="treeVisual=false"
                       v-if="treeVisual" @selectDialogSubmit="zrrSunmit"/>
     </el-dialog>
   </div>
@@ -162,7 +166,7 @@ import {getwtxlMethod} from "@/api/question/question";
 
 export default {
   name: "Sjzrzd",
-  components:{
+  components: {
     deptTreeSelect
   },
   data() {
@@ -244,13 +248,13 @@ export default {
       this.treeVisual = true
     },
     //子组件确定按钮的执行方法
-    zrrSunmit(row,title) {
+    zrrSunmit(row, title) {
       this.selectZrrList = row;
       if (title === '当前责任人') {
         this.form.zrbm = this.selectZrrList.dept.deptName;
         this.form.dqzerid = this.selectZrrList.userId.toString();
         this.form.dqzer = this.selectZrrList.nickName;
-      }else {
+      } else {
         this.form.yjzrrid = this.selectZrrList.userId.toString();
         this.form.yjzrr = this.selectZrrList.nickName;
       }
@@ -276,9 +280,9 @@ export default {
         xh: null,
         zrbm: null,
         zrbmid: null,
-        dqjb:null,
-        yjjb:null,
-        yjzrr:null,
+        dqjb: null,
+        yjjb: null,
+        yjzrr: null,
         ejzrr: null,
         sjzrr: null,
         yjzrrid: null,
@@ -327,10 +331,10 @@ export default {
     },
     getWtsjjdZd() {
       this.jbList = []
-      getwtxlMethod({wtlb:'问题升级阶段'}).then(res=>{
+      getwtxlMethod({wtlb: '问题升级阶段'}).then(res => {
         let data = res.rows
         for (let i = 0; i < data.length; i++) {
-          this.jbList.push({lable:data[i],value:data[i]})
+          this.jbList.push({lable: data[i], value: data[i]})
         }
       })
     },
@@ -393,6 +397,7 @@ export default {
 .sjzrzdAddDialog .el-input {
   width: 85%;
 }
+
 .xzzrrDialog .el-dialog__close {
   font-size: 30px; /* 调整按钮大小 */
 }
@@ -404,16 +409,20 @@ export default {
 .xzzrrDialog .el-tooltip__popper {
   font-size: 18px; /* 调整字体大小为你需要的大小 */
 }
+
 .xzzrrDialog .el-dialog__body {
   padding-top: 0;
   padding-bottom: 20px;
 }
+
 .xzzrrDialog .el-dialog__headerbtn {
   z-index: 100;
 }
+
 .xzzrrDialog .el-dialog {
   border-radius: 10px;
 }
+
 .sjzrzdAdd .el-dialog__close {
   font-size: 30px; /* 调整按钮大小 */
 }
@@ -425,20 +434,25 @@ export default {
 .sjzrzdAdd .el-tooltip__popper {
   font-size: 18px; /* 调整字体大小为你需要的大小 */
 }
+
 .sjzrzdAdd .el-dialog__body {
   padding-top: 0;
   padding-bottom: 20px;
 }
+
 .sjzrzdAdd .el-dialog__headerbtn {
   z-index: 100;
 }
+
 .sjzrzdAdd .el-dialog {
   border-radius: 10px;
 }
+
 .sjzrzdAdd .el-dialog:not(.is-fullscreen) {
   margin-top: 10% !important;
 }
-.sjzrrDialogWidth{
+
+.sjzrrDialogWidth {
   width: 80%;
 }
 </style>
