@@ -158,6 +158,7 @@
 import {updateDaccToRd, listDaccToZN, getDacc, delDacc, updateDacc} from "@/api/question/upQuestion";
 import {getJhjlByWtid, getwtlbMethod, getwtxlMethod} from "@/api/question/question";
 import xiangxixinxi from '@/views/question/myquestion/xiangxixinxi'
+import {getUserInfo} from "@/api/question/wtlbry";
 
 export default {
   name: "WTGL_DACC",
@@ -190,6 +191,7 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      userInfo: null,//当前登录人
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -201,24 +203,13 @@ export default {
         GXH: null,
         WTLB: null,
         WTXL: null,
-        KEYWORDS: null
+        KEYWORDS: null,
+        DEPTID: null,
       }
     };
   },
   mounted() {
-    if (this.form != null) {
-      this.queryParams.WTMS = this.form.wtms
-      this.queryParams.WTMC = this.form.wtmc
-      this.queryParams.CPXH = this.form.cpxh
-      this.queryParams.JH = this.form.jh
-      this.queryParams.GXH = this.form.gxh
-      this.queryParams.WTLB = this.form.wtlb
-      this.queryParams.WTXL = this.form.wtxl
-      if (this.form.wtlb != null && this.form.wtlb !== '') {
-        this.wtxlMethod()
-      }
-      this.handleQuery()
-    }
+    this.getUserInfo();
     this.wtlbMethod();
   },
   methods: {
@@ -299,11 +290,42 @@ export default {
         return
       }
       this.loading = true;
+      let roles = [];
+      let isdbpt = false;
+      roles = this.userInfo.user.roles;
+      for (let i = 0; i < roles.length; i++) {
+        let roleName = roles[i].roleName;
+        if (roleName.includes("督办平台")||roleName.includes("超级管理员")) {
+          isdbpt = true;
+        }
+      }
+      if (!isdbpt) {
+        this.queryParams.DEPTID = this.userInfo.deptId;
+      }
       listDaccToZN(this.queryParams).then(response => {
         this.daccList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
+    },
+    //获取用户信息
+    getUserInfo() {
+      getUserInfo().then(response => {
+        this.userInfo = response.data
+        if (this.form != null) {
+          this.queryParams.WTMS = this.form.wtms
+          this.queryParams.WTMC = this.form.wtmc
+          this.queryParams.CPXH = this.form.cpxh
+          this.queryParams.JH = this.form.jh
+          this.queryParams.GXH = this.form.gxh
+          this.queryParams.WTLB = this.form.wtlb
+          this.queryParams.WTXL = this.form.wtxl
+          if (this.form.wtlb != null && this.form.wtlb !== '') {
+            this.wtxlMethod()
+          }
+          this.handleQuery()
+        }
+      })
     },
     // 取消按钮
     cancel() {

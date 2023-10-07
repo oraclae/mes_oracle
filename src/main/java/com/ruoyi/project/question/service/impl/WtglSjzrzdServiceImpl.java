@@ -103,8 +103,7 @@ public class WtglSjzrzdServiceImpl implements IWtglSjzrzdService {
      */
     @Override
     public WtglSjzrzd selectWtglSjzrzdByZrrid(String zrrid) {
-        WtglSjzrzd wtglSjzrzd = wtglSjzrzdMapper.selectWtglSjzrzdByZrrid(zrrid);
-        return wtglSjzrzd;
+        return wtglSjzrzdMapper.selectWtglSjzrzdByZrrid(zrrid);
     }
 
     /**
