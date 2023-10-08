@@ -1,6 +1,6 @@
 <template>
   <div className="app-container">
-    <div ref="gantt" className="left-container"/>
+    <div ref="gantt1" className="left-container"/>
   </div>
 </template>
 <script>
@@ -31,7 +31,7 @@ export default {
     //自适应甘特图的尺寸大小, 使得在不出现滚动条的情况下, 显示全部任务
     gantt.config.autosize = true
     //只读模式
-    gantt.config.readonly = true
+    gantt.config.readonly = false
     //是否显示左侧树表格
     gantt.config.show_grid = false
     //表格列设置
@@ -95,10 +95,10 @@ export default {
     };*/
     //任务条上的文字大小 以及取消border自带样式
     gantt.templates.task_class = function (start, end, item) {
-      return item.$level == 0 ? 'firstLevelTask' : 'secondLevelTask'
+      return item.$level === 0 ? 'firstLevelTask' : 'secondLevelTask'
     }
     // 初始化
-    gantt.init(this.$refs.gantt)
+    gantt.init(this.$refs.gantt1)
     // 数据解析
     gantt.parse(this.tasks)
   },
@@ -200,16 +200,16 @@ export default {
         var newObj = {}
         if (current.type) {
           //存在type字段 说明非一级菜单，判断阶段的具体类型 设置不同颜色
-          if (current.type == 1) {
+          if (current.type === 1) {
             //冒烟
             newObj = Object.assign({}, current, {color: '#fcca02'})
-          } else if (current.type == 2) {
+          } else if (current.type === 2) {
             //单元
             newObj = Object.assign({}, current, {color: '#fec0dc'})
-          } else if (current.type == 3) {
+          } else if (current.type === 3) {
             //回归
             newObj = Object.assign({}, current, {color: '#62ddd4'})
-          } else if (current.type == 4) {
+          } else if (current.type === 4) {
             newObj = Object.assign({}, current, {color: '#d1a6ff'})
           }
         } else {
@@ -223,7 +223,7 @@ export default {
   },
 }
 </script>
-<style lang="scss">
+<style scoped lang="scss">
 .firstLevelTask {
   border: none;
 
@@ -265,8 +265,8 @@ export default {
 
 html,
 body {
-  margin: 0px;
-  padding: 0px;
+  margin: 0;
+  padding: 0;
   height: 100%;
   overflow: hidden;
 }

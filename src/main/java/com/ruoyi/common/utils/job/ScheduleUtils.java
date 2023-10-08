@@ -115,7 +115,7 @@ public class ScheduleUtils
                 return cb.withMisfireHandlingInstructionDoNothing();
             default:
                 throw new TaskException("The task misfire policy '" + job.getMisfirePolicy()
-                        + "' cannot be used in cron schedule tasks", Code.CONFIG_ERROR);
+                        + "' cannot be used in cron schedule tasks1", Code.CONFIG_ERROR);
         }
     }
 
