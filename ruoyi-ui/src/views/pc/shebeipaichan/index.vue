@@ -5,9 +5,9 @@
 </template>
 <script>
 import gantt from 'dhtmlx-gantt' // 引入模块
-//import 'dhtmlx-gantt/codebase/dhtmlxgantt.css'
+import 'dhtmlx-gantt/codebase/dhtmlxgantt.css'
 import 'dhtmlx-gantt/codebase/skins/dhtmlxgantt_terrace.css' //皮肤
-import 'dhtmlx-gantt/codebase/locale/locale_cn' // 本地化
+// import 'dhtmlx-gantt/codebase/locale/locale_cn' // 本地化
 import 'dhtmlx-gantt/codebase/ext/dhtmlxgantt_tooltip.js' //任务条悬浮提示
 
 export default {
@@ -33,7 +33,7 @@ export default {
     //只读模式
     gantt.config.readonly = false
     //是否显示左侧树表格
-    gantt.config.show_grid = false
+    gantt.config.show_grid = true
     //表格列设置
     gantt.config.columns = [
       {name: 'text', label: '阶段名字', tree: true, width: '120'},
@@ -53,9 +53,9 @@ export default {
     gantt.config.show_task_cells = true
 
     //设置x轴日期
-    gantt.config.scale_unit = 'day'
-    gantt.config.step = 1
-    gantt.config.date_scale = '星期' + '%D'
+    gantt.config.scale_unit = 'minute'; // 设置时间单位为分钟
+    gantt.config.step = 60; // 设置步长为1
+    gantt.config.date_scale = '%H:%i'; // 设置日期刻度格式为小时和分钟
 
     //当task的长度改变时，自动调整图表坐标轴区间用于适配task的长度
     gantt.config.fit_tasks = true
@@ -116,7 +116,7 @@ export default {
         {
           id: 1,
           text: '计划时间',
-          start_date: '2020-04-08',
+          start_date: '2020-04-08 0:00:00',
           duration: 10,
           open: true, //默认打开，
           toolTipsTxt: 'xxxxxxxxxxxxxxxxx',
@@ -124,7 +124,7 @@ export default {
         {
           toolTipsTxt: 'xxxxxxxxxxxxxxxxx父任务01-001',
           text: '冒烟阶段', // 任务名
-          start_date: '2020-04-08', // 开始时间
+          start_date: '2020-04-08 1:10:10', // 开始时间
           id: 11, // 任务id
           duration: 3, // 任务时长，从start_date开始计算
           parent: 1, // 父任务ID
@@ -133,7 +133,7 @@ export default {
         {
           toolTipsTxt: '',
           text: '单元测试', // 任务名
-          start_date: '2020-04-11', // 开始时间
+          start_date: '2020-04-11 2:20:20', // 开始时间
           id: 12, // 任务id
           duration: 2, // 任务时长，从start_date开始计算
           parent: 1, // 父任务ID
@@ -142,7 +142,7 @@ export default {
         {
           toolTipsTxt: '',
           text: '回归测试', // 任务名
-          start_date: '2020-04-13', // 开始时间
+          start_date: '2020-04-13 3:30:30', // 开始时间
           id: 13, // 任务id
           duration: 4, // 任务时长，从start_date开始计算
           parent: 1, // 父任务ID
@@ -151,7 +151,7 @@ export default {
         {
           toolTipsTxt: '',
           text: '阶段四', // 任务名
-          start_date: '2020-04-13', // 开始时间
+          start_date: '2020-04-13 3:50:30', // 开始时间
           id: 14, // 任务id
           duration: 4, // 任务时长，从start_date开始计算
           parent: 1, // 父任务ID
