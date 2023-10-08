@@ -26,7 +26,7 @@ export default {
             text: 'Project #1',
             type: gantt.config.types.project,
             progress: 0.6,
-            open: true,
+            open: false,
           },
 
           {
@@ -233,8 +233,8 @@ export default {
 
 html,
 body {
-  margin: 0px;
-  padding: 0px;
+  margin: 0;
+  padding: 0;
   height: 100%;
   overflow: hidden;
 }
