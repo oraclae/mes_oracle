@@ -556,6 +556,7 @@
         select
         LISTAGG(wy.YZR, ',') WITHIN GROUP (ORDER BY wy.CJSJ) YZR,
         wy.CJSJ,
+        wy.SFDZFK,
         wy.WTMC,
         wy.SCDDH,
         wy.CPXH,
@@ -645,6 +646,7 @@
         </if>
         group by
         wy.CJSJ,
+        wy.SFDZFK,
         wy.WTMC,
         wy.SCDDH,
         wy.CPXH,

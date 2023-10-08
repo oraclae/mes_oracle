@@ -53,9 +53,9 @@ export default {
     gantt.config.show_task_cells = true
 
     //设置x轴日期
-    gantt.config.scale_unit = 'minute'; // 设置时间单位为分钟
-    gantt.config.step = 60; // 设置步长为1
-    gantt.config.date_scale = '%H:%i'; // 设置日期刻度格式为小时和分钟
+    gantt.config.scale_unit = 'day'
+    gantt.config.step = 1
+    gantt.config.date_scale = '星期' + '%D'
 
     //当task的长度改变时，自动调整图表坐标轴区间用于适配task的长度
     gantt.config.fit_tasks = true
