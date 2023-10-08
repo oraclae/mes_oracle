@@ -108,8 +108,7 @@ export default {
       var begintime_ms = Date.parse(new Date(strDateStart.replace(/-/g, '/'))) //begintime 为开始时间
       var endtime_ms = Date.parse(new Date(strDateEnd.replace(/-/g, '/'))) // endtime 为结束时间
       var date3 = endtime_ms - begintime_ms //时间差的毫秒数
-      var days = Math.floor(date3 / (24 * 3600 * 1000))
-      return days
+      return Math.floor(date3 / (24 * 3600 * 1000))
     },
     initData: function () {
       this.tasks.data = [
