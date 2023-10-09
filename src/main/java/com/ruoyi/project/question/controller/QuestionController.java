@@ -190,11 +190,11 @@ public class QuestionController extends BaseController {
     /**
      * 获取问题编号的数据的方法
      */
-    @GetMapping("/myquestion/getwtbhMethod")
+    /*@GetMapping("/myquestion/getwtbhMethod")
     public AjaxResult getwtbhMethod() {
         String wtbh = questionService.getwtbhMethod();
         return AjaxResult.success(wtbh);
-    }
+    }*/
 
     /**
      * 创建问题的方法

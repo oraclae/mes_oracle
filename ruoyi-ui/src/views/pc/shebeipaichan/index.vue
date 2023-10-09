@@ -42,7 +42,7 @@ export default {
         label: '时长',
         align: 'center',
         template: function (obj) {
-          return obj.duration + '天'
+          return obj.duration + '分'
         },
       },
       /*{name:"start_date", label:"开始时间", align: "center" },
@@ -53,26 +53,30 @@ export default {
     gantt.config.show_task_cells = true
 
     //设置x轴日期
-    gantt.config.scale_unit = 'day'
+    /*gantt.config.scale_unit = 'day'
     gantt.config.step = 1
-    gantt.config.date_scale = '星期' + '%D'
+    gantt.config.date_scale = '星期' + '%D'*/
+
+    gantt.config.scale_unit = 'minute'; // 设置时间单位为分钟
+    gantt.config.date_scale = '%H:%i'; // 设置日期和时间的显示格式
+    gantt.config.step = 60; // 步长为1
 
     //当task的长度改变时，自动调整图表坐标轴区间用于适配task的长度
     gantt.config.fit_tasks = true
     // 在时间线上增加一行显示星期
     gantt.config.subscales = [
       //{unit:"day",  step:1, date:"星期"+"%D" },
-      {unit: 'day', step: 1, date: '%M' + '%d' + '日'},
+      {unit: 'day', step: 1, date: '%m' +'月'+ '%d' + '日'},
     ]
     //时间轴图表中，任务条形图的高度
     gantt.config.task_height = 28
     //时间轴图表中，甘特图的高度
     gantt.config.row_height = 36
     //从后端过来的数据格式化
-    gantt.config.xml_date = '%Y-%m-%d'
+    gantt.config.xml_date = '%Y-%m-%d %H:%i'
     //任务条显示内容
     gantt.templates.task_text = function (start, end, task) {
-      return task.text + '(' + task.duration + '天)'
+      return task.text + '(' + task.duration + '分)'
     }
     // gantt.templates.task_class = function(start, end, task){return "xx";};
     //悬浮
@@ -103,97 +107,54 @@ export default {
     gantt.parse(this.tasks)
   },
   methods: {
-    //开始时间-结束时间参数
+    /*//开始时间-结束时间参数
     DateDifference: function (strDateStart, strDateEnd) {
       var begintime_ms = Date.parse(new Date(strDateStart.replace(/-/g, '/'))) //begintime 为开始时间
       var endtime_ms = Date.parse(new Date(strDateEnd.replace(/-/g, '/'))) // endtime 为结束时间
       var date3 = endtime_ms - begintime_ms //时间差的毫秒数
       return Math.floor(date3 / (24 * 3600 * 1000))
-    },
+    },*/
     initData: function () {
       this.tasks.data = [
         {
           id: 1,
           text: '计划时间',
-          start_date: '2020-04-08 0:00:00',
-          duration: 10,
+          start_date: '2020-04-08 08:00',
+          duration: 30,
           open: true, //默认打开，
           toolTipsTxt: 'xxxxxxxxxxxxxxxxx',
         },
         {
           toolTipsTxt: 'xxxxxxxxxxxxxxxxx父任务01-001',
           text: '冒烟阶段', // 任务名
-          start_date: '2020-04-08 1:10:10', // 开始时间
+          start_date: '2020-04-08 01:10', // 开始时间
           id: 11, // 任务id
-          duration: 3, // 任务时长，从start_date开始计算
-          parent: 1, // 父任务ID
+          duration: 60, // 任务时长，从start_date开始计算
           type: 1,
         },
         {
-          toolTipsTxt: '',
+          toolTipsTxt: 'sadasssssasdasd',
           text: '单元测试', // 任务名
-          start_date: '2020-04-11 2:20:20', // 开始时间
+          start_date: '2020-04-11 02:20', // 开始时间
           id: 12, // 任务id
-          duration: 2, // 任务时长，从start_date开始计算
-          parent: 1, // 父任务ID
+          duration: 90, // 任务时长，从start_date开始计算
           type: 2,
         },
         {
-          toolTipsTxt: '',
+          toolTipsTxt: 'dsadsadasdsadas',
           text: '回归测试', // 任务名
-          start_date: '2020-04-13 3:30:30', // 开始时间
+          start_date: '2020-04-13 03:30', // 开始时间
           id: 13, // 任务id
-          duration: 4, // 任务时长，从start_date开始计算
-          parent: 1, // 父任务ID
+          duration: 10, // 任务时长，从start_date开始计算
           type: 3,
         },
         {
-          toolTipsTxt: '',
+          toolTipsTxt: 'asdsadasdasdsadsadfads',
           text: '阶段四', // 任务名
-          start_date: '2020-04-13 3:50:30', // 开始时间
+          start_date: '2020-04-13 03:50', // 开始时间
           id: 14, // 任务id
-          duration: 4, // 任务时长，从start_date开始计算
-          parent: 1, // 父任务ID
+          duration: 15, // 任务时长，从start_date开始计算
           type: 4,
-        },
-        //========================
-        {
-          id: 2,
-          text: '实际时间',
-          start_date: '2020-04-08',
-          duration: 8,
-          open: true, //默认打开，才可隐藏左侧表格
-          toolTipsTxt: 'xxxxxxxxxxxxxxxxx',
-          state: 'default',
-          // color:"#409EFF",
-          //progress: 0.6
-        },
-        {
-          toolTipsTxt: 'xxxxxxxxxxxxxxxxx父任务01-001',
-          text: '冒烟阶段', // 任务名
-          start_date: '2020-04-08', // 开始时间
-          id: 21, // 任务id
-          duration: 2, // 任务时长，从start_date开始计算
-          parent: 2, // 父任务ID
-          type: 1,
-        },
-        {
-          toolTipsTxt: '',
-          text: '单元测试', // 任务名
-          start_date: '2020-04-09', // 开始时间
-          id: 22, // 任务id
-          duration: 2, // 任务时长，从start_date开始计算
-          parent: 2, // 父任务ID
-          type: 2,
-        },
-        {
-          toolTipsTxt: '',
-          text: '回归测试', // 任务名
-          start_date: '2020-04-11', // 开始时间
-          id: 23, // 任务id
-          duration: 2, // 任务时长，从start_date开始计算
-          parent: 2, // 父任务ID
-          type: 3,
         },
       ].map(function (current, ind, arry) {
         var newObj = {}

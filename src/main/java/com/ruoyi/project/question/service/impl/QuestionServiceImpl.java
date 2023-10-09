@@ -233,9 +233,10 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public void createQuestion(WtxxDTO wtxxDTO) {
+    public synchronized void createQuestion(WtxxDTO wtxxDTO) {
         Long userId = SecurityUtils.getUserId();
         wtxxDTO.setCJRID(userId + "");//创建人id
+        wtxxDTO.setWTBH(getwtbhMethod());
         SysUser sysUser = sysUserMapper.selectUserById(SecurityUtils.getUserId());
         wtxxDTO.setCJR(sysUser.getNickName());//创建人
         //创建人科室

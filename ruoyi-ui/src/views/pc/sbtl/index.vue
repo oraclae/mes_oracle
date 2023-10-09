@@ -103,7 +103,7 @@
 
     <el-table border v-loading="loading" :data="sbtlList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="序号" align="center" type="index" />
+      <el-table-column width="50" label="序号" align="center" type="index" />
       <el-table-column label="日期" align="center" prop="rq" />
       <el-table-column label="设备班次" align="center" prop="sbbc" />
       <el-table-column label="设备编号" align="center" prop="sbbh" />

@@ -433,7 +433,7 @@
 
 <script>
 import {
-  getwtbhMethod, getjjcdMethod, getwtxlMethod,
+  getjjcdMethod, getwtxlMethod,
   getwtlyMethod, getwtlbMethod, selectWtxxData,
   createQuestion, deleteQuestions, updateQuestions,
   updateQuestionsStatus, answerSelectOff, getJhjlByWtid,
@@ -893,20 +893,18 @@ export default {
         }
       })
     },
-    //问题编号获得方法
+    /*//问题编号获得方法
     wtbhMethod() {
       getwtbhMethod().then(res => {
         if (res.code === 200) {
           this.form.wtbh = res.msg;
         }
       })
-    },
+    },*/
     //创建问题按钮的方法
     createQuestion() {
       this.createQuestionShuaxin();
       this.dialogTableVisible = true;
-      //获得问题编号
-      this.wtbhMethod();
       //获得问题来源
       this.wtlyMethod();
       //获得问题类别
