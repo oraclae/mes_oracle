@@ -107,5 +107,8 @@ public class WtglCjls extends BaseEntity
     /** 问题细类 */
     private String WTXL;
 
+    /** 问题编号 */
+    private String WTBH;
+
 
 }

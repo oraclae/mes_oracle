@@ -35,6 +35,7 @@
         <result property="WTMC" column="WTMC"/>
         <result property="WTLB" column="WTLB"/>
         <result property="WTXL" column="WTXL"/>
+        <result property="WTBH" column="WTBH"/>
     </resultMap>
 
     <sql id="selectWtglCjlsVo">
@@ -67,7 +68,8 @@
                CJBMKS,
                WTMC,
                WTLB,
-               WTXL
+               WTXL,
+               WTBH
         from WTGL_CJLS
     </sql>
 
@@ -129,7 +131,8 @@
                CJBMKS,
                WTMC,
                WTLB,
-               WTXL
+               WTXL,
+               WTBH
         from WTGL_CJLS
         where WTZT = '提交'
           and CJBMKS = #{deptName}
@@ -351,6 +354,9 @@
                  left join WTGL_YWZD WY on BUT.BUTNAME = WY.ZJD
         order by BUT.PX,WY.PX
     </select>
+    <select id="selectWtbh" resultType="java.lang.String">
+        select MAX(WTBH) from WTGL_CJLS where WTBH like 'X' || #{format} || '%'
+    </select>
     <insert id="insertWtglCjls" parameterType="WtglCjls">
         insert into WTGL_CJLS
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -384,6 +390,7 @@
             <if test="WTMC != null">WTMC,</if>
             <if test="WTLB != null">WTLB,</if>
             <if test="WTXL != null">WTXL,</if>
+            <if test="WTBH != null">WTBH,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="LSID != null">#{LSID},</if>
@@ -416,6 +423,7 @@
             <if test="WTMC != null">#{WTMC},</if>
             <if test="WTLB != null">#{WTLB},</if>
             <if test="WTXL != null">#{WTXL},</if>
+            <if test="WTBH != null">#{WTBH},</if>
         </trim>
     </insert>
     <insert id="addYwzd">
@@ -483,6 +491,7 @@
             <if test="WTMC != null">WTMC = #{WTMC},</if>
             <if test="WTLB != null">WTLB = #{WTLB},</if>
             <if test="WTXL != null">WTXL = #{WTXL},</if>
+            <if test="WTBH != null">WTBH = #{WTBH},</if>
         </trim>
         where LSID = #{LSID}
     </update>

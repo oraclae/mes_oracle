@@ -98,6 +98,7 @@
           </el-table-column>
           <el-table-column type="index" label="序号" align="center" width="50"/>
           <el-table-column show-overflow-tooltip width="210" prop="jjfa" label="解决方案" header-align="center"/>
+          <el-table-column show-overflow-tooltip width="120" prop="wtbh" label="问题编号" header-align="center"/>
           <el-table-column show-overflow-tooltip width="120" prop="cjbmks" label="创建部门科室" header-align="center"/>
           <el-table-column show-overflow-tooltip width="120" prop="tbr" label="提报人" header-align="center"/>
           <el-table-column show-overflow-tooltip width="210" prop="wtmc" label="问题名称" header-align="center"/>

@@ -231,4 +231,9 @@ public interface WtglCjlsMapper
      * 获取问题类别细类
      */
     List<WtlbXlVO> getWtlbXlList();
+
+    /**
+     * 获取问题编号
+     */
+    String selectWtbh(String format);
 }

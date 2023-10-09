@@ -16,6 +16,8 @@ import com.ruoyi.project.system.mapper.SysDeptMapper;
 import com.ruoyi.project.system.mapper.SysUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -94,10 +96,10 @@ public class WtglCjlsServiceImpl implements IWtglCjlsService {
      * @return 结果
      */
     @Override
-    public int insertWtglCjls(WtglCjls wtglCjls) {
+    public synchronized int insertWtglCjls(WtglCjls wtglCjls) {
         wtglCjls.setLSID(UUID.randomUUID().toString());
         wtglCjls.setWTZT("提交");
-        WtlbRy bjr = wtglCjlsMapper.selectBjrByWtlbAndDeptId(wtglCjls,SecurityUtils.getDeptId().toString());
+        WtlbRy bjr = wtglCjlsMapper.selectBjrByWtlbAndDeptId(wtglCjls, SecurityUtils.getDeptId().toString());
         //如果没有被叫人
         if (bjr == null) {
             return 0;
@@ -113,6 +115,19 @@ public class WtglCjlsServiceImpl implements IWtglCjlsService {
         SysDept sysDept = sysDeptMapper.selectDeptById(SecurityUtils.getDeptId());
         wtglCjls.setBJZRKS(sysDept.getDeptName());//被叫责任科室设为本部门
         wtglCjls.setCJBMKS(sysDept.getDeptName());//创建部门科室赋值
+
+        //先查询今天的年月日
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
+        String format = simpleDateFormat.format(new Date());
+        //获取数据库中问题编号最新的问题编号
+        String wtbh = wtglCjlsMapper.selectWtbh(format);
+        if (wtbh == null) {
+            wtglCjls.setWTBH("X" + format + "001");
+        } else {
+            String suffix = wtbh.substring(9);
+            DecimalFormat d = new DecimalFormat("000");
+            wtglCjls.setWTBH("X" + format + d.format(Integer.parseInt(suffix) + 1));
+        }
         return wtglCjlsMapper.insertWtglCjls(wtglCjls);
     }
 
@@ -151,6 +166,7 @@ public class WtglCjlsServiceImpl implements IWtglCjlsService {
 
     /**
      * 查询问题列表
+     *
      * @param wtglCjls 参数
      * @return 列表
      */
@@ -178,8 +194,8 @@ public class WtglCjlsServiceImpl implements IWtglCjlsService {
     /**
      * 修改问题状态
      *
-     * @param wtglCjlsList  需要修改的对象
-     * @param wtzt 问题状态
+     * @param wtglCjlsList 需要修改的对象
+     * @param wtzt         问题状态
      * @return 结果
      */
     @Override
@@ -467,8 +483,6 @@ public class WtglCjlsServiceImpl implements IWtglCjlsService {
 //        questionMapper.selectWTByisWtsj();
 
 
-
-
         wtglCjls.setLSID(UUID.randomUUID().toString());
         wtglCjls.setWTZT("提交");
         //获取登录用户
@@ -476,7 +490,7 @@ public class WtglCjlsServiceImpl implements IWtglCjlsService {
         wtglCjls.setTBR(sysUser.getNickName());//提报人赋值
         wtglCjls.setTBRID(sysUser.getUserId().toString());//提报人ID赋值
         //获取本部门的部门领导
-        List<SysUser> ldUsers = wtglCjlsMapper.selectUserByPostAndDept("部门领导",sysUser.getDeptId());
+        List<SysUser> ldUsers = wtglCjlsMapper.selectUserByPostAndDept("部门领导", sysUser.getDeptId());
         if (ldUsers.size() == 0) {
             ldUsers.add(SecurityUtils.getLoginUser().getUser());
         }

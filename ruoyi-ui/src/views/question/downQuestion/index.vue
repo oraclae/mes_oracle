@@ -103,6 +103,7 @@
           <el-table-column show-overflow-tooltip label="问题类别" header-align="center" width="150px" prop="wtlb"/>
           <el-table-column show-overflow-tooltip label="问题细类" header-align="center" width="150px" prop="wtxl"/>
           <el-table-column show-overflow-tooltip label="问题状态" header-align="center" width="150px" prop="wtzt"/>
+          <el-table-column show-overflow-tooltip width="120" prop="wtbh" label="问题编号" header-align="center"/>
           <el-table-column show-overflow-tooltip label="生产订单号" header-align="center" width="150px" prop="scddh"/>
           <el-table-column show-overflow-tooltip label="产品型号" header-align="center" width="150px" prop="cpxh"/>
           <el-table-column show-overflow-tooltip label="件号" header-align="center" width="150px" prop="jh"/>

@@ -113,6 +113,9 @@ public class WtglCjlsDTO extends BaseEntity
     /** 问题细类 */
     private String WTXL;
 
+    /** 问题编号 */
+    private String WTBH;
+
     /** 请求参数 */
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Map<String, Object> params;
