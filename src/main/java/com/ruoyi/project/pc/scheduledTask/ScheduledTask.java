@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+import javax.annotation.PostConstruct;
+
 /**
  * Author: QXD
  * Date: 2023/6/20 10:28
@@ -21,7 +23,7 @@ public class ScheduledTask extends BaseController {
     @Autowired
     private IDaDdgylxService daDdgylxService;
 
-//    @PostConstruct
+    //@PostConstruct
     public void pc() {
         System.out.println("开始");
         String lzjh = "D000000046";

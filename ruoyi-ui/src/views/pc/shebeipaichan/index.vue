@@ -36,7 +36,7 @@ export default {
     gantt.config.show_grid = true
     //表格列设置
     gantt.config.columns = [
-      {name: 'text', label: '阶段名字', tree: true, width: '120'},
+      /*{name: 'text', label: '阶段名字', tree: true, width: '120'},
       {
         name: 'duration',
         label: '时长',
@@ -44,10 +44,10 @@ export default {
         template: function (obj) {
           return obj.duration + '分'
         },
-      },
-      /*{name:"start_date", label:"开始时间", align: "center" },
+      },*/
+      {name:"start_date", label:"开始时间", align: "center" },
 
-      {name:"end_date",   label:"结束时间",   align: "center" },*/
+      {name:"end_date",   label:"结束时间",   align: "center" },
     ]
     //时间轴图表中，如果不设置，只有行边框，区分上下的任务，设置之后带有列的边框，整个时间轴变成格子状。
     gantt.config.show_task_cells = true
@@ -59,7 +59,7 @@ export default {
 
     gantt.config.scale_unit = 'minute'; // 设置时间单位为分钟
     gantt.config.date_scale = '%H:%i'; // 设置日期和时间的显示格式
-    gantt.config.step = 60; // 步长为1
+    gantt.config.step = 180; // 步长为1
 
     //当task的长度改变时，自动调整图表坐标轴区间用于适配task的长度
     gantt.config.fit_tasks = true
@@ -76,7 +76,7 @@ export default {
     gantt.config.xml_date = '%Y-%m-%d %H:%i'
     //任务条显示内容
     gantt.templates.task_text = function (start, end, task) {
-      return task.text + '(' + task.duration + '分)'
+      return task.text
     }
     // gantt.templates.task_class = function(start, end, task){return "xx";};
     //悬浮
@@ -120,7 +120,7 @@ export default {
           id: 1,
           text: '计划时间',
           start_date: '2020-04-08 08:00',
-          duration: 30,
+          end_date: '2020-04-09 11:00', // 结束时间
           open: true, //默认打开，
           toolTipsTxt: 'xxxxxxxxxxxxxxxxx',
         },
@@ -129,7 +129,7 @@ export default {
           text: '冒烟阶段', // 任务名
           start_date: '2020-04-08 01:10', // 开始时间
           id: 11, // 任务id
-          duration: 60, // 任务时长，从start_date开始计算
+          end_date: '2020-04-08 2:30', // 结束时间
           type: 1,
         },
         {
@@ -137,24 +137,8 @@ export default {
           text: '单元测试', // 任务名
           start_date: '2020-04-11 02:20', // 开始时间
           id: 12, // 任务id
-          duration: 90, // 任务时长，从start_date开始计算
+          end_date: '2020-04-11 11:00', // 结束时间
           type: 2,
-        },
-        {
-          toolTipsTxt: 'dsadsadasdsadas',
-          text: '回归测试', // 任务名
-          start_date: '2020-04-13 03:30', // 开始时间
-          id: 13, // 任务id
-          duration: 10, // 任务时长，从start_date开始计算
-          type: 3,
-        },
-        {
-          toolTipsTxt: 'asdsadasdasdsadsadfads',
-          text: '阶段四', // 任务名
-          start_date: '2020-04-13 03:50', // 开始时间
-          id: 14, // 任务id
-          duration: 15, // 任务时长，从start_date开始计算
-          type: 4,
         },
       ].map(function (current, ind, arry) {
         var newObj = {}
