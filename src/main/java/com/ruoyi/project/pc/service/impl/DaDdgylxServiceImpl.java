@@ -143,6 +143,7 @@ public class DaDdgylxServiceImpl implements IDaDdgylxService {
                     log.info("计划结束时间填写错误:生产订单号：{}",daLzjscdd.getScddh());
                     break;
                 }
+                daDdgylx.setZzsl(0L);
                 //这里也处理时间的范围原因
                 daDdgylx.setJhkssj(jhkssk);
             }

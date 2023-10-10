@@ -134,12 +134,12 @@
       </el-table-column>
       <el-table-column label="计划开始时间" align="center" prop="jhkssj" width="160">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.jhkssj, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.jhkssj, '{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="计划完成时间" align="center" prop="jhwcsj" width="160">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.jhwcsj, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.jhwcsj, '{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="实际完成时间" align="center" prop="sjwcsj" width="160">
