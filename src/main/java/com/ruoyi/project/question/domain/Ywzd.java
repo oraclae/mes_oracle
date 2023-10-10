@@ -32,7 +32,7 @@ public class Ywzd {
     private String XH;
 
     /** 排序 */
-    private String PX;
+    private Long PX;
 
     /** 请求参数 */
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
