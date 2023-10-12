@@ -7,14 +7,14 @@ spring:
             # 主库数据源
             master:
                 url: jdbc:oracle:thin:@139.129.203.2:1521:ORCL
-                #url: jdbc:oracle:thin:@127.0.0.1:1521:ORCL
+#                url: jdbc:oracle:thin:@127.0.0.1:1521:ORCL
                 username: system
 #                password: d12345678D
                 password: Mcp..123456
             # 从库数据源
             slave:
                 # 从数据源开关/默认关闭
-                enabled: false
+                enabled: true
                 url:
                 username:
                 password:

@@ -5,6 +5,7 @@ import java.util.List;
 import com.ruoyi.project.pc.domain.DaRl;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.security.core.parameters.P;
+import org.springframework.stereotype.Repository;
 
 /**
  * 日期Mapper接口
@@ -12,6 +13,7 @@ import org.springframework.security.core.parameters.P;
  * @author qxd
  * @date 2023-09-23
  */
+@Repository
 public interface DaRlMapper {
     /**
      * 查询日期

@@ -18,6 +18,7 @@
 -- ----------------------------
 -- Table structure for WTGL_JHJL
 -- ----------------------------
+select * from WTGL_JHJL;
 CREATE TABLE "WTGL_JHJL" (
   "XH" VARCHAR2(255) NOT NULL,
   "HFXX" VARCHAR2(255),
@@ -70,7 +71,7 @@ COMMENT ON COLUMN "WTGL_JHJL"."HFR" IS '回复人';
 COMMENT ON COLUMN "WTGL_JHJL"."JHZT" IS '交互记录的状态';
 COMMENT ON COLUMN "WTGL_JHJL"."JS" IS '问题的级数';
 COMMENT ON COLUMN "WTGL_JHJL"."YYD" IS '判断是否已阅读';
-COMMENT ON COLUMN "WTGL_JHJL".EJHFPPYJ IS '二级回复匹配一级';
+COMMENT ON COLUMN "WTGL_JHJL".EJHFPPYYJ IS '二级回复匹配一级';
 
 -- ----------------------------
 -- Records of WTGL_JHJL

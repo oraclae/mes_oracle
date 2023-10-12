@@ -1,12 +1,16 @@
 -- ----------------------------
 -- 1、部门表
 -- ----------------------------
+DROP SEQUENCE seq_sys_dept;
+
 create sequence seq_sys_dept
  increment by 1
  start with 200
  nomaxvalue
  nominvalue
  cache 20;
+
+-- xxxxx
 
 create table sys_dept (
   dept_id           number(20)      not null,
@@ -59,6 +63,7 @@ insert into sys_dept values(109,  102, '0,100,102',  '财务部门',   2, '若�
 
 -- ----------------------------
 -- 2、用户信息表
+DROP SEQUENCE seq_sys_user;
 -- ----------------------------
 create sequence seq_sys_user
  increment by 1
@@ -66,6 +71,9 @@ create sequence seq_sys_user
  nomaxvalue
  nominvalue
  cache 20;
+
+
+-- xxxxx
 
 create table sys_user (
   user_id           number(20)      not null,
@@ -122,12 +130,19 @@ insert into sys_user values(2,  105, 'ry',    '若依', '00', 'ry@qq.com',  '156
 -- ----------------------------
 -- 3、岗位信息表
 -- ----------------------------
+DROP SEQUENCE seq_sys_post;
+
 create sequence seq_sys_post
  increment by 1
  start with 10
  nomaxvalue
  nominvalue
  cache 20;
+
+SELECT object_name, object_type
+FROM all_objects
+WHERE object_name = 'SEQ_SYS_POST';
+
 
 create table sys_post
 (
@@ -169,6 +184,7 @@ insert into sys_post values(4, 'user', '普通员工',  4, '0', 'admin', sysdate
 -- ----------------------------
 -- 4、角色信息表
 -- ----------------------------
+DROP SEQUENCE seq_sys_role;
 create sequence seq_sys_role
  increment by 1
  start with 100
@@ -221,6 +237,7 @@ insert into sys_role values('2', '普通角色',   'common', 2, 2, 1, 1, '0', '0
 -- ----------------------------
 -- 5、菜单权限表
 -- ----------------------------
+DROP SEQUENCE seq_sys_menu;
 create sequence seq_sys_menu
  increment by 1
  start with 2000
@@ -549,6 +566,7 @@ insert into sys_user_post values ('2', '2');
 -- ----------------------------
 -- 10、操作日志记录
 -- ----------------------------
+DROP SEQUENCE seq_sys_oper_log;
 create sequence seq_sys_oper_log
  increment by 1
  start with 100
@@ -604,6 +622,7 @@ comment on column sys_oper_log.oper_time      is '操作时间';
 -- ----------------------------
 -- 11、字典类型表
 -- ----------------------------
+DROP SEQUENCE seq_sys_dict_type;
 create sequence seq_sys_dict_type
  increment by 1
  start with 100
@@ -653,6 +672,7 @@ insert into sys_dict_type values(10, '系统状态', 'sys_common_status',   '0',
 -- ----------------------------
 -- 12、字典数据表
 -- ----------------------------
+DROP SEQUENCE seq_sys_dict_data;
 create sequence seq_sys_dict_data
  increment by 1
  start with 100
@@ -730,6 +750,7 @@ insert into sys_dict_data values(29, 2,  '失败',     '1',       'sys_common_st
 -- ----------------------------
 -- 13、参数配置表
 -- ----------------------------
+DROP SEQUENCE seq_sys_config;
 create sequence seq_sys_config
  increment by 1
  start with 100
@@ -774,6 +795,7 @@ insert into sys_config values(6, '用户登录-黑名单列表',           'sys.
 -- ----------------------------
 -- 14、系统访问记录
 -- ----------------------------
+DROP SEQUENCE seq_sys_logininfor;
 create sequence seq_sys_logininfor
  increment by 1
  start with 100
@@ -812,6 +834,7 @@ comment on column sys_logininfor.login_time     is '访问时间';
 -- ----------------------------
 -- 15、定时任务调度表
 -- ----------------------------
+DROP SEQUENCE seq_sys_job;
 create sequence seq_sys_job
  increment by 1
  start with 100
@@ -860,6 +883,7 @@ insert into sys_job values(3, '系统默认（多参）', 'DEFAULT', 'ryTask.ryM
 -- ----------------------------
 -- 16、定时任务调度日志表
 -- ----------------------------
+DROP SEQUENCE seq_sys_job_log;
 create sequence seq_sys_job_log
  increment by 1
  start with 1
@@ -894,6 +918,7 @@ comment on column sys_job_log.create_time       is '创建时间';
 -- ----------------------------
 -- 17、通知公告表
 -- ----------------------------
+DROP SEQUENCE seq_sys_notice;
 create sequence seq_sys_notice
  increment by 1
  start with 100
@@ -939,6 +964,7 @@ commit;
 -- ----------------------------
 -- 18、代码生成业务表
 -- ----------------------------
+DROP SEQUENCE seq_gen_table;
 create sequence seq_gen_table
  increment by 1
  start with 100
@@ -997,6 +1023,7 @@ comment on column gen_table.remark            is '备注';
 -- ----------------------------
 -- 19、代码生成业务表字段
 -- ----------------------------
+DROP SEQUENCE seq_gen_table_column;
 create sequence seq_gen_table_column
  increment by 1
  start with 100

@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "@riophae/vue-treeselect": "0.4.0",
+    "@worktile/gantt": "^16.0.1",
     "axios": "0.24.0",
     "clipboard": "2.0.8",
     "core-js": "3.25.3",
